@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>ニクパーティ｜KU-DETA</title>
+  <meta name="description" content="ニクいほど、いい出会い。11/15(土) 18:30–21:00｜飲み放題つき｜岐阜・KU-DETA。20–35歳・独身限定の立食交流イベント。男性¥6,000 / 女性¥3,000（内税）。早割＆ペア割あり。" />
+
+  <!-- OGP -->
+  <meta property="og:title" content="ニクパーティ｜KU-DETA" />
+  <meta property="og:description" content="ニクいほど、いい出会い。飲み放題つき・立食・フォトスポット・ライブカッティング。20–35歳独身限定。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://example.com/meatparty/" />
+  <meta property="og:image" content="https://example.com/meatparty/img/ogp.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="img/favicon.png" />
+
+  <style>
+    :root{
+      --brand:#ff6b6b; --brand-2:#ff3b3b; --text:#f7f7fb; --sub:#c6c7d4;
+      --bg:#0c0b10; --muted:#15131c; --max:1100px; --radius:18px;
+      --ok:#4ade80; --warn:#fbbf24;
+    }
+    html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    .container{max-width:var(--max);margin:auto;padding:0 20px}
+
+    /* Header（上帯ナシ、簡潔ナビ） */
+    header{position:sticky;top:0;z-index:50;background:rgba(10,9,14,.55);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.08)}
+    .nav{display:flex;justify-content:space-between;align-items:center;height:64px}
+    .brand{display:flex;gap:10px;align-items:center;font-weight:800}
+    .brand .dot{width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--brand-2));box-shadow:0 0 18px rgba(255,80,80,.85)}
+    .links{display:flex;gap:14px;white-space:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .btn{display:inline-flex;align-items:center;gap:.5rem;padding:.9rem 1.1rem;border-radius:16px;background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#1d0909;font-weight:800;box-shadow:0 10px 26px rgba(255,59,59,.22);transition:.2s}
+    .btn:hover{transform:translateY(-1px)}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.26);color:var(--text)}
+
+    /* Hero（背景：画像差し替え推奨） */
+    .hero{position:relative}
+    .hero::before{
+      content:"";position:absolute;inset:0;background:url('img/meat_hero.jpg') center/cover no-repeat;
+      opacity:.48;filter:saturate(1.05) contrast(1.02) brightness(1.05)
+    }
+    .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,11,16,.2),rgba(12,11,16,.85) 70%, rgba(12,11,16,1) 100%)}
+    .hero-inner{position:relative;z-index:2;padding:90px 0 64px}
+    .hero-grid{display:grid;gap:18px}
+    @media(min-width:920px){.hero-grid{grid-template-columns:1.1fr .9fr}}
+    .tag{display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border-radius:999px;background:rgba(255,107,107,.18);border:1px solid rgba(255,107,107,.35);color:#ffdcdc;font-weight:800}
+    .hero h1{font-size:clamp(28px,6vw,52px);line-height:1.1;margin:10px 0 6px}
+    .catch{font-size:clamp(16px,3.4vw,20px);color:var(--sub);margin:0 0 16px}
+    .kpis{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+    .kpi{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:10px 12px;min-width:190px}
+    .kpi b{display:block;font-size:clamp(18px,4vw,26px)}
+
+    .glass{background:rgba(0,0,0,.32);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(12px);border-radius:var(--radius);padding:18px}
+
+    /* Sections */
+    section{padding:68px 0}
+    section h2{text-align:center;font-size:clamp(22px,4vw,34px);margin:0 0 14px}
+    .muted{color:var(--sub)}
+
+    /* Grid cards */
+    .cards{display:grid;gap:20px}
+    @media(min-width:900px){.cards{grid-template-columns:repeat(3,1fr)}}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:16px}
+    .card h3{margin:.2rem 0 .6rem}
+
+    /* Attractions / Highlights images */
+    .tile img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px;margin-bottom:10px}
+
+    /* Ticket table style */
+    .price{display:grid;gap:18px}
+    @media(min-width:860px){.price{grid-template-columns:repeat(3,1fr)}}
+    .chip{display:inline-block;font-weight:800;border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:4px 10px;margin-right:6px}
+    .chip.ok{border-color:rgba(74,222,128,.4);color:#b7f7c7}
+    .chip.warn{border-color:rgba(251,191,36,.4);color:#ffe5a3}
+
+    /* Form */
+    form.card{max-width:760px;margin:0 auto;background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:24px}
+    form .grid{display:grid;gap:14px}
+    @media(min-width:680px){form .grid{grid-template-columns:1fr 1fr}}
+    label span{display:block;margin-bottom:6px;color:var(--sub);font-size:.95rem}
+    input,select,textarea{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);color:#fff;font-size:16px}
+    input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 2px rgba(255,107,107,.26)}
+    .row{grid-column:1/-1}
+    .inline{display:flex;gap:10px;align-items:center}
+    .note{font-size:.9rem;color:var(--sub)}
+    .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+    .cta .btn{flex:1;justify-content:center}
+
+    /* Countdown */
+    .count{display:flex;gap:8px;flex-wrap:nowrap;margin:14px 0}
+    .box{min-width:72px;text-align:center;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px 8px}
+    .num{font-size:24px;font-weight:800}
+    .lbl{font-size:12px;color:var(--sub)}
+
+    /* Footer */
+    footer{border-top:1px solid rgba(255,255,255,.1);padding:36px 0;color:var(--sub)}
+    .reveal{opacity:0;transform:translateY(10px);transition:.6s}
+    .reveal.show{opacity:1;transform:none}
+
+    /* Mobile header: 予約だけ残す場合はここをON
+    @media(max-width:760px){ .links a:not(.btn){display:none} } */
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <div class="brand"><span class="dot"></span>KU-DETA EVENTS</div>
+    <nav class="links">
+      <a href="#about">概要</a>
+      <a href="#highlights">見どころ</a>
+      <a href="#tickets">料金</a>
+      <a href="#faq">FAQ</a>
+      <a href="#access">アクセス</a>
+      <a class="btn" href="#reserve">予約する</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="container hero-inner hero-grid">
+    <div>
+      <span class="tag">11/15(土) 18:30–21:00｜岐阜 KU-DETA（JR岐阜駅 徒歩10分）</span>
+      <h1>ニクいほど、いい出会い。</h1>
+      <p class="catch">20–35歳の独身限定。立食×飲み放題×フォトスポット。  
+        <br><small style="opacity:.9">English sub: Casual standing mixer with all-you-can-drink. Singles, ages 20–35 only.</small>
+      </p>
+
+      <!-- Countdown -->
+      <div class="count" aria-label="countdown">
+        <div class="box"><div class="num" id="d">--</div><div class="lbl">日</div></div>
+        <div class="box"><div class="num" id="h">--</div><div class="lbl">時間</div></div>
+        <div class="box"><div class="num" id="m">--</div><div class="lbl">分</div></div>
+        <div class="box"><div class="num" id="s">--</div><div class="lbl">秒</div></div>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi"><span class="lbl">募集</span><b>定員60名（男女30:30）</b></div>
+        <div class="kpi"><span class="lbl">飲み放題</span><b>生ビール/ハイボール/カクテル/ソフト</b></div>
+        <div class="kpi"><span class="lbl">スタイル</span><b>立食・カジュアル・身分確認あり</b></div>
+      </div>
+
+      <div class="cta">
+        <a class="btn" href="#reserve">今すぐ予約</a>
+        <a class="btn ghost" href="#tickets">料金を見る</a>
+      </div>
+    </div>
+
+    <aside class="glass">
+      <h3 style="margin:0 0 8px">当日の流れ</h3>
+      <ol class="muted" style="line-height:1.8;margin:0">
+        <li>18:15 受付開始（年齢・本人確認）</li>
+        <li>18:30 スタート＆乾杯</li>
+        <li>18:40–20:45 立食交流（飲み放題／ミニゲーム／ライブカッティング）</li>
+        <li>20:50 フリー交換タイム（連絡先など）</li>
+        <li>21:00 クローズ</li>
+      </ol>
+      <p class="muted" style="margin:.6rem 0 0;font-size:.9rem">※進行は一部変更になる場合があります。</p>
+    </aside>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="reveal">
+  <div class="container">
+    <h2>イベント概要</h2>
+    <p class="muted" style="max-width:860px;margin:10px auto 0;line-height:1.8">
+      「ニクパーティ」は、おいしい肉とラフな会話でつながる出会いイベント。  
+      会場にはフォトスポットや、焼き上がりをその場で切り分ける“ライブカッティング”も。  
+      立食スタイルだから、気軽に動けて話しやすい雰囲気です。
+    </p>
+    <div class="cards" style="margin-top:18px">
+      <div class="card tile">
+        <img src="img/highlight_photo.jpg" alt="フォトスポット">
+        <h3>映えるフォトスポット</h3>
+        <p class="muted">ネオン装飾前で記念ショット。最初の話題作りにも◎</p>
+      </div>
+      <div class="card tile">
+        <img src="img/highlight_cut.jpg" alt="ライブカッティング">
+        <h3>ライブカッティング</h3>
+        <p class="muted">追加オプションで高級ステーキをシェフがその場で切り分け。</p>
+      </div>
+      <div class="card tile">
+        <img src="img/highlight_mingle.jpg" alt="立食交流">
+        <h3>立食で自由にミングル</h3>
+        <p class="muted">テーブル固定なし。気になる人に自然と声がかけやすい。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HIGHLIGHTS / MENU -->
+<section id="highlights" class="reveal">
+  <div class="container">
+    <h2>ドリンク＆フード</h2>
+    <div class="cards">
+      <div class="card">
+        <h3>飲み放題に含まれるもの</h3>
+        <p class="muted">生ビール / ハイボール / レモンサワー / カクテル各種（ジン/ウォッカ/カシスなど）/ ワイン / ソフトドリンク</p>
+        <p class="note">※20歳未満への酒類提供はありません。身分確認を行います。</p>
+      </div>
+      <div class="card">
+        <h3>追加オプション</h3>
+        <p class="muted">高級ステーキ（ライブカッティング）ほか、軽食数品を追加購入可。</p>
+        <p class="note">追加料金は会場でお支払いください（PayPay/クレジット可）。</p>
+      </div>
+      <div class="card">
+        <h3>スタイル</h3>
+        <p class="muted">立食・カジュアル（ドレスコード：カジュアル）。スタッフがご案内＆場づくりをサポートします。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKETS -->
+<section id="tickets" class="reveal">
+  <div class="container">
+    <h2>料金・特典</h2>
+    <p style="text-align:center;margin:8px 0 16px">
+      <span class="chip ok">内税</span>
+      <span class="chip ok">事前決済推奨（PayPay / クレジット）</span>
+      <span class="chip warn">早割：10/15まで</span>
+      <span class="chip warn">ペア割：同一会計で2名につき500円OFF</span>
+    </p>
+
+    <div class="price">
+      <div class="card">
+        <h3>男性</h3>
+        <p><b style="font-size:1.4rem">¥6,000</b>（飲み放題つき）</p>
+        <ul class="muted">
+          <li>早割（〜10/15）：当日精算でもOK / 推奨は事前決済</li>
+          <li>ペア割（同一会計）：2名で合計500円OFF</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>女性</h3>
+        <p><b style="font-size:1.4rem">¥3,000</b>（飲み放題つき）</p>
+        <ul class="muted">
+          <li>早割（〜10/15）：当日精算でもOK / 推奨は事前決済</li>
+          <li>ペア割（同一会計）：2名で合計500円OFF</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>条件・対象</h3>
+        <ul class="muted">
+          <li>対象：20–35歳の独身の方のみ</li>
+          <li>男女比：50:50に近づくよう運営（定員60名）</li>
+          <li>入場時に身分確認を行います</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="cta" style="margin-top:14px">
+      <a class="btn" href="#reserve">予約する</a>
+      <a class="btn ghost" href="#faq">FAQを確認</a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="reveal">
+  <div class="container">
+    <h2>FAQ</h2>
+    <div class="cards" style="grid-template-columns:1fr">
+      <div class="card">
+        <details open>
+          <summary><b>参加資格は？</b></summary>
+          <p class="muted">20–35歳の独身の方のみ。入場時に年齢・本人確認を行います。</p>
+        </details>
+        <details>
+          <summary><b>男女比はどうなりますか？</b></summary>
+          <p class="muted">可能な限り50:50に近づくよう調整します（定員60名・30:30目安）。</p>
+        </details>
+        <details>
+          <summary><b>ドレスコードはありますか？</b></summary>
+          <p class="muted">カジュアルでOK。清潔感のある服装をおすすめします。</p>
+        </details>
+        <details>
+          <summary><b>支払い方法は？</b></summary>
+          <p class="muted">事前決済推奨（PayPay / クレジット）。当日支払いも可ですが混雑時はお待ちいただく場合があります。</p>
+        </details>
+        <details>
+          <summary><b>早割とペア割は併用できますか？</b></summary>
+          <p class="muted">はい、可能です。ペア割は同一会計で2名につき合計500円OFFです。</p>
+        </details>
+        <details>
+          <summary><b>迷惑行為ポリシーは？</b></summary>
+          <p class="muted">過度な勧誘・連絡先の強要・泥酔・無断撮影の要求などは即時退場の対象です（返金不可）。安心して楽しめる環境づくりにご協力ください。</p>
+        </details>
+        <details>
+          <summary><b>写真・動画の撮影ルールは？</b></summary>
+          <p class="muted">人物が映る撮影は相手の同意を得てください。SNS投稿の際は個人情報にご配慮ください。会場のフォトスポットはご自由にお使いください。</p>
+        </details>
+        <details>
+          <summary><b>キャンセルポリシーは？</b></summary>
+          <p class="muted">3日前まで0%／前日50%／当日100%。体調不良などやむを得ない場合はお早めにご連絡ください。</p>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACCESS -->
+<section id="access" class="reveal">
+  <div class="container">
+    <h2>アクセス</h2>
+    <p class="muted" style="text-align:center">KU-DETA（岐阜市加納新本町3-1-1）｜JR岐阜駅 南口より徒歩10分</p>
+    <div class="cards" style="grid-template-columns:1fr 1fr">
+      <div class="card">
+        <h3>会場情報</h3>
+        <p class="muted">フォトスポット＆ネオン装飾あり。スタッフ常駐でご案内します。</p>
+      </div>
+      <div class="card" style="position:relative; padding-top:56.25%">
+        <iframe title="map" src="https://maps.google.com/maps?q=KU-DETA%20Gifu&t=&z=15&ie=UTF8&iwloc=&output=embed"
+          style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:12px"
+          loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESERVE -->
+<section id="reserve" class="reveal">
+  <div class="container">
+    <h2>予約フォーム</h2>
+    <form class="card" method="POST" action="https://formspree.io/f/xpwlgjrn" onsubmit="this.querySelector('button[type=submit]').disabled=true;">
+      <div class="grid">
+        <label><span>お名前*</span><input name="name" required></label>
+        <label><span>メール*</span><input type="email" name="email" required></label>
+
+        <label><span>性別*</span>
+          <select name="gender" required>
+            <option value="" selected disabled>選択してください</option>
+            <option>男性</option>
+            <option>女性</option>
+            <option>回答しない</option>
+          </select>
+        </label>
+
+        <label><span>年齢*</span><input type="number" name="age" min="20" max="35" required></label>
+
+        <label class="row"><span>人数*</span>
+          <div class="inline">
+            <input type="number" name="people" min="1" max="4" value="1" required>
+            <span class="note">※男女比調整のため最大4名まで</span>
+          </div>
+        </label>
+
+        <label class="row"><span>ペア割</span>
+          <div class="inline">
+            <input type="checkbox" id="pair" name="pair_discount" value="yes">
+            <label for="pair" class="note">同一会計で2名につき合計500円OFFを希望する</label>
+          </div>
+        </label>
+
+        <label class="row"><span>支払い方法（推奨）*</span>
+          <div class="inline" style="flex-wrap:wrap">
+            <label class="inline"><input type="radio" name="pay" value="PayPay" required> PayPay（事前）</label>
+            <label class="inline"><input type="radio" name="pay" value="Card" required> クレジット（事前）</label>
+            <label class="inline"><input type="radio" name="pay" value="Onsite" required> 当日支払い</label>
+          </div>
+        </label>
+
+        <label class="row"><span>追加ステーキ</span>
+          <div class="inline">
+            <input type="checkbox" id="steak" name="add_steak" value="yes">
+            <label for="steak" class="note">ライブカッティングの高級ステーキを追加購入予定</label>
+          </div>
+        </label>
+
+        <label class="row"><span>備考</span><textarea name="note" rows="3" placeholder="同伴者名、到着予定時刻、配慮事項など"></textarea></label>
+
+        <label class="row inline">
+          <input type="checkbox" required>
+          <span class="note">20–35歳・独身／身分確認／迷惑行為ポリシー／撮影ルール／キャンセル規定に同意します。</span>
+        </label>
+      </div>
+
+      <input type="hidden" name="_subject" value="[KU-DETA] ニクパーティ 予約">
+      <input type="hidden" name="event" value="MEAT PARTY 2025-11-15">
+
+      <div class="cta">
+        <button class="btn" type="submit">送信</button>
+        <a class="btn ghost" href="https://line.me/R/ti/p/@rzd2388u" target="_blank" rel="noopener">LINEで質問</a>
+      </div>
+
+      <p class="note" style="margin-top:10px">
+        【キャンセルポリシー】3日前まで0%／前日50%／当日100%（返金手数料はお客様負担）。<br>
+        【注意】過度な勧誘・連絡先の強要・泥酔などの迷惑行為は即時退場（返金不可）。
+      </p>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="container" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+    <small>© 2025 KU-DETA</small>
+    <div style="display:flex;gap:12px">
+      <a href="https://www.instagram.com/ku_deta_gifu/" target="_blank" rel="noopener">Instagram</a>
+      <a href="mailto:kudeta.kanou@gmail.com">Email</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Countdown to 2025-11-15T18:30:00+09:00
+  const T = new Date('2025-11-15T18:30:00+09:00').getTime();
+  const id = {d:'d',h:'h',m:'m',s:'s'};
+  function tick(){
+    const now = Date.now(); let diff = Math.max(0, T - now);
+    const d = Math.floor(diff/86400000); diff-=d*86400000;
+    const h = Math.floor(diff/3600000);  diff-=h*3600000;
+    const m = Math.floor(diff/60000);    diff-=m*60000;
+    const s = Math.floor(diff/1000);
+    document.getElementById(id.d).textContent=d;
+    document.getElementById(id.h).textContent=h;
+    document.getElementById(id.m).textContent=m;
+    document.getElementById(id.s).textContent=s;
+  }
+  tick(); setInterval(tick,1000);
+
+  // reveal on scroll
+  const io = new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add('show')), {threshold:.1});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{
+    const id=a.getAttribute('href').slice(1); if(!id) return;
+    const t=document.getElementById(id); if(!t) return; e.preventDefault();
+    window.scrollTo({top:t.getBoundingClientRect().top+window.scrollY-64,behavior:'smooth'});
+  }));
+</script>
+
+<!-- JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Event",
+  "name":"ニクパーティ",
+  "description":"20–35歳・独身限定の立食交流イベント。飲み放題つき。早割・ペア割あり。『ニクいほど、いい出会い。』",
+  "startDate":"2025-11-15T18:30:00+09:00",
+  "endDate":"2025-11-15T21:00:00+09:00",
+  "eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode",
+  "eventStatus":"https://schema.org/EventScheduled",
+  "image":["https://example.com/meatparty/img/ogp.jpg"],
+  "location":{"@type":"Place","name":"KU-DETA","address":{"@type":"PostalAddress","addressLocality":"岐阜市","streetAddress":"加納新本町3-1-1"}},
+  "offers":[
+    {"@type":"Offer","name":"男性","price":"6000","priceCurrency":"JPY","availability":"https://schema.org/InStock"},
+    {"@type":"Offer","name":"女性","price":"3000","priceCurrency":"JPY","availability":"https://schema.org/InStock"}
+  ],
+  "organizer":{"@type":"Organization","name":"KU-DETA","url":"https://www.instagram.com/ku_deta_gifu/"}
+}
+</script>
+</body>
+</html>
