@@ -124,7 +124,7 @@ const QUESTIONS = [
   {id:1, axis:"RL", a:"赤身の旨みを噛みしめたい", b:"脂の甘みとコクで満たされたい"},
   {id:2, axis:"RL", a:"食後は軽やかが理想", b:"多少こってりでも満足感が大事"},
   {id:3, axis:"RL", a:"量より質で赤身中心に選ぶ", b:"サシの入った部位に惹かれる"},
-  {id:4, axis:"RL", a:"好きな部位はハラミ・モモ・ヒレ", b:"リブロース・サーロイン・バラ"},
+  {id:4, axis:"RL", a:"好きな部位はヒレ", b:"好きな部位はサーロイン"},
   // FS (5-7) A=F B=S
   {id:5, axis:"FS", a:"強火でサッと香ばしく", b:"低温や余熱でじっくり"},
   {id:6, axis:"FS", a:"炭火・鉄板の直火感", b:"ローストや煮込みの奥行き"},
@@ -313,7 +313,6 @@ async function copyResult(){
 /* events */
 ['btn-start','btn-start-2'].forEach(id=>document.getElementById(id).addEventListener('click',start));
 ['btn-A','btn-B'].forEach((id,i)=>document.getElementById(id).addEventListener('click',()=>pick(i===0?'A':'B')));
-['btn-retry'].forEach?null:0; // no-op to avoid errors if not found
 const retry=document.getElementById('btn-retry'); if(retry) retry.addEventListener('click',resetAll);
 const copy=document.getElementById('btn-copy'); if(copy) copy.addEventListener('click',copyResult);
 
