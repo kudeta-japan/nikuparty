@@ -7,7 +7,7 @@
   <meta name="description" content="ニクパーティ用 MEAT-BTI v2（18問）— 1問15秒、部位タイプ＆相性タグを判定。"/>
   <style>
     :root{
-      --bg:#0b0c10; --panel:#101218; --ink:#e8ecf1; --muted:#a6b0bf;
+      --bg:#0b0c10; --panel:#101218; --ink:#f4f7fb; --muted:#b6c0cf;
       --accent:#ff6b57; --accent2:#ffd166; --border:#1c1f27; --shadow:0 10px 30px rgba(0,0,0,.35);
     }
     html,body{height:100%}
@@ -20,6 +20,7 @@
     .logo{width:36px;height:36px;border-radius:10px;background:conic-gradient(from 140deg,var(--accent),var(--accent2));display:grid;place-items:center;color:#111;font-weight:900}
     .title{font-weight:900}
     .wrap{padding:16px}
+
     /* ---- QUIZ minimal ---- */
     .q-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
     .q-index{font-weight:900}
@@ -28,13 +29,15 @@
     .sec{font-family:ui-monospace,Menlo,Consolas,monospace}
     .bar{height:6px;background:#141721;border:1px solid var(--border);border-radius:999px;overflow:hidden}
     .bar>div{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2))}
-    .q-text{font-size:clamp(20px,3.6vw,26px);font-weight:900;text-align:center;margin:16px 0 10px}
+    .q-text{font-size:clamp(20px,3.6vw,26px);font-weight:900;text-align:center;margin:16px 0 10px;color:var(--ink)}
     .opt-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:6px}
     @media(min-width:640px){.opt-grid{grid-template-columns:1fr 1fr}}
-    .opt{background:#121523;border:1px solid var(--border);border-radius:14px;padding:18px;text-align:center;cursor:pointer;
-         transition:transform .05s ease,border-color .15s ease,background .15s ease;font-size:clamp(16px,2.6vw,18px)}
-    .opt:hover{transform:translateY(-1px);border-color:#2a2f3b;background:#15192a}
+    .opt{background:#151a27;border:1px solid #2a3140;border-radius:14px;padding:18px;text-align:center;cursor:pointer;
+         transition:transform .05s ease,border-color .15s ease,background .15s ease;font-size:clamp(16px,2.6vw,18px);color:var(--ink)}
+    .opt strong{color:var(--ink)}
+    .opt:hover{transform:translateY(-1px);border-color:#364158;background:#182033}
     .progress-note{color:var(--muted);font-size:12px;text-align:center;margin-top:8px}
+
     /* ---- RESULT ---- */
     .result{display:grid;gap:16px}
     .grid{display:grid;grid-template-columns:1fr;gap:12px}
@@ -92,9 +95,8 @@
                 <p class="desc" id="r-desc"></p>
               </div>
               <div class="r-card">
-                <div><strong>相性ヒント</strong></div>
-                <div style="margin-top:6px">補完（反対が2軸以上）：<div id="r-compat-complement" class="mono" style="margin-top:4px"></div></div>
-                <div style="margin-top:10px">同質（同じが2軸以上）：<div id="r-compat-similar" class="mono" style="margin-top:4px"></div></div>
+                <div><strong>相性No.1</strong></div>
+                <div id="r-best" class="mono" style="margin-top:6px"></div>
               </div>
             </div>
             <div class="r-card">
@@ -161,8 +163,8 @@ const TYPE_NAMES = {
   "R-S-C":"ランプ",
   "L-F-K":"リブロース",
   "L-F-C":"サーロイン",
-  "L-S-K":"リブロース",
-  "L-S-C":"ザブトン"
+  "L-S-K":"ザブトン",
+  "L-S-C":"リブロース"
 };
 
 const DESCRIPTIONS = {
@@ -172,42 +174,33 @@ const DESCRIPTIONS = {
   "ザブトン":"しっとり濃厚、噛むほどに広がるコクを愛する審美眼の持ち主。こだわりは強いが押し付けず、丁寧に言葉を選びます。大人数より少人数でじっくり話すのが好き。相手の良さを見つけて静かに引き出す聞き上手です。会話のコツは“なぜそれが好きか”の理由交換。丁寧さや誠実さに惹かれる大人の相性が生まれます。",
   "ランプ":"探究心と柔軟さを兼ね備えた実験好き。低温や創作のように、定番を一歩更新する工夫にワクワクします。物静かでも中身は熱い職人気質で、話し出すと深い知識がこぼれます。初対面では試食や小さな体験を共有すると会話が弾みやすい。相手の“新しい発見”を喜べる人と相性良好です。",
   "イチボ":"赤身の旨みを丁寧に味わう、調和型の通好み。控えめながら芯があり、空気を読みつつも要所でしっかり意見を言えます。派手さはないが、あとから効いてくる余韻タイプ。会話は相手の話を受けて一歩深めるのが得意で、価値観の近い相手と長期的な関係を築きやすい。気づけば“もっと話したい人”になっています。",
-  "タン":"さっぱり塩でキレ良く。テンポの良さと明るさで周囲をほぐすムードメイクが得意。直感が利き、判断もスピーディ。会話は短いキャッチボールを重ねるのが上手で、乾杯の号令や場のスイッチ役に向いています。深掘りは二巡目にゆっくり。“まずはやってみる”精神で、新しい人ともすぐ距離を縮められます.",
+  "タン":"さっぱり塩でキレ良く。テンポの良さと明るさで周囲をほぐすムードメイクが得意。直感が利き、判断もスピーディ。会話は短いキャッチボールを重ねるのが上手で、乾杯の号令や場のスイッチ役に向いています。深掘りは二巡目にゆっくり。“まずはやってみる”精神で、新しい人ともすぐ距離を縮められます。",
   "シャトーブリアン":"繊細さと集中力、そして質への強いこだわりを備えた“特選ヒレ”気質。量より質、派手さより完成度を重んじ、相手にも誠実さと丁寧さを求めます。会話は落ち着いていて、的確な一言で印象を残すタイプ。急がず深く、少人数でじっくり向き合うと相性が花開きます。希少ゆえに出会えたら大切にしたい存在。"
 };
 
 const OPP = { R:"L", L:"R", F:"S", S:"F", K:"C", C:"K" };
 
 /* --------------- State --------------- */
-let current = 0;
-let timer = null; let tLeft = 15;
-const total = QUESTIONS.length;
-
+let current = 0; let timer = null; let tLeft = 15; const total = QUESTIONS.length;
 const counts = { R:0,L:0,F:0,S:0,K:0,C:0,Q:0,M:0,Salt:0,Sauce:0,Light:0,Hearty:0 };
-const answers = []; // {id, axis, choice}
+const answers = [];
 
 const el = id => document.getElementById(id);
 const screenStart = el('screen-start');
-const screenQuiz = el('screen-quiz');
-const screenResult = el('screen-result');
+const screenQuiz  = el('screen-quiz');
+const screenResult= el('screen-result');
 
 function showScreen(which){
   screenStart.hidden = which !== 'start';
   screenQuiz.hidden  = which !== 'quiz';
   screenResult.hidden= which !== 'result';
 }
-
 function resetAll(){
   stopTimer(); tLeft=15; el('sec').textContent='15'; el('bar').style.width='0%';
   Object.keys(counts).forEach(k=>counts[k]=0);
   answers.length=0; current=0; showScreen('start');
 }
-
-function start(){
-  resetAll(); showScreen('quiz');
-  el('q-total').textContent = total;
-  current=0; renderQ(); startTimer();
-}
+function start(){ resetAll(); showScreen('quiz'); el('q-total').textContent=total; current=0; renderQ(); startTimer(); }
 
 function renderQ(){
   const q = QUESTIONS[current];
@@ -221,10 +214,8 @@ function startTimer(){
   stopTimer(); tLeft=15; const totalMs=15000; const startAt=performance.now();
   el('sec').textContent=String(tLeft);
   const tick=()=>{
-    const elapsed=performance.now()-startAt;
-    const remain=Math.max(0,totalMs-elapsed);
-    const s=Math.ceil(remain/1000);
-    if(s!==tLeft){ tLeft=s; el('sec').textContent=String(s); }
+    const elapsed=performance.now()-startAt; const remain=Math.max(0,totalMs-elapsed);
+    const s=Math.ceil(remain/1000); if(s!==tLeft){ tLeft=s; el('sec').textContent=String(s); }
     const pct=(elapsed/totalMs)*100; el('bar').style.width=Math.min(100,pct)+'%';
     if(remain<=0){ stopTimer(); pick('skip'); } else { timer=requestAnimationFrame(tick); }
   };
@@ -233,86 +224,63 @@ function startTimer(){
 function stopTimer(){ if(timer){ cancelAnimationFrame(timer); timer=null; } }
 
 function pick(choice){
-  const q = QUESTIONS[current];
-  answers.push({ id:q.id, axis:q.axis, choice });
-  if (choice==='A' || choice==='B'){
-    const label = AXIS_LABEL[q.axis][choice];
-    counts[label] = (counts[label]||0)+1;
-  }
+  const q = QUESTIONS[current]; answers.push({ id:q.id, axis:q.axis, choice });
+  if(choice==='A'||choice==='B'){ const label=AXIS_LABEL[q.axis][choice]; counts[label]=(counts[label]||0)+1; }
   next();
 }
-function next(){
-  stopTimer();
-  if(current<total-1){ current++; renderQ(); startTimer(); }
-  else { showResult(); }
-}
+function next(){ stopTimer(); if(current<total-1){ current++; renderQ(); startTimer(); } else { showResult(); } }
 
-/* ---- result logic (with RL adjustment & rare) ---- */
+/* ---- result logic (RL adjustment & rare) ---- */
 function computeResult(){
-  const R_base=counts.R, L_base=counts.L;
-  const F=counts.F, S=counts.S;
-  const K=counts.K, C=counts.C;
-  const Q=counts.Q, M=counts.M;
-  const Salt=counts.Salt, Sauce=counts.Sauce;
-  const Light=counts.Light, Hearty=counts.Hearty;
-
+  const R_base=counts.R, L_base=counts.L; const F=counts.F, S=counts.S; const K=counts.K, C=counts.C;
+  const Q=counts.Q, M=counts.M; const Salt=counts.Salt, Sauce=counts.Sauce; const Light=counts.Light, Hearty=counts.Hearty;
   const R_adj=(Q>=2?1:0)+(Salt>=2?1:0)+(Light>=2?1:0);
   const L_adj=(M>=2?1:0)+(Sauce>=2?1:0)+(Hearty>=2?1:0);
-
   const Rf=R_base+R_adj, Lf=L_base+L_adj;
-  const RL=(Rf>=Lf)?'R':'L';
-  const FS=(F>=S)?'F':'S';
-  const KC=(K>=C)?'K':'C';
-
+  const RL=(Rf>=Lf)?'R':'L'; const FS=(F>=S)?'F':'S'; const KC=(K>=C)?'K':'C';
   const code = `${RL}-${FS}-${KC}`;
   let name = TYPE_NAMES[code] || '不明';
-
   // Rare: Chateaubriand (Fillet special)
-  const isChateaubriand = (code==='R-F-K') && (Q>=2 && Salt>=2 && Light>=2) && (R_base>=3 && F>=2 && K>=2);
-  if(isChateaubriand) name='シャトーブリアン';
-
+  const isCB = (code==='R-F-K') && (Q>=2 && Salt>=2 && Light>=2) && (R_base>=3 && F>=2 && K>=2);
+  if(isCB) name='シャトーブリアン';
   const tagTexture=(Q>=M)?'噛み応え':'とろけ';
   const tagFlavor =(Salt>=Sauce)?'塩派':'ソース派';
   const tagAfter  =(Light>=Hearty)?'軽やか':'満足';
-
-  return { code, name, R_base,L_base,F,S,K,C,Q,M,Salt,Sauce,Light,Hearty,R_adj,L_adj,Rf,Lf, tagTexture,tagFlavor,tagAfter };
+  return { code,name,R_base,L_base,F,S,K,C,Q,M,Salt,Sauce,Light,Hearty,R_adj,L_adj,Rf,Lf,tagTexture,tagFlavor,tagAfter };
 }
 
 function allTypeCodes(){ return Object.keys(TYPE_NAMES); }
 function parseCode(code){ const [a,b,c]=code.split('-'); return {RL:a,FS:b,KC:c}; }
 
-function compatLists(code){
-  const mine=parseCode(code); const comp=[], sim=[];
+/* 相性No.1 を1つだけ算出 */
+function bestMatch(code){
+  const mine=parseCode(code); let best=null, bestScore=-1;
   for(const t of allTypeCodes()){
-    const other=parseCode(t);
+    if(t===code) continue; const other=parseCode(t);
     let opp=0, same=0;
-    if(other.RL===OPP[mine.RL])opp++;
-    if(other.FS===OPP[mine.FS])opp++;
-    if(other.KC===OPP[mine.KC])opp++;
-    if(other.RL===mine.RL)same++;
-    if(other.FS===mine.FS)same++;
-    if(other.KC===mine.KC)same++;
-    if(opp>=2) comp.push(t);
-    if(same>=2) sim.push(t);
+    if(other.RL===OPP[mine.RL]) opp++;
+    if(other.FS===OPP[mine.FS]) opp++;
+    if(other.KC===OPP[mine.KC]) opp++;
+    if(other.RL===mine.RL) same++;
+    if(other.FS===mine.FS) same++;
+    if(other.KC===mine.KC) same++;
+    const score = (opp>=2) ? opp*10 : (opp*10 + same); // 補完を優先
+    if(score>bestScore){ bestScore=score; best=t; }
   }
-  const map=arr=>arr.map(c=>`${TYPE_NAMES[c]}(${c})`).join('、 ');
-  return {compStr:map(comp), simStr:map(sim)};
+  return best; // 例: "L-F-C"
 }
 
 function showResult(){
-  const r=computeResult();
-  showScreen('result');
+  const r=computeResult(); showScreen('result');
   el('r-type-name').textContent=r.name;
   el('r-type-code').textContent=r.code;
   el('tag-texture').textContent=r.tagTexture;
   el('tag-flavor').textContent=r.tagFlavor;
   el('tag-after').textContent=r.tagAfter;
-
   el('r-desc').textContent = DESCRIPTIONS[r.name] || '';
 
-  const {compStr, simStr} = compatLists(r.code);
-  el('r-compat-complement').textContent=compStr;
-  el('r-compat-similar').textContent=simStr;
+  const bm=bestMatch(r.code);
+  el('r-best').textContent = bm ? `${TYPE_NAMES[bm]}（${bm}）` : '—';
 
   const detail=[
     `R/L base: R=${r.R_base}, L=${r.L_base}  adj: R+${r.R_adj}, L+${r.L_adj}  → Rf=${r.Rf}, Lf=${r.Lf}`,
@@ -331,36 +299,26 @@ function showResult(){
     answers, generatedAt:new Date().toISOString()
   };
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=el('btn-export'); a.href=url; a.download=`MEAT-BTI_${r.code}.json`;
+  const url=URL.createObjectURL(blob); const a=el('btn-export'); a.href=url; a.download=`MEAT-BTI_${r.code}.json`;
 }
 
 async function copyResult(){
-  const name=el('r-type-name').textContent;
-  const code=el('r-type-code').textContent;
+  const name=el('r-type-name').textContent; const code=el('r-type-code').textContent;
   const tags=[el('tag-texture').textContent,el('tag-flavor').textContent,el('tag-after').textContent].join('・');
   const text=`MEAT-BTI v2\n部位タイプ：${name}（${code}）\nタグ：${tags}`;
   try{ await navigator.clipboard.writeText(text); el('btn-copy').textContent='コピーしました！';
-       setTimeout(()=>el('btn-copy').textContent='結果をコピー',1500); }
-  catch{ alert('コピーに失敗しました'); }
+       setTimeout(()=>el('btn-copy').textContent='結果をコピー',1500); } catch{ alert('コピーに失敗しました'); }
 }
 
 /* events */
-document.getElementById('btn-start').addEventListener('click',start);
-document.getElementById('btn-start-2').addEventListener('click',start);
-document.getElementById('btn-A').addEventListener('click',()=>pick('A'));
-document.getElementById('btn-B').addEventListener('click',()=>pick('B'));
-document.getElementById('btn-retry').addEventListener('click',resetAll);
-document.getElementById('btn-copy').addEventListener('click',copyResult);
+['btn-start','btn-start-2'].forEach(id=>document.getElementById(id).addEventListener('click',start));
+['btn-A','btn-B'].forEach((id,i)=>document.getElementById(id).addEventListener('click',()=>pick(i===0?'A':'B')));
+['btn-retry'].forEach?null:0; // no-op to avoid errors if not found
+const retry=document.getElementById('btn-retry'); if(retry) retry.addEventListener('click',resetAll);
+const copy=document.getElementById('btn-copy'); if(copy) copy.addEventListener('click',copyResult);
 
-/* keyboard shortcuts (非表示) */
-window.addEventListener('keydown',e=>{
-  if(screenQuiz.hidden) return;
-  if(e.key==='1') pick('A');
-  else if(e.key==='2') pick('B');
-  else if(e.key.toLowerCase()==='s') pick('skip');
-  else if(e.code==='Space'){ e.preventDefault(); pick('skip'); }
-});
+/* keyboard shortcuts */
+window.addEventListener('keydown',e=>{ if(screenQuiz.hidden) return; if(e.key==='1') pick('A'); else if(e.key==='2') pick('B'); else if(e.key.toLowerCase()==='s'){ pick('skip'); } else if(e.code==='Space'){ e.preventDefault(); pick('skip'); } });
 
 /* init */
 showScreen('start');
