@@ -1,1 +1,341 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TEQUILA-BTI｜テキーラ嗜好診断</title>
+  <meta name="description" content="18問・1問15秒。テキーラの嗜好から8タイプ＋タグを判定。相性No.1も提示。"/>
+  <style>
+    :root{
+      --bg:#0b0c10; --panel:#101218; --ink:#f4f7fb; --muted:#b6c0cf;
+      --accent:#00d0ff; --accent2:#ffd166; --border:#1c1f27; --shadow:0 10px 30px rgba(0,0,0,.35);
+    }
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--ink);
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans JP","Hiragino Kaku Gothic ProN","Meiryo",sans-serif;letter-spacing:.02em}
+    .app{width:min(920px,100%);margin:0 auto;padding:24px}
+    .card{background:var(--panel);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+    header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border)}
+    .brand{display:flex;align-items:center;gap:10px}
+    .logo{width:36px;height:36px;border-radius:10px;background:conic-gradient(from 140deg,var(--accent),var(--accent2));display:grid;place-items:center;color:#111;font-weight:900}
+    .title{font-weight:900}
+    .wrap{padding:16px}
 
+    /* ---- QUIZ minimal ---- */
+    .q-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .q-index{font-weight:900}
+    .timer{display:flex;align-items:center;gap:8px}
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--accent2);box-shadow:0 0 0 6px rgba(255,209,102,.1)}
+    .sec{font-family:ui-monospace,Menlo,Consolas,monospace}
+    .bar{height:6px;background:#141721;border:1px solid var(--border);border-radius:999px;overflow:hidden}
+    .bar>div{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+    .q-text{font-size:clamp(20px,3.6vw,26px);font-weight:900;text-align:center;margin:16px 0 10px;color:var(--ink)}
+    .opt-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:6px}
+    @media(min-width:640px){.opt-grid{grid-template-columns:1fr 1fr}}
+    .opt{background:#151a27;border:1px solid #2a3140;border-radius:14px;padding:18px;text-align:center;cursor:pointer;
+         transition:transform .05s ease,border-color .15s ease,background .15s ease;font-size:clamp(16px,2.6vw,18px);color:var(--ink)}
+    .opt strong{color:var(--ink)}
+    .opt:hover{transform:translateY(-1px);border-color:#364158;background:#182033}
+    .progress-note{color:var(--muted);font-size:12px;text-align:center;margin-top:8px}
+
+    /* ---- RESULT ---- */
+    .result{display:grid;gap:16px}
+    .grid{display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:720px){.grid{grid-template-columns:1fr 1fr}}
+    .r-card{background:#0f1219;border:1px solid var(--border);border-radius:14px;padding:14px}
+    .big{font-size:clamp(28px,6vw,36px);font-weight:900}
+    .pill{display:inline-block;padding:6px 12px;border-radius:999px;background:#131726;border:1px solid var(--border);margin-right:6px}
+    .desc{margin-top:10px;line-height:1.9}
+    .mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+    .btn{appearance:none;border:1px solid var(--border);background:#141721;color:var(--ink);padding:10px 14px;border-radius:12px;font-weight:700;cursor:pointer}
+    .btn.primary{background:linear-gradient(180deg,var(--accent),#00b7ff);color:#111;border:none;box-shadow:0 10px 24px rgba(0,183,255,.35)}
+    footer{padding:10px 16px 16px;color:var(--muted);font-size:12px}
+  </style>
+</head>
+<body>
+  <main class="app">
+    <div class="card">
+      <header>
+        <div class="brand"><div class="logo">🪅</div><div class="title">TEQUILA-BTI</div></div>
+        <button id="btn-start" class="btn primary">スタート</button>
+      </header>
+      <div class="wrap" id="stage">
+        <!-- START -->
+        <section id="screen-start">
+          <h2 style="margin:0 0 6px">あなたはどの“テキーラタイプ”？</h2>
+          <p style="color:var(--muted);margin:0 0 12px">18問／1問15秒。選ぶだけで、テキーラのタイプと相性タグ（ライム/ストレート・パーティ/チル・アガベ/樽香）が分かります。</p>
+          <div><button class="btn primary" id="btn-start-2">診断をはじめる</button></div>
+        </section>
+
+        <!-- QUIZ -->
+        <section id="screen-quiz" hidden>
+          <div class="q-head">
+            <div class="q-index"><span id="q-counter">1</span>/<span id="q-total">18</span></div>
+            <div class="timer"><div class="dot"></div><div class="sec"><span id="sec">15</span>s</div></div>
+          </div>
+          <div class="bar"><div id="bar"></div></div>
+          <div class="q-text" id="q-text">どちらが近い？</div>
+          <div class="opt-grid">
+            <button class="opt" id="btn-A"><strong id="label-A">A</strong></button>
+            <button class="opt" id="btn-B"><strong id="label-B">B</strong></button>
+          </div>
+          <div class="progress-note">※未回答は15秒で自動スキップ</div>
+        </section>
+
+        <!-- RESULT -->
+        <section id="screen-result" hidden>
+          <div class="result">
+            <div class="big" id="r-title">診断結果</div>
+            <div class="grid">
+              <div class="r-card">
+                <div><strong>あなたのテキーラタイプ</strong></div>
+                <div style="margin-top:6px;font-size:22px;font-weight:900" id="r-type-name">—</div>
+                <div class="mono" id="r-type-code" style="opacity:.8">U-C-N</div>
+                <div style="margin-top:10px"><span class="pill" id="tag-garnish">ライム派</span><span class="pill" id="tag-scene">パーティ</span><span class="pill" id="tag-aroma">アガベ</span></div>
+                <p class="desc" id="r-desc"></p>
+              </div>
+              <div class="r-card">
+                <div><strong>相性No.1</strong></div>
+                <div id="r-best" class="mono" style="margin-top:6px"></div>
+              </div>
+            </div>
+            <div class="r-card">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+                <strong>詳細（集計値）</strong>
+                <button class="btn" id="btn-copy">結果をコピー</button>
+              </div>
+              <pre class="mono" id="r-detail" style="white-space:pre-wrap;margin-top:8px;color:var(--muted)"></pre>
+            </div>
+            <div style="display:flex;justify-content:space-between;gap:10px">
+              <button class="btn" id="btn-retry">最初から</button>
+              <a class="btn primary" href="#" id="btn-export" download>結果をJSONで保存</a>
+            </div>
+          </div>
+        </section>
+      </div>
+      <footer>© KU-DETA / TEQUILA-BTI</footer>
+    </div>
+  </main>
+
+<script>
+/* --------------- Question Data (18) --------------- */
+// Axes:
+// UA: Unaged(U:ブランコ系) vs Aged(A:樽熟成系)
+// CS: Citrus/Herbal(C) vs Sweet/Vanilla/Spice(S)
+// NM: Neat(N) vs Mix(M)
+// Extra tags (do not change FS/NM directly): Garnish Lime vs NeatOnly, Scene Party vs Chill, Aroma Agave vs Barrel
+
+const QUESTIONS = [
+  // UA (1-4) A=U B=A
+  {id:1, axis:"UA", a:"澄んだクリアな味わいが好き（ブランコ寄り）", b:"樽の丸みと深みが好き（熟成寄り）"},
+  {id:2, axis:"UA", a:"見た目は透明が好み", b:"琥珀色に惹かれる"},
+  {id:3, axis:"UA", a:"タコスやセビーチェに合うのが嬉しい", b:"チョコやナッツとも相性が良いと嬉しい"},
+  {id:4, axis:"UA", a:"好きなのはブランコ", b:"好きなのはアネホ"},
+  // CS (5-7) A=C B=S
+  {id:5, axis:"CS", a:"青いアガベ・シトラス・ハーブの香り", b:"バニラ・キャラメル・スパイスの香り"},
+  {id:6, axis:"CS", a:"キレのあるドライ", b:"まろやかで甘みの余韻"},
+  {id:7, axis:"CS", a:"レモン/ライムに合わせたい", b:"樽由来の甘さを楽しみたい"},
+  // NM (8-10) A=N B=M
+  {id:8, axis:"NM", a:"ストレートorロックでじっくり", b:"テキーラソーダやカクテルが好き"},
+  {id:9, axis:"NM", a:"小さめグラスで香りを楽しむ", b:"ロングでゴクゴク楽しむ"},
+  {id:10, axis:"NM", a:"じっくり味わいたい", b:"場を回すテンポ重視"},
+  // Garnish Lime/NeatOnly (11-12) A=Lime B=NeatOnly
+  {id:11, axis:"GA", a:"塩＆ライムの王道が好き", b:"何も足さずに楽しみたい"},
+  {id:12, axis:"GA", a:"柑橘を軽く絞ると上がる", b:"香りが変わるので基本はそのまま"},
+  // Scene Party/Chill (13-15) A=Party B=Chill
+  {id:13, axis:"SC", a:"みんなでワイワイ乾杯向き", b:"静かなバーでしっとり"},
+  {id:14, axis:"SC", a:"テンポ良く楽しく", b:"落ち着いて会話を楽しむ"},
+  {id:15, axis:"SC", a:"BGMはアップテンポ", b:"ジャズやチルが心地よい"},
+  // Aroma Agave/Barrel (16-18) A=Agave B=Barrel
+  {id:16, axis:"AR", a:"青いアガベのフレッシュ感", b:"樽香のバニラやトフィー"},
+  {id:17, axis:"AR", a:"ミネラル感・ハーブ感が好き", b:"トースト香・スパイス感が好き"},
+  {id:18, axis:"AR", a:"クリアでクリーン", b:"厚みと丸み"},
+];
+
+const AXIS_LABEL = {
+  UA: {A:"U", B:"A"},
+  CS: {A:"C", B:"S"},
+  NM: {A:"N", B:"M"},
+  GA: {A:"Lime", B:"NeatOnly"},
+  SC: {A:"Party", B:"Chill"},
+  AR: {A:"Agave", B:"Barrel"},
+};
+
+/* --- 8 types (with rare) --- */
+const TYPE_NAMES = {
+  "U-C-N":"ブランコ（ハイランド志向）",
+  "U-C-M":"ブランコ・ソーダ",
+  "U-S-N":"クリスタリーノ",
+  "U-S-M":"ホーベン（ゴールド）",
+  "A-C-N":"レポサド",
+  "A-C-M":"レポサド・ハイボール",
+  "A-S-N":"アネホ",
+  "A-S-M":"アネホ・カクテル"
+};
+
+const DESCRIPTIONS = {
+  "ブランコ（ハイランド志向）":"アガベ本来の青さとミネラル、ライムの相性で勝負する純度高めタイプ。香りはシトラスやハーブ、味わいはシャープで後口はクリーン。ストレートでもいけるが、一口目は塩やライムで立ち上がりを楽しむのが得意。軽やかな料理との相性が良く、乾杯からテンポよく会話を回すファシリ役にも向いています。",
+  "ブランコ・ソーダ":"爽快感重視。レモンやグレープフルーツを合わせ、クリアなアガベ感をソーダで伸ばして飲みやすく。場を温めるのが上手で、初対面でもグラスを片手に軽快にブリッジ。味の好みはシンプルで、甘さ控えめ・香りはフレッシュがベース。フードはセビーチェやサラダなどライトなペアリングが得意です。",
+  "クリスタリーノ":"熟成の角を丸くしつつフィルターでクリアにしたモダン派。外観は透明でも、内側には樽由来のまろやかな甘みと余韻。丁寧な所作が好印象で、会話は落ち着いて的確。ライムに頼らず香りを楽しみたい時に真価を発揮し、バーでも食中でも柔軟に対応できるバランサーです。",
+  "ホーベン（ゴールド）":"にぎやかでサービス精神旺盛なパーティムードメーカー。甘味のニュアンスや色味の華やかさでテンションを上げ、カクテルでも真価を発揮。味は分かりやすく、写真映えも大切。テンポ良い会話とリアクションで輪を広げるのが得意な社交タイプです。",
+  "レポサド":"短期熟成のやわらかな木香とアガベのフレッシュさが同居。食中の万能選手で、軽やかさを保ちつつ奥行きをプラス。聞き上手で、相手の好みをほどよく拾って寄り添える。ストレートでもカクテルでもいける汎用性が魅力です。",
+  "レポサド・ハイボール":"軽快さと樽の丸みを両立する現代派。炭酸で香りを開かせつつ、甘さは控えめ。食事と並走しやすく、会話もテンポよく進行。初対面での“もう一杯いける”バランス感覚が光ります。",
+  "アネホ":"樽由来のバニラやトフィー、スパイスの厚みをしっかり楽しむ大人タイプ。ストレートでグラスを回しながら、ゆっくり会話を深めるのが得意。落ち着いた場で存在感を放ち、デザートやチョコとも好相性です。",
+  "アネホ・カクテル":"重厚さをカクテルでエレガントに解く上級者。オールドファッションド風など、樽香をアクセントとして活かすセンスが魅力。会話は物腰柔らかで、気配り上手。二軸以上の反対性を持つ相手とも噛み合いやすい社交性を備えます。",
+  "エクストラアネホ":"長期熟成の深みとしっとりした甘やかさを伴う希少タイプ。量より質、グラス一杯で物語る余韻派。バーでの静かな時間や少人数の会に最適で、言葉少なでも余韻で伝える表現力が魅力。丁寧さと誠実さを大切にする相手と相性良好です。"
+};
+
+const OPP = { U:"A", A:"U", C:"S", S:"C", N:"M", M:"N" };
+
+/* --------------- State --------------- */
+let current = 0; let timer = null; let tLeft = 15; const total = QUESTIONS.length;
+const counts = { U:0,A:0,C:0,S:0,N:0,M:0,Lime:0,NeatOnly:0,Party:0,Chill:0,Agave:0,Barrel:0 };
+const answers = [];
+
+const $ = id => document.getElementById(id);
+const screenStart = $('screen-start');
+const screenQuiz  = $('screen-quiz');
+const screenResult= $('screen-result');
+
+function showScreen(which){
+  screenStart.hidden = which !== 'start';
+  screenQuiz.hidden  = which !== 'quiz';
+  screenResult.hidden= which !== 'result';
+}
+function resetAll(){
+  stopTimer(); tLeft=15; $('sec').textContent='15'; $('bar').style.width='0%';
+  Object.keys(counts).forEach(k=>counts[k]=0);
+  answers.length=0; current=0; showScreen('start');
+}
+function start(){ resetAll(); showScreen('quiz'); $('q-total').textContent=total; current=0; renderQ(); startTimer(); }
+
+function renderQ(){
+  const q = QUESTIONS[current];
+  $('q-counter').textContent = current+1;
+  $('q-text').textContent = 'どちらが近い？';
+  $('label-A').textContent = q.a;
+  $('label-B').textContent = q.b;
+}
+
+function startTimer(){
+  stopTimer(); tLeft=15; const totalMs=15000; const startAt=performance.now();
+  $('sec').textContent=String(tLeft);
+  const tick=()=>{
+    const elapsed=performance.now()-startAt; const remain=Math.max(0,totalMs-elapsed);
+    const s=Math.ceil(remain/1000); if(s!==tLeft){ tLeft=s; $('sec').textContent=String(s); }
+    const pct=(elapsed/totalMs)*100; $('bar').style.width=Math.min(100,pct)+'%';
+    if(remain<=0){ stopTimer(); pick('skip'); } else { timer=requestAnimationFrame(tick); }
+  };
+  timer=requestAnimationFrame(tick);
+}
+function stopTimer(){ if(timer){ cancelAnimationFrame(timer); timer=null; } }
+
+function pick(choice){
+  const q = QUESTIONS[current]; answers.push({ id:q.id, axis:q.axis, choice });
+  if(choice==='A'||choice==='B'){ const label=AXIS_LABEL[q.axis][choice]; counts[label]=(counts[label]||0)+1; }
+  next();
+}
+function next(){ stopTimer(); if(current<total-1){ current++; renderQ(); startTimer(); } else { showResult(); } }
+
+/* ---- result logic (UA adjustment & rare) ---- */
+function computeResult(){
+  const U_base=counts.U, A_base=counts.A; const C=counts.C, S=counts.S; const N=counts.N, M=counts.M;
+  const Lime=counts.Lime, NeatOnly=counts.NeatOnly; const Party=counts.Party, Chill=counts.Chill; const Agave=counts.Agave, Barrel=counts.Barrel;
+
+  // Adjust UA only: party/lime/agave -> Uに +1、 chill/straight/barrel -> Aに +1
+  const U_adj = (Lime>=2?1:0) + (Party>=2?1:0) + (Agave>=2?1:0);
+  const A_adj = (NeatOnly>=2?1:0) + (Chill>=2?1:0) + (Barrel>=2?1:0);
+
+  const Uf = U_base + U_adj; const Af = A_base + A_adj;
+  const UA = (Uf>=Af)?'U':'A';
+  const CS = (C>=S)?'C':'S';
+  const NM = (N>=M)?'N':'M';
+
+  const code = `${UA}-${CS}-${NM}`;
+  let name = TYPE_NAMES[code] || '不明';
+
+  // Rare: Extra Añejo — A-S-N base + (NeatOnly>=2 & Chill>=2 & Barrel>=2) and A_base>=3,S>=2,N>=2
+  const isXA = (code==='A-S-N') && (NeatOnly>=2 && Chill>=2 && Barrel>=2) && (A_base>=3 && S>=2 && N>=2);
+  if(isXA) name = 'エクストラアネホ';
+
+  const tagGarnish = (Lime>=NeatOnly)?'ライム派':'ストレート派';
+  const tagScene   = (Party>=Chill)?'パーティ':'チル';
+  const tagAroma   = (Agave>=Barrel)?'アガベ':'樽香';
+
+  return { code, name, U_base,A_base,C,S,N,M,Lime,NeatOnly,Party,Chill,Agave,Barrel, U_adj,A_adj,Uf,Af, tagGarnish,tagScene,tagAroma };
+}
+
+function allTypeCodes(){ return Object.keys(TYPE_NAMES); }
+function parseCode(code){ const [a,b,c]=code.split('-'); return {UA:a,CS:b,NM:c}; }
+
+/* 相性No.1 */
+function bestMatch(code){
+  const mine=parseCode(code); let best=null, bestScore=-1;
+  for(const t of allTypeCodes()){
+    if(t===code) continue; const other=parseCode(t);
+    let opp=0, same=0;
+    if(other.UA===OPP[mine.UA]) opp++;
+    if(other.CS===OPP[mine.CS]) opp++;
+    if(other.NM===OPP[mine.NM]) opp++;
+    if(other.UA===mine.UA) same++;
+    if(other.CS===mine.CS) same++;
+    if(other.NM===mine.NM) same++;
+    const score = (opp>=2) ? opp*10 : (opp*10 + same);
+    if(score>bestScore){ bestScore=score; best=t; }
+  }
+  return best;
+}
+
+function showResult(){
+  const r=computeResult(); showScreen('result');
+  $('r-type-name').textContent=r.name;
+  $('r-type-code').textContent=r.code;
+  $('tag-garnish').textContent=r.tagGarnish;
+  $('tag-scene').textContent=r.tagScene;
+  $('tag-aroma').textContent=r.tagAroma;
+  $('r-desc').textContent = DESCRIPTIONS[r.name] || '';
+
+  const bm=bestMatch(r.code);
+  $('r-best').textContent = bm ? `${TYPE_NAMES[bm]}（${bm}）` : '—';
+
+  const detail=[
+    `U/A base: U=${r.U_base}, A=${r.A_base}  adj: U+${r.U_adj}, A+${r.A_adj}  → Uf=${r.Uf}, Af=${r.Af}`,
+    `C/S: C=${r.C}, S=${r.S}`,
+    `N/M: N=${r.N}, M=${r.M}`,
+    `Tags: Lime=${r.Lime}, NeatOnly=${r.NeatOnly} | Party=${r.Party}, Chill=${r.Chill} | Agave=${r.Agave}, Barrel=${r.Barrel}`,
+    `${r.tagGarnish}・${r.tagScene}・${r.tagAroma}`,
+  ].join('\n');
+  $('r-detail').textContent=detail;
+
+  const payload={
+    type:{code:r.code,name:r.name},
+    tags:{garnish:r.tagGarnish,scene:r.tagScene,aroma:r.tagAroma},
+    counts:{U:r.U_base,A:r.A_base,C:r.C,S:r.S,N:r.N,M:r.M,Lime:r.Lime,NeatOnly:r.NeatOnly,Party:r.Party,Chill:r.Chill,Agave:r.Agave,Barrel:r.Barrel},
+    adjusted:{Uf:r.Uf,Af:r.Af,U_adj:r.U_adj,A_adj:r.A_adj},
+    answers, generatedAt:new Date().toISOString()
+  };
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob); const a=$('btn-export'); a.href=url; a.download=`TEQUILA-BTI_${r.code}.json`;
+}
+
+async function copyResult(){
+  const name=$('r-type-name').textContent; const code=$('r-type-code').textContent;
+  const tags=[$('tag-garnish').textContent,$('tag-scene').textContent,$('tag-aroma').textContent].join('・');
+  const text=`TEQUILA-BTI\nタイプ：${name}（${code}）\nタグ：${tags}`;
+  try{ await navigator.clipboard.writeText(text); $('btn-copy').textContent='コピーしました！'; setTimeout(()=>$('btn-copy').textContent='結果をコピー',1500); } catch{ alert('コピーに失敗しました'); }
+}
+
+/* events */
+['btn-start','btn-start-2'].forEach(id=>document.getElementById(id).addEventListener('click',start));
+['btn-A','btn-B'].forEach((id,i)=>document.getElementById(id).addEventListener('click',()=>pick(i===0?'A':'B')));
+const retry=document.getElementById('btn-retry'); if(retry) retry.addEventListener('click',resetAll);
+const copy=document.getElementById('btn-copy'); if(copy) copy.addEventListener('click',copyResult);
+
+/* keyboard shortcuts */
+window.addEventListener('keydown',e=>{ if(screenQuiz.hidden) return; if(e.key==='1') pick('A'); else if(e.key==='2') pick('B'); else if(e.key.toLowerCase()==='s'){ pick('skip'); } else if(e.code==='Space'){ e.preventDefault(); pick('skip'); } });
+
+/* init */
+showScreen('start');
+</script>
+</body>
+</html>
