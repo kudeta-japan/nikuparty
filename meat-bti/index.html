@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MEAT-BTI v2｜ニクパーティ診断</title>
+  <meta name="description" content="ニクパーティ用 MEAT-BTI v2（18問）— 1問15秒のタイムアタックで、部位タイプ＆相性タグを判定。" />
+  <style>
+    :root{
+      --bg:#0b0c10;       /* near-black */
+      --panel:#101218;    /* card bg */
+      --ink:#e8ecf1;      /* text */
+      --muted:#a6b0bf;
+      --accent:#ff6b57;   /* tomato */
+      --accent-2:#ffd166; /* amber */
+      --good:#35d19d;     /* green */
+      --bad:#ef476f;      /* pink */
+      --border:#1c1f27;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    html,body{height:100%;}
+    body{
+      margin:0; background:radial-gradient(1200px 800px at 20% -10%, rgba(255,107,87,.08), transparent),
+                         radial-gradient(1200px 800px at 120% 110%, rgba(255,209,102,.06), transparent),
+                         var(--bg); color:var(--ink);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+      line-height:1.6; letter-spacing:.02em;
+      display:flex; align-items:center; justify-content:center; padding:28px;
+    }
+    .app{ width:min(920px, 100%); }
+    .card{ background:var(--panel); border:1px solid var(--border); border-radius:24px; box-shadow:var(--shadow); overflow:hidden; }
+    header{
+      display:flex; align-items:center; justify-content:space-between; padding:22px 22px 12px; gap:12px; flex-wrap:wrap;
+    }
+    .brand{ display:flex; align-items:center; gap:14px; }
+    .logo{ width:40px; height:40px; border-radius:12px; background:conic-gradient(from 140deg, var(--accent), var(--accent-2)); display:grid; place-items:center; font-weight:800; color:#111; box-shadow:0 6px 18px rgba(255,107,87,.35); }
+    .title{ font-size:clamp(18px, 2.6vw, 22px); font-weight:800; }
+    .subtitle{ color:var(--muted); font-size:13px; }
+    .wrap{ padding:6px 22px 22px; }
+
+    .hero{ display:grid; gap:18px; padding:10px 0 8px; text-align:center; }
+    .hero h1{ margin:6px 0 0; font-size:clamp(22px, 4vw, 30px); }
+    .hero p{ margin:0 auto; max-width:60ch; color:var(--muted); }
+
+    .controls{ display:flex; gap:12px; justify-content:center; margin-top:8px; flex-wrap:wrap; }
+    button{ appearance:none; border:none; border-radius:14px; padding:12px 18px; font-weight:700; cursor:pointer; transition:transform .06s ease, box-shadow .2s ease, background .2s ease; }
+    .btn-primary{ background:linear-gradient(180deg, var(--accent), #ff4e36); color:#111; box-shadow:0 10px 24px rgba(255,107,87,.35); }
+    .btn-primary:hover{ transform:translateY(-1px); }
+    .btn-ghost{ background:#171a22; color:var(--ink); border:1px solid var(--border); }
+
+    .meta{ display:flex; align-items:center; gap:10px; color:var(--muted); font-size:13px; }
+
+    .progressbar{ height:8px; background:#141721; border-radius:999px; overflow:hidden; border:1px solid var(--border); }
+    .progressbar > div{ height:100%; width:0%; background:linear-gradient(90deg, var(--accent), var(--accent-2)); transition:width .2s linear; }
+
+    .q-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin:8px 0 12px; }
+    .q-index{ font-weight:800; letter-spacing:.04em; }
+    .timer{ display:flex; align-items:center; gap:8px; }
+    .timer .dot{ width:10px; height:10px; border-radius:50%; background:var(--accent-2); box-shadow:0 0 0 6px rgba(255,209,102,.1); }
+    .timer .sec{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing:.02em; }
+
+    .q-card{ background:#0f1219; border:1px solid var(--border); border-radius:16px; padding:18px; display:grid; gap:14px; }
+    .q-text{ font-size:clamp(18px, 3.2vw, 22px); font-weight:700; }
+
+    .opt-grid{ display:grid; grid-template-columns:1fr; gap:12px; }
+    @media (min-width: 640px){ .opt-grid{ grid-template-columns:1fr 1fr; } }
+
+    .opt{ background:#121523; border:1px solid var(--border); border-radius:14px; padding:14px; text-align:left; display:flex; align-items:center; gap:10px; cursor:pointer; transition:transform .05s ease, border-color .15s ease, background .15s ease; }
+    .opt:hover{ transform:translateY(-1px); border-color:#2a2f3b; background:#15192a; }
+    .opt .key{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background:#0d1018; border:1px solid #1a1e29; padding:6px 10px; border-radius:10px; color:var(--muted);
+    }
+    .opt .label strong{ display:block; font-size:16px; }
+    .opt .label small{ color:var(--muted); }
+
+    .q-actions{ display:flex; justify-content:space-between; gap:10px; margin-top:2px; }
+
+    .badge{ display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; border:1px solid var(--border); background:#111522; color:var(--muted); font-size:12px; }
+
+    .result{
+      display:grid; gap:16px; padding:10px 0 0;
+    }
+    .result .big{ font-size:clamp(32px, 6vw, 44px); font-weight:900; letter-spacing:.03em; }
+    .grid{ display:grid; grid-template-columns:1fr; gap:12px; }
+    @media (min-width: 720px){ .grid{ grid-template-columns:1fr 1fr; } }
+
+    .r-card{ background:#0f1219; border:1px solid var(--border); border-radius:16px; padding:16px; }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .pill{ display:inline-block; padding:6px 12px; border-radius:999px; background:#131726; border:1px solid var(--border); margin-right:6px; }
+
+    footer{ padding:12px 22px 22px; display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; color:var(--muted); font-size:12px; }
+    a{ color:var(--accent-2); text-decoration:none; }
+    a:hover{ text-decoration:underline; }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <div class="card" id="card">
+      <header>
+        <div class="brand">
+          <div class="logo" aria-hidden="true">🥩</div>
+          <div>
+            <div class="title">MEAT-BTI v2<span class="mono">｜</span>ニクパーティ診断</div>
+            <div class="subtitle">18問・1問15秒。嗜好から〈部位タイプ〉と〈相性タグ〉を判定します。</div>
+          </div>
+        </div>
+        <div class="meta" id="meta">
+          <span class="badge">所要 <strong>約 3〜5 分</strong></span>
+          <span class="badge">1問 <strong>15秒</strong></span>
+        </div>
+      </header>
+
+      <div class="wrap" id="stage">
+        <section class="hero" id="screen-start" role="region" aria-labelledby="start-title">
+          <h1 id="start-title">あなたはどの“部位タイプ”？</h1>
+          <p>スタートすると、18問が1つずつ表示されます。選択 or 15秒で自動スキップ。最後に結果が表示されます。</p>
+          <div class="controls">
+            <button class="btn-primary" id="btn-start" aria-label="診断を開始">スタート</button>
+            <button class="btn-ghost" id="btn-how">使い方</button>
+          </div>
+          <div class="subtitle">キー操作: <span class="mono">1</span>=A, <span class="mono">2</span>=B, <span class="mono">Space</span>=次へ / <span class="mono">S</span>=スキップ</div>
+        </section>
+
+        <section id="screen-how" hidden>
+          <div class="q-card">
+            <div class="q-text">使い方</div>
+            <ol>
+              <li>「スタート」を押すと18問が1問ずつ出題されます。</li>
+              <li>各問は <strong>15秒</strong> の制限時間。未回答は自動スキップ（集計に影響しません）。</li>
+              <li>全問後、<strong>部位タイプ（8種）</strong>と<strong>タグ（噛み応え/とろけ・塩/ソース・軽やか/満足）</strong>が表示されます。</li>
+              <li>再挑戦は「最初から」ボタンでOK。</li>
+            </ol>
+            <div class="controls">
+              <button class="btn-primary" id="btn-back-home">戻る</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="screen-quiz" hidden>
+          <div class="q-head">
+            <div class="q-index"><span id="q-counter">1</span> / <span id="q-total">18</span></div>
+            <div class="timer" aria-live="polite">
+              <div class="dot" aria-hidden="true"></div>
+              <div class="sec"><span id="sec">15</span>s</div>
+            </div>
+          </div>
+          <div class="progressbar" aria-hidden="true"><div id="bar"></div></div>
+
+          <div class="q-card" aria-live="assertive">
+            <div class="q-text" id="q-text">ここに質問が入ります</div>
+            <div class="opt-grid">
+              <button class="opt" id="btn-A">
+                <span class="key">A / 1</span>
+                <span class="label"><strong id="label-A">Aテキスト</strong><small>（左）</small></span>
+              </button>
+              <button class="opt" id="btn-B">
+                <span class="key">B / 2</span>
+                <span class="label"><strong id="label-B">Bテキスト</strong><small>（右）</small></span>
+              </button>
+            </div>
+            <div class="q-actions">
+              <span class="badge">未回答は自動スキップ</span>
+              <div class="controls">
+                <button class="btn-ghost" id="btn-skip" title="この問題をスキップ (S)">スキップ</button>
+                <button class="btn-primary" id="btn-next" title="次へ (Space)">次へ</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="screen-result" hidden>
+          <div class="result">
+            <div class="big" id="r-title">診断結果</div>
+            <div class="grid">
+              <div class="r-card">
+                <div><strong>あなたの部位タイプ</strong></div>
+                <div style="margin-top:6px; font-size:22px; font-weight:900" id="r-type-name">—</div>
+                <div class="mono" id="r-type-code" style="opacity:.8">R-F-K</div>
+                <div style="margin-top:10px"><span class="pill" id="tag-texture">噛み応え</span><span class="pill" id="tag-flavor">塩派</span><span class="pill" id="tag-after">軽やか</span></div>
+              </div>
+              <div class="r-card">
+                <div><strong>相性ヒント</strong></div>
+                <div style="margin-top:6px">補完（反対が2軸以上）：<div id="r-compat-complement" class="mono" style="margin-top:4px"></div></div>
+                <div style="margin-top:10px">同質（同じが2軸以上）：<div id="r-compat-similar" class="mono" style="margin-top:4px"></div></div>
+              </div>
+            </div>
+
+            <div class="r-card">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+                <strong>詳細（集計値）</strong>
+                <button class="btn-ghost" id="btn-copy">結果をコピー</button>
+              </div>
+              <pre class="mono" id="r-detail" style="white-space:pre-wrap; margin-top:8px; color:var(--muted)"></pre>
+            </div>
+
+            <div class="controls" style="justify-content:space-between">
+              <button class="btn-ghost" id="btn-retry">最初から</button>
+              <a class="btn-primary" href="#" id="btn-export" download>結果をJSONで保存</a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <footer>
+        <div>© KU-DETA / ニクパーティ — MEAT-BTI v2</div>
+        <div>GitHub Pages で静的公開できます。</div>
+      </footer>
+    </div>
+  </main>
+
+  <script>
+  // === Question Data (18) ===
+  const QUESTIONS = [
+    // RL (1-4) A=R B=L
+    {id:1, axis:"RL", a:"赤身の旨みを噛みしめたい", b:"脂の甘みとコクで満たされたい"},
+    {id:2, axis:"RL", a:"食後は軽やかが理想", b:"多少こってりでも満足感が大事"},
+    {id:3, axis:"RL", a:"量より質で赤身中心に選ぶ", b:"サシの入った部位に惹かれる"},
+    {id:4, axis:"RL", a:"好きな部位はハラミ・モモ・ヒレ", b:"リブロース・サーロイン・バラ"},
+
+    // FS (5-7) A=F B=S
+    {id:5, axis:"FS", a:"強火でサッと香ばしく", b:"低温や余熱でじっくり"},
+    {id:6, axis:"FS", a:"炭火・鉄板の直火感", b:"ローストや煮込みの奥行き"},
+    {id:7, axis:"FS", a:"薄めでキレ良く", b:"厚めで中までしっとり"},
+
+    // KC (8-10) A=K B=C
+    {id:8, axis:"KC", a:"まずは定番から", b:"新作・限定に惹かれる"},
+    {id:9, axis:"KC", a:"塩・胡椒・わさびで簡潔に", b:"特製ソースやスパイスでアレンジ"},
+    {id:10, axis:"KC", a:"“いつものベスト”重視", b:"相手のおすすめにも乗る"},
+
+    // Texture Q/M (11-13) A=Q B=M
+    {id:11, axis:"TX", a:"しっかり噛んで旨みを感じたい", b:"ほろほろ・とろけ食感が好き"},
+    {id:12, axis:"TX", a:"歯切れ良いレア寄り", b:"口どけ重視のミディアム〜ウェル"},
+    {id:13, axis:"TX", a:"噛むほど味が出る赤身派", b:"やわらかジューシー最優先"},
+
+    // Flavor Salt/Sauce (14-15) A=Salt B=Sauce
+    {id:14, axis:"FL", a:"まずは塩で素材感", b:"バター・ガーリック等のソースが決め手"},
+    {id:15, axis:"FL", a:"胡椒や燻香で香りを足す", b:"甘辛・クリーミー系も歓迎"},
+
+    // After Light/Hearty (16-18) A=Light B=Hearty
+    {id:16, axis:"AF", a:"明日も軽快に動きたい", b:"今夜はご褒美にしっかり"},
+    {id:17, axis:"AF", a:"付け合わせはサラダ派", b:"マッシュやチーズトッピングも欲しい"},
+    {id:18, axis:"AF", a:"もう一軒行ける余力が大事", b:"1軒で完結できる満足感が大事"},
+  ];
+
+  const AXIS_LABEL = {
+    RL: {A:"R", B:"L"},
+    FS: {A:"F", B:"S"},
+    KC: {A:"K", B:"C"},
+    TX: {A:"Q", B:"M"},
+    FL: {A:"Salt", B:"Sauce"},
+    AF: {A:"Light", B:"Hearty"},
+  };
+
+  const TYPE_NAMES = {
+    "R-F-K":"ヒレ", "R-F-C":"ハラミ", "R-S-K":"モモ", "R-S-C":"ランプ",
+    "L-F-K":"リブロース", "L-F-C":"サーロイン", "L-S-K":"スネ", "L-S-C":"バラ"
+  };
+
+  const OPP = { R:"L", L:"R", F:"S", S:"F", K:"C", C:"K" };
+
+  // === State ===
+  let current = 0; // index in QUESTIONS
+  let timer = null; let tLeft = 15; // seconds per question
+  const total = QUESTIONS.length;
+
+  const counts = {
+    R:0, L:0, F:0, S:0, K:0, C:0, Q:0, M:0, Salt:0, Sauce:0, Light:0, Hearty:0,
+  };
+  const answers = []; // {id, axis, choice: 'A'|'B'|'skip'}
+
+  // === Elements ===
+  const el = (id)=>document.getElementById(id);
+  const screenStart = el('screen-start');
+  const screenHow = el('screen-how');
+  const screenQuiz = el('screen-quiz');
+  const screenResult = el('screen-result');
+
+  // Buttons
+  el('btn-start').addEventListener('click', start);
+  el('btn-how').addEventListener('click', ()=>showScreen('how'));
+  el('btn-back-home').addEventListener('click', ()=>showScreen('start'));
+
+  el('btn-A').addEventListener('click', ()=>pick('A'));
+  el('btn-B').addEventListener('click', ()=>pick('B'));
+  el('btn-next').addEventListener('click', next);
+  el('btn-skip').addEventListener('click', ()=>pick('skip'));
+
+  el('btn-retry').addEventListener('click', resetAll);
+  el('btn-copy').addEventListener('click', copyResult);
+
+  // Keyboard shortcuts
+  window.addEventListener('keydown', (e)=>{
+    if (screenQuiz.hidden) return;
+    if (e.key === '1') pick('A');
+    else if (e.key === '2') pick('B');
+    else if (e.key.toLowerCase() === 's') pick('skip');
+    else if (e.code === 'Space') { e.preventDefault(); next(); }
+  });
+
+  function showScreen(which){
+    screenStart.hidden = which !== 'start';
+    screenHow.hidden = which !== 'how';
+    screenQuiz.hidden = which !== 'quiz';
+    screenResult.hidden = which !== 'result';
+  }
+
+  function start(){
+    resetAll();
+    showScreen('quiz');
+    el('q-total').textContent = total;
+    current = 0; renderQ(); startTimer();
+  }
+
+  function resetAll(){
+    stopTimer(); tLeft = 15; el('sec').textContent = '15'; el('bar').style.width = '0%';
+    Object.keys(counts).forEach(k=>counts[k]=0);
+    answers.length = 0; current = 0; showScreen('start');
+  }
+
+  function renderQ(){
+    const q = QUESTIONS[current];
+    el('q-counter').textContent = current+1;
+    el('q-text').textContent = q.a + ' ／ ' + q.b; // concise; options show full
+    el('label-A').textContent = q.a;
+    el('label-B').textContent = q.b;
+  }
+
+  function startTimer(){
+    stopTimer(); tLeft = 15; const totalMs = 15000; const startAt = performance.now();
+    el('sec').textContent = String(tLeft);
+    const tick = ()=>{
+      const elapsed = performance.now() - startAt;
+      const remain = Math.max(0, totalMs - elapsed);
+      const s = Math.ceil(remain/1000);
+      if (s !== tLeft){ tLeft = s; el('sec').textContent = String(s); }
+      const pct = (elapsed/totalMs)*100; el('bar').style.width = Math.min(100, pct)+"%";
+      if (remain <= 0){ stopTimer(); pick('skip'); } else { timer = requestAnimationFrame(tick); }
+    };
+    timer = requestAnimationFrame(tick);
+  }
+  function stopTimer(){ if (timer){ cancelAnimationFrame(timer); timer=null; } }
+
+  function pick(choice){
+    // record
+    const q = QUESTIONS[current];
+    answers.push({ id:q.id, axis:q.axis, choice });
+    if (choice === 'A' || choice === 'B'){
+      const label = AXIS_LABEL[q.axis][choice];
+      counts[label] = (counts[label]||0)+1;
+    }
+
+    // flash next
+    next();
+  }
+
+  function next(){
+    stopTimer();
+    if (current < total-1){
+      current++; renderQ(); startTimer();
+    } else {
+      // done
+      showResult();
+    }
+  }
+
+  function computeResult(){
+    // Base counts
+    const R_base = counts.R, L_base = counts.L;
+    const F = counts.F, S = counts.S;
+    const K = counts.K, C = counts.C;
+
+    const Q = counts.Q, M = counts.M;
+    const Salt = counts.Salt, Sauce = counts.Sauce;
+    const Light = counts.Light, Hearty = counts.Hearty;
+
+    // Adjust RL only
+    const R_adj = (Q>=2?1:0) + (Salt>=2?1:0) + (Light>=2?1:0);
+    const L_adj = (M>=2?1:0) + (Sauce>=2?1:0) + (Hearty>=2?1:0);
+
+    const Rf = R_base + R_adj;
+    const Lf = L_base + L_adj;
+
+    const RL = (Rf >= Lf) ? 'R' : 'L'; // tie -> A side(R) by spec
+    const FS = (F >= S) ? 'F' : 'S';
+    const KC = (K >= C) ? 'K' : 'C';
+
+    const code = `${RL}-${FS}-${KC}`;
+    const name = TYPE_NAMES[code] || '不明';
+
+    const tagTexture = (Q >= M) ? '噛み応え' : 'とろけ';
+    const tagFlavor  = (Salt >= Sauce) ? '塩派' : 'ソース派';
+    const tagAfter   = (Light >= Hearty) ? '軽やか' : '満足';
+
+    return { code, name, R_base, L_base, F, S, K, C, Q, M, Salt, Sauce, Light, Hearty, R_adj, L_adj, Rf, Lf, tagTexture, tagFlavor, tagAfter };
+  }
+
+  function allTypeCodes(){
+    return Object.keys(TYPE_NAMES);
+  }
+
+  function parseCode(code){
+    const [a,b,c] = code.split('-'); return {RL:a, FS:b, KC:c};
+  }
+
+  function compatLists(code){
+    const mine = parseCode(code);
+    const comp=[], sim=[];
+    for (const t of allTypeCodes()){
+      if (t===code) { sim.push(t); continue; }
+      const other = parseCode(t);
+      let oppMatches = 0, same = 0;
+      if (other.RL === OPP[mine.RL]) oppMatches++; if (other.FS === OPP[mine.FS]) oppMatches++; if (other.KC === OPP[mine.KC]) oppMatches++;
+      if (other.RL === mine.RL) same++; if (other.FS === mine.FS) same++; if (other.KC === mine.KC) same++;
+      if (oppMatches >= 2) comp.push(t);
+      if (same >= 2) sim.push(t);
+    }
+    // Map to name(code)
+    const map = arr => arr.map(c => `${TYPE_NAMES[c]}(${c})`).join('、 ');
+    return { compStr: map(comp), simStr: map(sim) };
+  }
+
+  function showResult(){
+    const r = computeResult();
+    showScreen('result');
+    el('r-type-name').textContent = r.name;
+    el('r-type-code').textContent = r.code;
+    el('tag-texture').textContent = r.tagTexture;
+    el('tag-flavor').textContent = r.tagFlavor;
+    el('tag-after').textContent = r.tagAfter;
+
+    const { compStr, simStr } = compatLists(r.code);
+    el('r-compat-complement').textContent = compStr;
+    el('r-compat-similar').textContent = simStr;
+
+    const detail = [
+      `R/L base: R=${r.R_base}, L=${r.L_base}  adj: R+${r.R_adj}, L+${r.L_adj}  → Rf=${r.Rf}, Lf=${r.Lf}`,
+      `F/S: F=${r.F}, S=${r.S}`,
+      `K/C: K=${r.K}, C=${r.C}`,
+      `Texture: Q=${r.Q}, M=${r.M}  Flavor: Salt=${r.Salt}, Sauce=${r.Sauce}  After: Light=${r.Light}, Hearty=${r.Hearty}`,
+      `Tags: ${r.tagTexture}・${r.tagFlavor}・${r.tagAfter}`,
+    ].join('\n');
+    el('r-detail').textContent = detail;
+
+    // Export JSON
+    const payload = {
+      type: { code:r.code, name:r.name },
+      tags: { texture:r.tagTexture, flavor:r.tagFlavor, after:r.tagAfter },
+      counts: { R:r.R_base, L:r.L_base, F:r.F, S:r.S, K:r.K, C:r.C, Q:r.Q, M:r.M, Salt:r.Salt, Sauce:r.Sauce, Light:r.Light, Hearty:r.Hearty },
+      adjusted: { Rf:r.Rf, Lf:r.Lf, R_adj:r.R_adj, L_adj:r.L_adj },
+      answers,
+      generatedAt: new Date().toISOString()
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = el('btn-export');
+    a.href = url; a.download = `MEAT-BTI_${r.code}.json`;
+  }
+
+  async function copyResult(){
+    const name = el('r-type-name').textContent;
+    const code = el('r-type-code').textContent;
+    const tags = [el('tag-texture').textContent, el('tag-flavor').textContent, el('tag-after').textContent].join('・');
+    const text = `MEAT-BTI v2\n部位タイプ：${name}（${code}）\nタグ：${tags}`;
+    try{ await navigator.clipboard.writeText(text); el('btn-copy').textContent = 'コピーしました！'; setTimeout(()=>el('btn-copy').textContent='結果をコピー', 1600); }catch(err){ alert('コピーに失敗しました'); }
+  }
+
+  // Initial screen
+  showScreen('start');
+  </script>
+</body>
+</html>
