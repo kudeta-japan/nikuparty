@@ -1,19 +1,30 @@
+<!-- ===== FILE: /index.html ===== -->
 <!doctype html>
 <html lang="ja">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ニクパーティ｜肉も恋も、ジューシーな夜</title>
-  <meta name="description" content="11/15(金) KU-DETA。肉ビュッフェ＆フリードリンク。MEAT TYPE 8の簡易診断と最後の相思相愛発表で、恋も友情もつながる夜。20–40歳独身限定・定員50名。"/>
-  <meta property="og:title" content="ニクパーティ｜肉も恋も、ジューシーな夜" />
-  <meta property="og:description" content="11/15(金) KU-DETA。肉ビュッフェ＆フリードリンク。MEAT TYPE 8 簡易診断＆終盤1人指名→相思相愛のみ発表。定員50名。" />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://kudeta-japan.github.io/nikuparty/assets/og.jpg" />
-  <meta property="og:url" content="https://kudeta-japan.github.io/nikuparty/" />
+  <meta name="description" content="11/15(金) KU-DETA。肉ビュッフェ＆フリードリンク。MEAT TYPE 8 簡易診断と、終盤の1人指名→相思相愛だけ発表。20–40歳独身・定員50名（25×25）。"/>
+  <meta property="og:title" content="ニクパーティ｜肉も恋も、ジューシーな夜"/>
+  <meta property="og:description" content="KU-DETAで“美味しい出会い”。肉ビュッフェ＆フリードリンク、ミニ診断、相思相愛だけ発表。"/>
+  <!-- <meta property="og:image" content="https://kudeta-japan.github.io/nikuparty/assets/og.jpg"/>  画像決まり次第でOK -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://kudeta-japan.github.io/nikuparty/"/>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-V39MNGQD5H"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-V39MNGQD5H');
+  </script>
+
   <style>
-    :root{--bg:#0b0c10;--panel:#0f1219;--ink:#f5f7fb;--muted:#b6c0cf;--acc:#ff6b57;--gold:#f1c40f;--bd:#1c1f27}
+    :root{--bg:#0b0c10;--panel:#101218;--ink:#f5f7fb;--muted:#b6c0cf;--acc:#ff6b57;--gold:#f1c40f;--bd:#1c1f27}
     html,body{height:100%}
-    body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans JP","Hiragino Kaku Gothic ProN","Meiryo",sans-serif;letter-spacing:.02em}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,'Noto Sans JP','Hiragino Kaku Gothic ProN','Meiryo',sans-serif;letter-spacing:.02em}
     .wrap{width:min(1000px,100%);margin:0 auto;padding:20px}
     .hero{padding:56px 20px 32px;background:radial-gradient(1200px 600px at 70% -10%,rgba(255,107,87,.25),transparent),linear-gradient(180deg,#0b0c10,#0b0c10)}
     h1{font-size:clamp(28px,5.5vw,48px);line-height:1.15;margin:0 0 8px;font-weight:900}
@@ -27,9 +38,6 @@
     h3{font-size:16px;margin:12px 0 6px;color:#dce4f0}
     .muted{color:var(--muted)}
     .badge{display:inline-block;padding:4px 8px;border:1px solid #2a3140;border-radius:999px;margin-right:8px;color:var(--muted);font-size:12px}
-    .price{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    .price .box{background:#0e1118;border:1px solid #202430;border-radius:12px;padding:10px}
-    .box strong{font-size:18px}
     table{width:100%;border-collapse:separate;border-spacing:0 6px}
     td,th{padding:8px 10px;text-align:right}
     th:first-child,td:first-child{text-align:left}
@@ -42,12 +50,11 @@
     .center{text-align:center}
     .foot{color:var(--muted);font-size:12px}
     .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#121726;border:1px solid #22283a;margin-right:6px}
-    .kpi li{margin:4px 0;color:var(--muted)}
     .note{font-size:12px;color:var(--muted)}
+    .price-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .box{background:#0e1118;border:1px solid #202430;border-radius:12px;padding:10px}
+    .box strong{font-size:18px}
   </style>
-  <!-- GA4: 置き換え用 -->
-  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXX');</script> -->
 </head>
 <body>
   <header class="hero">
@@ -57,8 +64,9 @@
           <h1>肉も恋も、ジューシーな夜</h1>
           <p class="sub">「いいね」の数より、笑い声の数。KU-DETAが仕掛ける“美味しい出会い”で、恋も友情もつながる夜へ。</p>
           <p class="muted" style="margin-top:10px">11/15 (金) <strong>18:30 OPEN / 19:00 START / 21:00 CLOSE</strong> @ KU-DETA<br>20–40歳の独身男女／定員 <strong>50名（25×25）</strong></p>
-          <div style="display:flex;gap:8px;margin-top:12px">
-            <a href="#entry" class="btn primary" onclick="gtag && gtag('event','cta_click',{location:'hero'})">申し込む</a>
+          <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+            <a href="#entry" class="btn primary" onclick="window.gtag && gtag('event','cta_click',{location:'hero'})">申し込む</a>
+            <a href="./meat-bti/" class="btn" onclick="window.gtag && gtag('event','diagnostic_start',{from:'hero'})">簡易診断を試す</a>
             <a href="#about" class="btn">イベント概要</a>
           </div>
         </div>
@@ -67,7 +75,7 @@
           <ul class="muted" style="margin:6px 0 0 18px">
             <li>肉ビュッフェ</li>
             <li>フリードリンク</li>
-            <li>MEAT TYPE 8 簡易診断（正式版は後日リリース）</li>
+            <li>MEAT TYPE 8（簡易診断）</li>
             <li>終盤の「1人指名 → 相思相愛のみ発表」</li>
           </ul>
           <div style="margin-top:10px">
@@ -84,7 +92,7 @@
     <section id="about" class="grid cols-2" style="margin-top:16px">
       <div class="card">
         <h2>料金（当日支払い）</h2>
-        <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px">
+        <div class="price-grid">
           <div class="box">
             <strong>男性</strong>
             <table>
@@ -106,15 +114,14 @@
             </table>
           </div>
         </div>
-        <p class="note">※ 当日支払い（現金／QR決済）／早割 10/20 までの特典は近日公開</p>
+        <p class="note">※ 当日支払い（現金／QR決済）／早割 10/20 は特典検討中。男女混合グループ申込OK。</p>
       </div>
       <div class="card">
-        <h2>会場</h2>
-        <p class="muted">KU-DETA（地図リンクは後日掲載）</p>
-        <h3>ターゲット</h3>
-        <p class="muted">20–40歳の独身男女。初参加歓迎、友人同伴OK。</p>
+        <h2>会場・対象</h2>
+        <p class="muted">KU-DETA（岐阜市）※地図リンクは後日掲載</p>
+        <p class="muted">対象：20–40歳の独身の方／定員50名（男性25・女性25）</p>
         <h3>ドレスコード</h3>
-        <p class="muted">少しラグジュアリー。スマートカジュアル推奨。</p>
+        <p class="muted">少しラグジュアリーなスマートカジュアル推奨（岐阜らしい上品カジュアルでOK）。</p>
       </div>
     </section>
 
@@ -122,8 +129,8 @@
       <div class="card">
         <h2>体験コンテンツ</h2>
         <p><span class="pill">MEAT TYPE 8（簡易版）</span> <span class="pill">お肉×相性の会話の糸口</span></p>
-        <p class="muted">当日のミニ診断でタイプ（ヒレ／サーロイン／リブロース／ザブトン／ランプ／イチボ／タン／シャトーブリアン）を判定。結果カードには「相性No.1（1名）」だけを表示します。</p>
-        <p class="muted">終盤は1人だけ指名を送信。<strong>相思相愛のペアだけ</strong>発表します。</p>
+        <p class="muted">当日のミニ診断でタイプ（ヒレ／サーロイン／リブロース／ザブトン／ランプ／イチボ／タン／シャトーブリアン／ハラミ／カルビ／肩ロース／ミスジ）を判定。結果カードには<strong>「相性No.1（1名）」だけ</strong>表示します。</p>
+        <p class="muted">終盤は1人だけ指名を送信。<strong>相思相愛のペアだけ</strong>発表します（投票の詳細表記は行いません）。</p>
       </div>
       <div class="card">
         <h2>スケジュール</h2>
@@ -138,99 +145,86 @@
 
     <section id="kpi" class="card" style="margin-top:16px">
       <h2>目標と計測（GA）</h2>
-      <ul class="kpi">
-        <li>申込数：<strong>50人</strong>（定員）</li>
-        <li>CVR：LP訪問→送信（Formspree）<strong>◯◯%</strong>（初期値）</li>
+      <ul class="muted">
+        <li>申込数：<strong>50人</strong>（男性25・女性25）</li>
         <li>流入：Instagram/TikTok（参考：チーズパーティ Reels 6投稿＝25,000再生）</li>
-        <li>GAイベント：<code>cta_click</code>（位置: hero/footer）、<code>form_submit</code>、<code>copy_share</code> など</li>
+        <li>イベント：<code>cta_click</code>、<code>form_submit</code>、<code>diagnostic_start</code></li>
       </ul>
-      <p class="note">※ GA4の測定IDを入れ次第、クリック計測が稼働します。</p>
     </section>
 
     <section id="entry" class="card" style="margin-top:16px">
       <h2>申し込み（Formspree）</h2>
-      <form action="https://formspree.io/f/XXXXXXXX" method="POST" onsubmit="gtag && gtag('event','form_submit')">
+      <form action="https://formspree.io/f/mblzajvd" method="POST" onsubmit="window.gtag && gtag('event','form_submit')">
+        <input type="hidden" name="_subject" value="ニクパーティ申込 (LP)"/>
+        <input type="hidden" name="_template" value="table"/>
+        <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off"/>
         <div class="grid" style="grid-template-columns:1fr 1fr;gap:8px">
           <div>
-            <label>お名前</label>
+            <label>代表者名</label>
             <input name="name" placeholder="例：山田太郎" required style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--bd);background:#141721;color:var(--ink)">
           </div>
           <div>
-            <label>性別</label>
-            <select name="gender" required style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--bd);background:#141721;color:var(--ink)">
-              <option value="">選択してください</option>
-              <option>男性</option>
-              <option>女性</option>
-            </select>
+            <label>連絡先（メール or LINE ID）</label>
+            <input name="contact" placeholder="例：mail@example.com / LINE: @id" required style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--bd);background:#141721;color:var(--ink)">
           </div>
         </div>
+
         <div class="grid" style="grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
           <div>
-            <label>参加人数（同伴含む）</label>
-            <select name="party" id="party" required style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--bd);background:#141721;color:var(--ink)">
-              <option value="1">1名</option>
-              <option value="2">2名</option>
-              <option value="3">3名</option>
-              <option value="4">4名</option>
-              <option value="5">5名</option>
+            <label>男性人数</label>
+            <select id="men" name="men" required style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--bd);background:#141721;color:var(--ink)">
+              <option value="0">0名</option><option value="1">1名</option><option value="2">2名</option><option value="3">3名</option><option value="4">4名</option><option value="5">5名</option>
             </select>
           </div>
           <div>
-            <label>代表者の連絡先（メール or LINE ID）</label>
-            <input name="contact" placeholder="例：mail@example.com" required style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--bd);background:#141721;color:var(--ink)">
-          </div>
-        </div>
-        <div class="grid" style="grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-          <div>
-            <label>希望グループ（男性/女性）</label>
-            <select name="group_gender" id="group_gender" required style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--bd);background:#141721;color:var(--ink)">
-              <option>男性</option>
-              <option>女性</option>
+            <label>女性人数</label>
+            <select id="women" name="women" required style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--bd);background:#141721;color:var(--ink)">
+              <option value="0">0名</option><option value="1">1名</option><option value="2">2名</option><option value="3">3名</option><option value="4">4名</option><option value="5">5名</option>
             </select>
           </div>
-          <div>
-            <label>概算料金</label>
-            <div id="price-est" class="badge">—</div>
-          </div>
         </div>
+        <div style="margin-top:8px">
+          <label>概算料金</label>
+          <div id="price-est" class="badge">—</div>
+        </div>
+
         <div style="margin-top:10px">
           <label>メモ（任意）</label>
           <textarea name="note" rows="3" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--bd);background:#141721;color:var(--ink)" placeholder="同伴者名や質問など"></textarea>
         </div>
-        <div style="display:flex;gap:8px;align-items:center;margin-top:12px">
+        <div style="display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap">
           <button class="btn primary" type="submit">送信して仮予約</button>
-          <span class="muted">※ 当日支払い／キャンセルポリシーは前回と同様</span>
+          <span class="muted">※ 当日支払い／キャンセル：当日100％・3日前50％／男女混合OK／年齢確認あり</span>
         </div>
       </form>
     </section>
 
     <section id="faq" class="card" style="margin-top:16px">
-      <h2>FAQ</h2>
-      <dl class="faq">
-        <dt>Q. 1人参加でも大丈夫？</dt>
-        <dd>もちろんOKです。初参加の方が多いのでご安心ください。乾杯後はスタッフが会話のきっかけを作ります。</dd>
-        <dt>Q. 支払い方法は？</dt>
-        <dd>当日支払い（現金／QR決済）です。早割などの特典は10/20までに発表します。</dd>
-        <dt>Q. 途中参加・早退は可能？</dt>
-        <dd>可能です。受付のスタッフにお声掛けください。</dd>
-        <dt>Q. 服装は？</dt>
-        <dd>少しラグジュアリーなスマートカジュアルを推奨します。</dd>
-      </dl>
+      <h2>注意事項（簡潔）</h2>
+      <ul class="muted" style="margin:6px 0 0 18px">
+        <li>20–40歳の独身限定。<strong>当日、年齢確認を行います（20歳以上）</strong>。</li>
+        <li>会場・料理中心での撮影を行います。<strong>顔出しNGの方は受付でお申し出ください</strong>。</li>
+        <li>相思相愛のみ発表。一方通行の投票は公開されません（詳細表記なし）。</li>
+        <li>キャンセルポリシー：<strong>当日100%／3日前50%</strong>。</li>
+        <li>定員に達し次第、受付終了（男性25・女性25）。</li>
+      </ul>
     </section>
 
     <section id="contact" class="grid cols-2" style="margin-top:16px">
       <div class="card">
-        <h2>SNS</h2>
-        <p class="muted"><a href="#">Instagram</a> ／ <a href="#">TikTok</a></p>
-        <p class="note">※ リール連動で告知予定。GAで流入・CVRを計測します。</p>
+        <h2>お問い合わせ</h2>
+        <p class="muted"><a href="mailto:kudeta.kanou@gmail.com">kudeta.kanou@gmail.com</a></p>
+        <h3>SNS</h3>
+        <p class="muted"><a href="https://instagram.com/ku_deta_gifu" target="_blank" rel="noopener">Instagram @ku_deta_gifu</a> ／ TikTok（準備中）</p>
       </div>
       <div class="card">
-        <h2>注意事項（簡潔）</h2>
-        <ul class="muted" style="margin:6px 0 0 18px">
-          <li>20–40歳の独身限定。ナンパ・強引な勧誘はお断りします。</li>
-          <li>相思相愛のみ発表。一方通行の投票は公開されません。</li>
-          <li>会場・他参加者への配慮をお願いします。</li>
-        </ul>
+        <h2>よくある質問</h2>
+        <dl class="faq">
+          <dt>Q. 1人参加でも大丈夫？</dt>
+          <dd>もちろんOKです。乾杯後はスタッフが会話のきっかけを作ります。</dd>
+          <dt>Q. 服装は？</dt>
+          <dd>少しラグジュアリーなスマートカジュアルを推奨（岐阜らしい上品カジュアルでOK）。</dd>
+        </dl>
       </div>
     </section>
 
@@ -240,28 +234,82 @@
   <!-- 常時表示CTA -->
   <div class="sticky-cta">
     <div class="wrap cta-row">
-      <div class="muted">11/15(金) KU-DETA｜定員50名｜肉ビュッフェ&フリードリンク</div>
-      <a href="#entry" class="btn primary" onclick="gtag && gtag('event','cta_click',{location:'sticky'})">申し込む</a>
+      <div class="muted">11/15(金) KU-DETA｜定員50名（25×25）｜肉ビュッフェ&フリードリンク</div>
+      <a href="#entry" class="btn primary" onclick="window.gtag && gtag('event','cta_click',{location:'sticky'})">申し込む</a>
     </div>
   </div>
 
 <script>
-// 料金概算（当日支払い）
-const male = {1:6500,2:12500,3:18500,4:24500,5:30500};
-const female = {1:3500,2:6500,3:9500,4:12500,5:15500};
-const party = document.getElementById('party');
-const group = document.getElementById('group_gender');
-const est = document.getElementById('price-est');
-function updatePrice(){
-  const n = Number(party.value||1);
-  const g = group.value==='女性' ? 'female' : 'male';
-  const total = (g==='female'?female:male)[n];
-  const one = Math.round(total/n);
-  est.textContent = `合計 ¥${total.toLocaleString()}（1人あたり ¥${one.toLocaleString()}）`;
-}
-party?.addEventListener('change',updatePrice);
-group?.addEventListener('change',updatePrice);
-updatePrice();
+// 料金概算（男女内訳）
+const priceMen   = {1:6500, 2:12500, 3:18500, 4:24500, 5:30500};
+const priceWomen = {1:3500, 2: 6500, 3: 9500, 4:12500, 5:15500};
+const selMen = document.getElementById('men');
+const selWomen = document.getElementById('women');
+const estBox = document.getElementById('price-est');
+function calcGroupTotal(tbl, n){ if(n===0) return 0; if(n<=5) return tbl[n]; const unit = tbl[1]; return tbl[5] + (n-5)*unit; }
+function updateEstimate(){ const m=Number(selMen.value||0), w=Number(selWomen.value||0); const tM=calcGroupTotal(priceMen,m), tW=calcGroupTotal(priceWomen,w); const total=tM+tW; const heads=m+w; const per=heads>0?Math.round(total/heads):0; estBox.textContent = heads>0?`合計 ¥${total.toLocaleString()}（${heads}名｜1人あたり 約¥${per.toLocaleString()}）`:'—'; }
+selMen?.addEventListener('change',updateEstimate); selWomen?.addEventListener('change',updateEstimate); updateEstimate();
 </script>
+</body>
+</html>
+
+
+<!-- ===== FILE: /checkin/index.html ===== -->
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>受付チェックイン｜ニクパーティ</title>
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-V39MNGQD5H"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-V39MNGQD5H');
+  </script>
+  <style>
+    body{background:#0b0c10;color:#f4f7fb;font-family:system-ui,-apple-system,'Noto Sans JP',sans-serif;margin:0}
+    .wrap{width:min(560px,100%);margin:0 auto;padding:24px}
+    .card{background:#101218;border:1px solid #1c1f27;border-radius:14px;padding:16px}
+    label{display:block;margin:10px 0 6px}
+    input,select{width:100%;padding:10px;border-radius:10px;border:1px solid #1c1f27;background:#141721;color:#f4f7fb}
+    .btn{margin-top:12px;padding:10px 14px;border-radius:10px;background:linear-gradient(180deg,#ff6b57,#ff4e36);color:#111;border:none;font-weight:800;cursor:pointer}
+    .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#131726;border:1px solid #1c1f27;margin-right:6px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1 style="margin:0 0 8px">受付チェックイン</h1>
+    <p class="badge">11/15(金) KU-DETA</p>
+    <div class="card">
+      <form action="https://formspree.io/f/mblzajvd" method="POST" onsubmit="window.gtag && gtag('event','form_submit',{form:'checkin'})">
+        <input type="hidden" name="_subject" value="CHECKIN: ニクパーティ 2024-11-15">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="form_type" value="checkin">
+        <input type="hidden" id="event_code" name="event_code" value="20241115">
+        <label>代表者名（または申込名）</label>
+        <input name="checkin_name" required placeholder="例：山田太郎">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div><label>男性人数</label>
+            <select name="checkin_men"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+          </div>
+          <div><label>女性人数</label>
+            <select name="checkin_women"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+          </div>
+        </div>
+        <label style="display:flex;gap:8px;align-items:center;margin-top:10px">
+          <input type="checkbox" name="age_ok" required>私は20歳以上です（年齢確認に同意）
+        </label>
+        <button class="btn" type="submit">送信してチェックイン</button>
+      </form>
+    </div>
+    <p style="color:#b6c0cf;margin-top:10px">※ 代表者のみ送信でOK。スタッフに送信完了画面をご提示ください。</p>
+  </div>
+  <script>
+    // e=YYYYMMDD がURLにあれば hidden に反映
+    const p=new URLSearchParams(location.search); const e=p.get('e'); if(e){ document.getElementById('event_code').value=e; }
+  </script>
 </body>
 </html>
