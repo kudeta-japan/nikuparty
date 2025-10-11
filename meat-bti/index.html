@@ -3,8 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MEAT-BTI v6.2｜5択×12タイプ診断（味9＋シーン9）</title>
+  <title>MEAT-BTI v6.3｜5択×12タイプ診断（味9＋シーン9）</title>
   <meta name="description" content="18問×15秒。5段階リッカート＋無作為順・左右入替・一貫性チェック。12タイプ判定（ヒレ/サーロイン/リブロース/ザブトン/ランプ/イチボ/タン/シャトーブリアン/ハラミ/カルビ/肩ロース/ミスジ）と相性No.1を表示。味の嗜好9問＋食べるシーン9問。"/>
+
+  <!-- GA4（サイト共通：G-V39MNGQD5H） -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-V39MNGQD5H"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-V39MNGQD5H');
+  </script>
+
   <style>
     :root{
       --bg:#0b0c10; --panel:#101218; --ink:#f4f7fb; --muted:#b6c0cf;
@@ -70,15 +80,15 @@
   <main class="app">
     <div class="card">
       <header>
-        <div class="brand"><div class="logo">🥩</div><div class="title">MEAT-BTI v6.2（見やすさUP：左右カード＋大文字）</div></div>
-        <button id="btn-start" class="btn primary">スタート</button>
+        <div class="brand"><div class="logo">🥩</div><div class="title">MEAT-BTI v6.3（読みやすさUP＋Start修正）</div></div>
+        <button id="btn-start" class="btn primary" data-action="start">診断する</button>
       </header>
       <div class="wrap" id="stage">
         <!-- START -->
         <section id="screen-start">
           <h2 style="margin:0 0 6px">あなたはどの“部位タイプ”？</h2>
           <p style="color:var(--muted);margin:0 0 12px">18問／1問15秒。<strong>5段階</strong>で回答。<strong>無作為順・左右入替</strong>でバイアスを低減。左右の文章を<strong>大きなカード</strong>で表示し、判断しやすくしました。</p>
-          <div><button class="btn primary" id="btn-start-2">診断をはじめる</button></div>
+          <div><button class="btn primary" id="btn-start-2" data-action="start">診断する</button></div>
         </section>
 
         <!-- QUIZ -->
@@ -106,7 +116,7 @@
           <div class="progress-note">※未回答は15秒で自動「どちらでもない」。キーボード <b>1–5</b> でも選べます。</div>
         </section>
 
-        <!-- RESULT（v6.1と同じUI） -->
+        <!-- RESULT -->
         <section id="screen-result" hidden>
           <div class="result">
             <div class="big" id="r-title">診断結果</div>
@@ -157,7 +167,7 @@
           </div>
         </section>
       </div>
-      <footer>© KU-DETA / ニクパーティ — MEAT-BTI v6.2</footer>
+      <footer>© KU-DETA / ニクパーティ — MEAT-BTI v6.3</footer>
     </div>
   </main>
 
@@ -233,7 +243,14 @@ const screenStart=el('screen-start'), screenQuiz=el('screen-quiz'), screenResult
 
 function showScreen(which){screenStart.hidden=which!=='start';screenQuiz.hidden=which!=='quiz';screenResult.hidden=which!=='result';}
 function resetAll(){stopTimer();tLeft=15;el('sec').textContent='15';el('bar').style.width='0%';Object.keys(counts).forEach(k=>counts[k]=0);answers.length=0;rtimes.length=0;rl_items.length=0;fs_items.length=0;kc_items.length=0;current=0;showScreen('start');}
-function start(){resetAll();QUESTIONS=decorateBankRandomly([...BANK]).sort(()=>Math.random()-0.5);showScreen('quiz');el('q-total').textContent=QUESTIONS.length;current=0;renderQ();startTimer();}
+function start(){
+  resetAll();
+  // GA: 診断開始イベント
+  window.gtag && gtag('event','diagnostic_start',{from:'meat-bti'});
+  QUESTIONS=decorateBankRandomly([...BANK]).sort(()=>Math.random()-0.5);
+  showScreen('quiz');
+  el('q-total').textContent=QUESTIONS.length;
+  current=0;renderQ();startTimer();}
 
 function renderQ(){
   const q=QUESTIONS[current];
@@ -266,4 +283,60 @@ function computeResult(){
   let name=TYPE_NAMES[code]||'不明';
   const isCB=(code==='R-F-K') && (M>=2 && Salt>=2 && Light>=2) && (R_base>=2.5 && F>=2 && K>=2);
   if(isCB) name='シャトーブリアン';
-  if(!isCB && code==='R-F-C' && (Q>=2 || Hearty>=2
+  if(!isCB && code==='R-F-C' && (Q>=2 || Hearty>=2) && Sauce>=2){ name='ハラミ'; }
+  if(code==='L-S-C'){ name='カルビ'; }
+  if(!isCB && code==='L-F-K' && Q>=2 && Hearty<=1){ name='肩ロース'; }
+  if(!isCB && (code==='R-S-K' || code==='R-F-K') && M>=2 && Salt>=2 && Light>=1){ name='ミスジ'; }
+
+  const tagTexture=(Q>=M)?'噛み応え':'とろけ';
+  const tagFlavor =(Salt>=Sauce)?'塩派':'ソース派';
+  const tagAfter  =(Light>=Hearty)?'軽やか':'満足';
+  return { code,name,R_base,L_base,F,S,K,C,Q,M,Salt,Sauce,Light,Hearty,R_adj,L_adj,Rf,Lf,tagTexture,tagFlavor,tagAfter };
+}
+
+function parseCode(code){const [a,b,c]=code.split('-');return {RL:a,FS:b,KC:c};}
+function allTypeCodes(){return Object.keys(TYPE_NAMES);} // 8コードで相性計算
+function bestMatch(code){const mine=parseCode(code);let best=null,bestScore=-1;for(const t of allTypeCodes()){if(t===code) continue;const other=parseCode(t);let opp=0,same=0;if(other.RL===OPP[mine.RL])opp++;if(other.FS===OPP[mine.FS])opp++;if(other.KC===OPP[mine.KC])opp++;if(other.RL===mine.RL)same++;if(other.FS===mine.FS)same++;if(other.KC===mine.KC)same++;const score=(opp>=2)?opp*10:(opp*10+same);if(score>bestScore){bestScore=score;best=t;}}return best;}
+
+/* ---- 信頼度ロジック ---- */
+function smoothedRatio(a,b,prior=1.2){const p=(a+prior)/(a+b+2*prior);return p;} 
+function axisConfidence(a,b){const p=smoothedRatio(a,b);return Math.max(p,1-p);} 
+function kr20(items){const k=items.length;if(k<2)return null;const mean=items.reduce((s,x)=>s+x,0)/k;const vari=items.reduce((s,x)=>s+(x-mean)**2,0)/k;const totalVar=k*mean*(1-mean);if(totalVar===0)return null;return (k/(k-1))*(1-(k*vari)/totalVar);} 
+function percentile(arr,p){const a=[...arr].sort((x,y)=>x-y);const i=Math.floor((a.length-1)*p);return a[i]??0;}
+
+function qualityAssess(r){
+  const confRL=axisConfidence(r.R_base,r.L_base); const confFS=axisConfidence(r.F,r.S); const confKC=axisConfidence(r.K,r.C);
+  const overall=Math.round(((confRL+confFS+confKC)/3)*100);
+  const alphaRL=kr20(rl_items), alphaFS=kr20(fs_items), alphaKC=kr20(kc_items);
+  const medRT=percentile(rtimes,0.5); const tooFast=rtimes.filter(ms=>ms<400).length>=4; const posBias=Math.max(answers.filter(a=>a.uiVal>0).length,answers.filter(a=>a.uiVal<0).length)/answers.length;
+  let notes=[]; if(alphaRL!==null && alphaRL<0.4) notes.push('R/Lの回答一貫性がやや低いかも'); if(alphaFS!==null && alphaFS<0.4) notes.push('F/Sの回答一貫性がやや低いかも'); if(alphaKC!==null && alphaKC<0.4) notes.push('K/Cの回答一貫性がやや低いかも'); if(tooFast) notes.push('非常に速い回答が多い（連打の可能性）'); if(posBias>0.8) notes.push('左/右どちらかに偏った選択');
+  return {confRL,confFS,confKC,overall,alphaRL,alphaFS,alphaKC,medRT,tooFast,posBias,notes};
+}
+
+function setMeter(id,pct){el(id).style.width=pct+'%';const tId=id+'-text';if(el(tId)) el(tId).textContent=Math.round(pct)+'%';}
+
+function showResult(){const r=computeResult();showScreen('result');el('r-type-name').textContent=r.name;el('r-type-code').textContent=r.code;el('tag-texture').textContent=r.tagTexture;el('tag-flavor').textContent=r.tagFlavor;el('tag-after').textContent=r.tagAfter;el('r-desc').textContent=DESCRIPTIONS[r.name]||'';const bm=bestMatch(r.code);el('r-best').textContent=bm?`${TYPE_NAMES[bm]}（${bm}）`:'—';const qa=qualityAssess(r);setMeter('conf-overall',qa.overall);el('conf-overall-text').textContent=`${qa.overall}% ${qa.overall>=75?'（高）':qa.overall>=60?'（中）':'（低）'}`;setMeter('conf-rl',qa.confRL*100);el('conf-rl-text').textContent=`${Math.round(qa.confRL*100)}%`;setMeter('conf-fs',qa.confFS*100);el('conf-fs-text').textContent=`${Math.round(qa.confFS*100)}%`;setMeter('conf-kc',qa.confKC*100);el('conf-kc-text').textContent=`${Math.round(qa.confKC*100)}%`;let hint=[];if(qa.alphaRL!==null) hint.push(`R/L 一貫性 α=${qa.alphaRL.toFixed(2)}`);if(qa.alphaFS!==null) hint.push(`F/S 一貫性 α=${qa.alphaFS.toFixed(2)}`);if(qa.alphaKC!==null) hint.push(`K/C 一貫性 α=${qa.alphaKC.toFixed(2)}`);hint.push(`中央値の回答時間 ${Math.round(qa.medRT)}ms`);if(qa.notes.length){hint.push('注意: '+qa.notes.join(' / '));}el('quality-hints').textContent=hint.join('　');const detail=[`R/L base: R=${r.R_base.toFixed(1)}, L=${r.L_base.toFixed(1)}  adj: R+${r.R_adj}, L+${r.L_adj}  → Rf=${r.Rf.toFixed(1)}, Lf=${r.Lf.toFixed(1)}`,`F/S: F=${r.F.toFixed(1)}, S=${r.S.toFixed(1)}`,`K/C: K=${r.K.toFixed(1)}, C=${r.C.toFixed(1)}`,`Texture: Q=${r.Q.toFixed(1)}, M=${r.M.toFixed(1)}  Flavor: Salt=${r.Salt.toFixed(1)}, Sauce=${r.Sauce.toFixed(1)}  After: Light=${r.Light.toFixed(1)}, Hearty=${r.Hearty.toFixed(1)}`,`Tags: ${r.tagTexture}・${r.tagFlavor}・${r.tagAfter}`].join('\n');el('r-detail').textContent=detail;const payload={type:{code:r.code,name:r.name},tags:{texture:r.tagTexture,flavor:r.tagFlavor,after:r.tagAfter},counts:{R:r.R_base,L:r.L_base,F:r.F,S:r.S,K:r.K,C:r.C,Q:r.Q,M:r.M,Salt:r.Salt,Sauce:r.Sauce,Light:r.Light,Hearty:r.Hearty},adjusted:{Rf:r.Rf,Lf:r.Lf,R_adj:r.R_adj,L_adj:r.L_adj},quality:qa,answers,generatedAt:new Date().toISOString()};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=el('btn-export');a.href=url;a.download=`MEAT-BTI_${r.code}.json`;}
+
+async function copyResult(){const name=el('r-type-name').textContent;const code=el('r-type-code').textContent;const tags=[el('tag-texture').textContent,el('tag-flavor').textContent,el('tag-after').textContent].join('・');const text=`MEAT-BTI v6.3\n部位タイプ：${name}（${code}）\nタグ：${tags}`;try{await navigator.clipboard.writeText(text);el('btn-copy').textContent='コピーしました！';setTimeout(()=>el('btn-copy').textContent='結果をコピー',1500);}catch{alert('コピーに失敗しました');}}
+
+// クリック委任：Startボタン（#btn-start / #btn-start-2 / data-action="start"）をまとめて拾う
+addEventListener('click',(ev)=>{ const t=ev.target.closest('#btn-start, #btn-start-2, [data-action="start"]'); if(!t) return; ev.preventDefault(); start(); });
+
+['1','2','3','4','5'].forEach(i=>document.getElementById('btn-'+i).addEventListener('mouseenter',()=>{if(i==='1'||i==='2')setHover('L'); else if(i==='4'||i==='5')setHover('R'); else setHover();}));
+['1','2','3','4','5'].forEach(i=>document.getElementById('btn-'+i).addEventListener('mouseleave',()=>setHover()));
+['1','2','3','4','5'].forEach(i=>document.getElementById('btn-'+i).addEventListener('click',e=>pickLikert(Number(e.currentTarget.dataset.val))));
+
+// 左右の大きなカードをクリック→「やや左/やや右」をクイック選択
+el('ab-left').addEventListener('click',()=>pickLikert(1));
+el('ab-right').addEventListener('click',()=>pickLikert(-1));
+
+const retry=document.getElementById('btn-retry'); if(retry) retry.addEventListener('click',resetAll);
+const copy=document.getElementById('btn-copy'); if(copy) copy.addEventListener('click',copyResult);
+
+// keyboard shortcuts 1..5
+window.addEventListener('keydown',e=>{ if(screenQuiz.hidden) return; const map={'1':2,'2':1,'3':0,'4':-1,'5':-2}; if(map[e.key]!==undefined) pickLikert(map[e.key]); });
+
+showScreen('start');
+</script>
+</body>
+</html>
