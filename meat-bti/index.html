@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MEAT-BTI v6.3｜5択×12タイプ診断（味9＋シーン9）</title>
+  <title>MEAT-BTI v6.4｜5択×12タイプ診断（味9＋シーン9）</title>
   <meta name="description" content="18問×15秒。5段階リッカート＋無作為順・左右入替・一貫性チェック。12タイプ判定（ヒレ/サーロイン/リブロース/ザブトン/ランプ/イチボ/タン/シャトーブリアン/ハラミ/カルビ/肩ロース/ミスジ）と相性No.1を表示。味の嗜好9問＋食べるシーン9問。"/>
 
   <!-- GA4（サイト共通：G-V39MNGQD5H） -->
@@ -80,7 +80,7 @@
   <main class="app">
     <div class="card">
       <header>
-        <div class="brand"><div class="logo">🥩</div><div class="title">MEAT-BTI v6.3（読みやすさUP＋Start修正）</div></div>
+        <div class="brand"><div class="logo">🥩</div><div class="title">MEAT-BTI v6.4（分布調整・決定的タイブレーク）</div></div>
         <button id="btn-start" class="btn primary" data-action="start">診断する</button>
       </header>
       <div class="wrap" id="stage">
@@ -167,7 +167,7 @@
           </div>
         </section>
       </div>
-      <footer>© KU-DETA / ニクパーティ — MEAT-BTI v6.3</footer>
+      <footer>© KU-DETA / ニクパーティ — MEAT-BTI v6.4</footer>
     </div>
   </main>
 
@@ -271,26 +271,95 @@ function pickLikert(uiVal){const q=QUESTIONS[current];const elapsed=performance.
 
 function next(){stopTimer();if(current<QUESTIONS.length-1){current++;renderQ();startTimer();}else{showResult();}}
 
-/* ---- 判定ロジック（RL調整 & 12タイプ上書き） ---- */
+/* ===== 決定的タイブレーカー（ランダム不使用） ===== */
+function strongEdge(axis){
+  let edge = 0;
+  for (const a of answers) {
+    if (a.axis !== axis) continue;
+    if (a.valForA >= 2) edge += 1;       // A（左）に強く
+    else if (a.valForA <= -2) edge -= 1; // B（右）に強く
+  }
+  return edge;
+}
+
+function decideAxis(A_base, B_base, A_label, B_label, relatedA, relatedB, strongAxis) {
+  if (A_base > B_base) return A_label;
+  if (B_base > A_base) return B_label;
+  // 2) 関連指標の寄与（決定的）
+  const wA = A_base + relatedA;
+  const wB = B_base + relatedB;
+  if (wA > wB) return A_label;
+  if (wB > wA) return B_label;
+  // 3) 強い選択数の差でブレーク（それでも同点なら A）
+  const edge = strongEdge(strongAxis);
+  if (edge > 0) return A_label;
+  if (edge < 0) return B_label;
+  return A_label; // 完全同点はA
+}
+
+/* ---- 判定ロジック（分布調整版） ---- */
 function computeResult(){
-  const R_base=counts.R, L_base=counts.L; const F=counts.F, S=counts.S; const K=counts.K, C=counts.C;
-  const Q=counts.Q, M=counts.M; const Salt=counts.Salt, Sauce=counts.Sauce; const Light=counts.Light, Hearty=counts.Hearty;
+  const R_base=counts.R, L_base=counts.L;
+  const F=counts.F, S=counts.S;
+  const K=counts.K, C=counts.C;
+
+  const Q=counts.Q, M=counts.M;                // 食感：Q=噛み応え / M=とろけ
+  const Salt=counts.Salt, Sauce=counts.Sauce;  // 味付け：塩 vs ソース
+  const Light=counts.Light, Hearty=counts.Hearty; // 余白 vs 満足
+
+  // 軸補正（既存）
   const R_adj=(Q>=2?1:0)+(Salt>=2?1:0)+(Light>=2?1:0);
   const L_adj=(M>=2?1:0)+(Sauce>=2?1:0)+(Hearty>=2?1:0);
   const Rf=R_base+R_adj, Lf=L_base+L_adj;
-  const RL=(Rf>=Lf)?'R':'L'; const FS=(F>=S)?'F':'S'; const KC=(K>=C)?'K':'C';
+
+  // 軸の決定（同点はランダムではなく決定的にブレーク）
+  const RL = decideAxis(
+    Rf, Lf, 'R', 'L',
+    0.60*Q + 0.25*Salt + 0.15*Light,
+    0.60*M + 0.25*Sauce + 0.15*Hearty,
+    'RL'
+  );
+
+  const FS = decideAxis(
+    F, S, 'F', 'S',
+    0.50*Light + 0.30*Salt + 0.20*Q,
+    0.50*Hearty + 0.30*Sauce + 0.20*M,
+    'FS'
+  );
+
+  const KC = decideAxis(
+    K, C, 'K', 'C',
+    0.45*Salt + 0.25*Light + 0.15*Q,
+    0.45*Sauce + 0.25*Hearty + 0.15*M,
+    'KC'
+  );
+
   const code=`${RL}-${FS}-${KC}`;
   let name=TYPE_NAMES[code]||'不明';
-  const isCB=(code==='R-F-K') && (M>=2 && Salt>=2 && Light>=2) && (R_base>=2.5 && F>=2 && K>=2);
-  if(isCB) name='シャトーブリアン';
-  if(!isCB && code==='R-F-C' && (Q>=2 || Hearty>=2) && Sauce>=2){ name='ハラミ'; }
-  if(code==='L-S-C'){ name='カルビ'; }
-  if(!isCB && code==='L-F-K' && Q>=2 && Hearty<=1){ name='肩ロース'; }
-  if(!isCB && (code==='R-S-K' || code==='R-F-K') && M>=2 && Salt>=2 && Light>=1){ name='ミスジ'; }
+
+  // 差分（どれだけ強くその軸に傾いたか）
+  const dRL = Math.max(0, (RL==='R' ? Rf-Lf : Lf-Rf));
+  const dFS = Math.max(0, (FS==='F' ? F-S : S-F));
+  const dKC = Math.max(0, (KC==='K' ? K-C : C-K));
+
+  // ── レア枠判定（目標：シャトーブリアン ≈ 2%）
+  const isCB = (code==='R-F-K')
+    && (M>=2 && Salt>=2 && Light>=2)                 // 上品・質志向
+    && (dRL>=1.2 && dFS>=1.0 && dKC>=1.0);           // 軸差分が十分
+
+  if (isCB) {
+    name='シャトーブリアン';
+  } else {
+    // ほかの派生（頻度控えめ、均一性は大きく崩さない）
+    if (code==='R-F-C' && (Sauce>=2) && (Q>=1 || Hearty>=1)) name='ハラミ';
+    if (code==='L-F-K' && (Q>=2) && (Hearty<=1))             name='肩ロース';
+    if ((code==='R-S-K' || code==='R-F-K') && (M>=2) && (Salt>=2) && (Light>=1)) name='ミスジ';
+  }
 
   const tagTexture=(Q>=M)?'噛み応え':'とろけ';
   const tagFlavor =(Salt>=Sauce)?'塩派':'ソース派';
   const tagAfter  =(Light>=Hearty)?'軽やか':'満足';
+
   return { code,name,R_base,L_base,F,S,K,C,Q,M,Salt,Sauce,Light,Hearty,R_adj,L_adj,Rf,Lf,tagTexture,tagFlavor,tagAfter };
 }
 
@@ -317,7 +386,7 @@ function setMeter(id,pct){el(id).style.width=pct+'%';const tId=id+'-text';if(el(
 
 function showResult(){const r=computeResult();showScreen('result');el('r-type-name').textContent=r.name;el('r-type-code').textContent=r.code;el('tag-texture').textContent=r.tagTexture;el('tag-flavor').textContent=r.tagFlavor;el('tag-after').textContent=r.tagAfter;el('r-desc').textContent=DESCRIPTIONS[r.name]||'';const bm=bestMatch(r.code);el('r-best').textContent=bm?`${TYPE_NAMES[bm]}（${bm}）`:'—';const qa=qualityAssess(r);setMeter('conf-overall',qa.overall);el('conf-overall-text').textContent=`${qa.overall}% ${qa.overall>=75?'（高）':qa.overall>=60?'（中）':'（低）'}`;setMeter('conf-rl',qa.confRL*100);el('conf-rl-text').textContent=`${Math.round(qa.confRL*100)}%`;setMeter('conf-fs',qa.confFS*100);el('conf-fs-text').textContent=`${Math.round(qa.confFS*100)}%`;setMeter('conf-kc',qa.confKC*100);el('conf-kc-text').textContent=`${Math.round(qa.confKC*100)}%`;let hint=[];if(qa.alphaRL!==null) hint.push(`R/L 一貫性 α=${qa.alphaRL.toFixed(2)}`);if(qa.alphaFS!==null) hint.push(`F/S 一貫性 α=${qa.alphaFS.toFixed(2)}`);if(qa.alphaKC!==null) hint.push(`K/C 一貫性 α=${qa.alphaKC.toFixed(2)}`);hint.push(`中央値の回答時間 ${Math.round(qa.medRT)}ms`);if(qa.notes.length){hint.push('注意: '+qa.notes.join(' / '));}el('quality-hints').textContent=hint.join('　');const detail=[`R/L base: R=${r.R_base.toFixed(1)}, L=${r.L_base.toFixed(1)}  adj: R+${r.R_adj}, L+${r.L_adj}  → Rf=${r.Rf.toFixed(1)}, Lf=${r.Lf.toFixed(1)}`,`F/S: F=${r.F.toFixed(1)}, S=${r.S.toFixed(1)}`,`K/C: K=${r.K.toFixed(1)}, C=${r.C.toFixed(1)}`,`Texture: Q=${r.Q.toFixed(1)}, M=${r.M.toFixed(1)}  Flavor: Salt=${r.Salt.toFixed(1)}, Sauce=${r.Sauce.toFixed(1)}  After: Light=${r.Light.toFixed(1)}, Hearty=${r.Hearty.toFixed(1)}`,`Tags: ${r.tagTexture}・${r.tagFlavor}・${r.tagAfter}`].join('\n');el('r-detail').textContent=detail;const payload={type:{code:r.code,name:r.name},tags:{texture:r.tagTexture,flavor:r.tagFlavor,after:r.tagAfter},counts:{R:r.R_base,L:r.L_base,F:r.F,S:r.S,K:r.K,C:r.C,Q:r.Q,M:r.M,Salt:r.Salt,Sauce:r.Sauce,Light:r.Light,Hearty:r.Hearty},adjusted:{Rf:r.Rf,Lf:r.Lf,R_adj:r.R_adj,L_adj:r.L_adj},quality:qa,answers,generatedAt:new Date().toISOString()};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=el('btn-export');a.href=url;a.download=`MEAT-BTI_${r.code}.json`;}
 
-async function copyResult(){const name=el('r-type-name').textContent;const code=el('r-type-code').textContent;const tags=[el('tag-texture').textContent,el('tag-flavor').textContent,el('tag-after').textContent].join('・');const text=`MEAT-BTI v6.3\n部位タイプ：${name}（${code}）\nタグ：${tags}`;try{await navigator.clipboard.writeText(text);el('btn-copy').textContent='コピーしました！';setTimeout(()=>el('btn-copy').textContent='結果をコピー',1500);}catch{alert('コピーに失敗しました');}}
+async function copyResult(){const name=el('r-type-name').textContent;const code=el('r-type-code').textContent;const tags=[el('tag-texture').textContent,el('tag-flavor').textContent,el('tag-after').textContent].join('・');const text=`MEAT-BTI v6.4\n部位タイプ：${name}（${code}）\nタグ：${tags}`;try{await navigator.clipboard.writeText(text);el('btn-copy').textContent='コピーしました！';setTimeout(()=>el('btn-copy').textContent='結果をコピー',1500);}catch{alert('コピーに失敗しました');}}
 
 // クリック委任：Startボタン（#btn-start / #btn-start-2 / data-action="start"）をまとめて拾う
 addEventListener('click',(ev)=>{ const t=ev.target.closest('#btn-start, #btn-start-2, [data-action="start"]'); if(!t) return; ev.preventDefault(); start(); });
