@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MEAT-BTI v7.0｜5択×基本12タイプ＋シークレットCB</title>
+  <title>MEAT-BTI v7.1｜基本12タイプ＋シークレットCB</title>
   <meta name="description" content="18問×15秒。5段階リッカート＋無作為順・左右入替・一貫性チェック。基本12タイプ（ヒレ/タン/イチボ/ランプ/リブロース/サーロイン/ザブトン/カルビ/ハラミ/シンシン/カイノミ/ミスジ）＋シークレット『シャトーブリアン』。"/>
 
   <!-- GA4（サイト共通：G-V39MNGQD5H） -->
@@ -17,9 +17,12 @@
 
   <style>
     :root{
-      --bg:#0b0c10; --panel:#101218; --ink:#f4f7fb; --muted:#b6c0cf;
-      --acc:#ff6b57; --acc2:#ffd166; --bd:#1c1f27; --shadow:0 10px 30px rgba(0,0,0,.35);
+      --bg:#090b10; --panel:#0f1219; --ink:#f5f8ff; --muted:#b7c3d6;
+      --acc:#ff715b; --acc2:#ffd166; --bd:#1b2030; --shadow:0 10px 30px rgba(0,0,0,.35);
       --good:#35d19d; --warn:#ffd166; --bad:#ff476f; --blue:#59b3ff;
+      --grad: radial-gradient(1200px 600px at 10% -10%, rgba(255,113,91,.25), transparent 40%),
+              radial-gradient(1200px 600px at 110% 110%, rgba(255,209,102,.2), transparent 40%),
+              linear-gradient(180deg,#0a0d14,#0b0e15 50%, #0d111a);
     }
     html,body{height:100%}
     body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;letter-spacing:.02em}
@@ -29,9 +32,37 @@
     .brand{display:flex;align-items:center;gap:10px}
     .logo{width:36px;height:36px;border-radius:10px;background:conic-gradient(from 140deg,var(--acc),var(--acc2));display:grid;place-items:center;color:#111;font-weight:900}
     .title{font-weight:900}
-    .wrap{padding:16px}
+    .wrap{padding:0}
+
+    /* ====== HERO ====== */
+    .hero{position:relative;background:var(--grad);padding:28px 18px 20px;overflow:hidden}
+    @media(min-width:860px){.hero{padding:40px 28px 26px}}
+    .hero-inner{display:grid;gap:18px}
+    .eyebrow{display:inline-flex;gap:8px;align-items:center;background:rgba(255,255,255,.08);border:1px solid #222a3a;color:#dfe7f5;padding:6px 10px;border-radius:999px;font-size:12px}
+    .spark{filter:drop-shadow(0 2px 8px rgba(255,209,102,.35))}
+    .h1{font-size:clamp(26px,5.6vw,40px);line-height:1.2;font-weight:900;margin:0}
+    .lead{color:var(--muted);margin:0}
+    .badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+    .badge{background:#121829;border:1px solid #2a3245;color:#dfe7f5;border-radius:999px;padding:6px 10px;font-size:12px}
+    .cta-row{display:flex;align-items:center;gap:12px;margin-top:8px;flex-wrap:wrap}
+    .btn{appearance:none;border:1px solid var(--bd);background:#151a23;color:var(--ink);padding:12px 16px;border-radius:12px;font-weight:800;cursor:pointer;transition:transform .06s ease, box-shadow .15s ease}
+    .btn:hover{transform:translateY(-1px)}
+    .btn.primary{background:linear-gradient(180deg,var(--acc),#ff4e36);color:#111;border:none;box-shadow:0 12px 26px rgba(255,113,91,.35)}
+    .subnote{color:var(--muted);font-size:12px}
+
+    .types{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
+    @media(min-width:720px){.types{grid-template-columns:repeat(6,1fr)}}
+    .type-chip{background:#121726;border:1px solid #2a3140;border-radius:12px;padding:10px 10px;text-align:center;font-weight:700;white-space:nowrap}
+
+    .float{position:absolute;opacity:.55;user-select:none;pointer-events:none;font-size:28px}
+    .f1{left:6%; top:18%; animation:floatY 6s ease-in-out infinite}
+    .f2{left:86%; top:14%; animation:floatY 7s ease-in-out infinite reverse}
+    .f3{left:12%; bottom:8%; animation:floatY 8s ease-in-out infinite}
+    .f4{left:74%; bottom:10%; animation:floatY 9s ease-in-out infinite reverse}
+    @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 
     /* ---- QUIZ ---- */
+    .section{padding:16px}
     .q-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
     .q-index{font-weight:900}
     .timer{display:flex;align-items:center;gap:8px}
@@ -67,8 +98,6 @@
     .pill{display:inline-block;padding:6px 12px;border-radius:999px;background:#131726;border:1px solid var(--bd);margin-right:6px}
     .desc{margin-top:10px;line-height:1.9}
     .mono{font-family:ui-monospace,Menlo,Consolas,monospace}
-    .btn{appearance:none;border:1px solid var(--bd);background:#141721;color:var(--ink);padding:10px 14px;border-radius:12px;font-weight:700;cursor:pointer}
-    .btn.primary{background:linear-gradient(180deg,var(--acc),#ff4e36);color:#111;border:none;box-shadow:0 10px 24px rgba(255,107,87,.35)}
     footer{padding:10px 16px 16px;color:var(--muted);font-size:12px}
 
     .meter{height:10px;background:#141721;border:1px solid var(--bd);border-radius:999px;overflow:hidden}
@@ -80,19 +109,54 @@
   <main class="app">
     <div class="card">
       <header>
-        <div class="brand"><div class="logo">🥩</div><div class="title">MEAT-BTI v7.0（基本12タイプ＋シークレットCB）</div></div>
-        <button id="btn-start" class="btn primary" data-action="start">診断する</button>
+        <div class="brand"><div class="logo">🥩</div><div class="title">MEAT-BTI v7.1（12タイプ＋シークレットCB）</div></div>
+        <button id="btn-start" class="btn primary" data-action="start">診断をはじめる</button>
       </header>
-      <div class="wrap" id="stage">
-        <!-- START -->
-        <section id="screen-start">
-          <h2 style="margin:0 0 6px">あなたはどの“部位タイプ”？</h2>
-          <p style="color:var(--muted);margin:0 0 12px">18問／1問15秒。<strong>5段階</strong>で回答。<strong>無作為順・左右入替</strong>でバイアスを低減。左右の文章を<strong>大きなカード</strong>で表示し、判断しやすくしました。</p>
-          <div><button class="btn primary" id="btn-start-2" data-action="start">診断する</button></div>
-        </section>
 
-        <!-- QUIZ -->
-        <section id="screen-quiz" hidden>
+      <!-- ===== HERO / START ===== -->
+      <section id="screen-start" class="hero">
+        <div class="float f1">🥩</div>
+        <div class="float f2">🍷</div>
+        <div class="float f3">🔥</div>
+        <div class="float f4">🎉</div>
+
+        <div class="hero-inner">
+          <span class="eyebrow"><span class="spark">✨</span> KU-DETA 限定 ・ 11/15</span>
+          <h1 class="h1">肉好きのための性格診断。<br/>あなたはどの <span style="color:var(--acc2)">“部位タイプ”</span>？</h1>
+          <p class="lead">基本12タイプ＋シークレット。18問（約4分）で、<b>あなたの味覚と食事シーンのクセ</b>からタイプを判定。<br/>相性No.1タイプも分かります。</p>
+          <div class="badges">
+            <span class="badge">5択 × 18問</span>
+            <span class="badge">1問15秒</span>
+            <span class="badge">無作為順・左右入替</span>
+            <span class="badge">信頼度計測つき</span>
+          </div>
+          <div class="cta-row">
+            <button class="btn primary" id="btn-start-2" data-action="start">診断をはじめる</button>
+            <span class="subnote">※途中で戻ってやり直しもOK</span>
+          </div>
+
+          <div class="section" style="padding:0;margin-top:6px">
+            <div class="types" aria-label="12タイプ">
+              <div class="type-chip">ヒレ</div>
+              <div class="type-chip">タン</div>
+              <div class="type-chip">イチボ</div>
+              <div class="type-chip">ランプ</div>
+              <div class="type-chip">リブロース</div>
+              <div class="type-chip">サーロイン</div>
+              <div class="type-chip">ザブトン</div>
+              <div class="type-chip">カルビ</div>
+              <div class="type-chip">ハラミ</div>
+              <div class="type-chip">シンシン</div>
+              <div class="type-chip">カイノミ</div>
+              <div class="type-chip">ミスジ</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== QUIZ ===== -->
+      <div class="wrap" id="stage">
+        <section id="screen-quiz" class="section" hidden>
           <div class="q-head">
             <div class="q-index"><span id="q-counter">1</span>/<span id="q-total">18</span></div>
             <div class="timer"><div class="dot"></div><div class="sec"><span id="sec">15</span>s</div></div>
@@ -117,7 +181,7 @@
         </section>
 
         <!-- RESULT -->
-        <section id="screen-result" hidden>
+        <section id="screen-result" class="section" hidden>
           <div class="result">
             <div class="big" id="r-title">診断結果</div>
             <div class="grid">
@@ -167,7 +231,7 @@
           </div>
         </section>
       </div>
-      <footer>© KU-DETA / ニクパーティ — MEAT-BTI v7.0</footer>
+      <footer>© KU-DETA / ニクパーティ — MEAT-BTI v7.1</footer>
     </div>
   </main>
 
@@ -178,7 +242,7 @@ const BANK = [
   // RL（A=R=軽め/さっぱり、B=L=コク/満足）
   {id:1,  axis:"RL", a:"脂少なめで赤身の旨みを味わいたい", b:"サシの入ったコクで満足したい"},
   {id:2,  axis:"RL", a:"食後は軽やかに終えたい",           b:"しっかり満腹・余韻を楽しみたい"},
-  {id:3,  axis:"RL", a:"味はキレ重視（さっぱり）",         b:"味はコク重重（濃厚）"},
+  {id:3,  axis:"RL", a:"味はキレ重視（さっぱり）",         b:"味はコク重視（濃厚）"},
   {id:4,  axis:"RL", a:"ヒレやタンに惹かれる",             b:"サーロインやカルビに惹かれる"},
   // TX（A=Q=噛み応え、B=M=とろけ）
   {id:5,  axis:"TX", a:"歯切れよく噛むほど旨い食感が好き", b:"とろける柔らかさが好き"},
@@ -266,7 +330,7 @@ function pickLikert(uiVal){const q=QUESTIONS[current];const elapsed=performance.
 
 function next(){stopTimer();if(current<QUESTIONS.length-1){current++;renderQ();startTimer();}else{showResult();}}
 
-/* ===== タイブレーカー（ランダム不使用） ===== */
+/* ===== タイブレーカー（ランダム不使用＋シード） ===== */
 function strongEdge(axis){
   let edge = 0;
   for (const a of answers) {
@@ -298,18 +362,10 @@ function decideAxis(A_base, B_base, A_label, B_label, relatedA, relatedB, strong
 }
 
 /* ===== サブタイプ選択（8コード→12タイプへ分岐） ===== */
-function scoreHarami(c){ // +ならハラミ、-ならタン
-  return 0.60*c.Sauce - 0.60*c.Salt + 0.30*c.Hearty - 0.30*c.Light + 0.20*c.M - 0.20*c.Q;
-}
-function scoreMisuji(c){ // +ならミスジ、-ならイチボ
-  return 0.70*c.M - 0.70*c.Q + 0.20*c.Salt - 0.20*c.Sauce + 0.10*c.Light - 0.10*c.Hearty;
-}
-function scoreShinshin(c){ // +ならシンシン、-ならリブロース
-  return 0.55*c.Q - 0.55*c.M + 0.25*c.Light - 0.25*c.Hearty + 0.20*c.Salt - 0.20*c.Sauce;
-}
-function scoreKainomi(c){ // +ならカイノミ、-ならカルビ
-  return 0.60*c.Q - 0.60*c.M + 0.30*c.Salt - 0.30*c.Sauce + 0.10*c.Light - 0.10*c.Hearty;
-}
+function scoreHarami(c){ return 0.60*c.Sauce - 0.60*c.Salt + 0.30*c.Hearty - 0.30*c.Light + 0.20*c.M - 0.20*c.Q; }
+function scoreMisuji(c){ return 0.70*c.M - 0.70*c.Q + 0.20*c.Salt - 0.20*c.Sauce + 0.10*c.Light - 0.10*c.Hearty; }
+function scoreShinshin(c){ return 0.55*c.Q - 0.55*c.M + 0.25*c.Light - 0.25*c.Hearty + 0.20*c.Salt - 0.20*c.Sauce; }
+function scoreKainomi(c){ return 0.60*c.Q - 0.60*c.M + 0.30*c.Salt - 0.30*c.Sauce + 0.10*c.Light - 0.10*c.Hearty; }
 function pickSubtype(code, c){
   switch(code){
     case 'R-F-K': return 'ヒレ';
@@ -408,7 +464,7 @@ function setMeter(id,pct){el(id).style.width=pct+'%';const tId=id+'-text';if(el(
 
 function showResult(){const r=computeResult();showScreen('result');el('r-type-name').textContent=r.name;el('r-type-code').textContent=r.code;el('tag-texture').textContent=r.tagTexture;el('tag-flavor').textContent=r.tagFlavor;el('tag-after').textContent=r.tagAfter;el('r-desc').textContent=DESCRIPTIONS[r.name]||'';const bm=bestMatch(r.code);const repr=CODE_REPR[bm]||bm;el('r-best').textContent=bm?`${repr}（${bm}）`:'—';const qa=qualityAssess(r);setMeter('conf-overall',qa.overall);el('conf-overall-text').textContent=`${qa.overall}% ${qa.overall>=75?'（高）':qa.overall>=60?'（中）':'（低）'}`;setMeter('conf-rl',qa.confRL*100);el('conf-rl-text').textContent=`${Math.round(qa.confRL*100)}%`;setMeter('conf-fs',qa.confFS*100);el('conf-fs-text').textContent=`${Math.round(qa.confFS*100)}%`;setMeter('conf-kc',qa.confKC*100);el('conf-kc-text').textContent=`${Math.round(qa.confKC*100)}%`;let hint=[];if(qa.alphaRL!==null) hint.push(`R/L 一貫性 α=${qa.alphaRL.toFixed(2)}`);if(qa.alphaFS!==null) hint.push(`F/S 一貫性 α=${qa.alphaFS.toFixed(2)}`);if(qa.alphaKC!==null) hint.push(`K/C 一貫性 α=${qa.alphaKC.toFixed(2)}`);hint.push(`中央値の回答時間 ${Math.round(qa.medRT)}ms`);if(qa.notes.length){hint.push('注意: '+qa.notes.join(' / '));}el('quality-hints').textContent=hint.join('　');const detail=[`Code: ${r.code} / Base: ${r.baseName} / Display: ${r.name}`,`R/L base: R=${r.R_base.toFixed(1)}, L=${r.L_base.toFixed(1)}  adj: R+${r.R_adj}, L+${r.L_adj}  → Rf=${r.Rf.toFixed(1)}, Lf=${r.Lf.toFixed(1)}`,`F/S: F=${r.F.toFixed(1)}, S=${r.S.toFixed(1)}`,`K/C: K=${r.K.toFixed(1)}, C=${r.C.toFixed(1)}`,`Texture: Q=${r.Q.toFixed(1)}, M=${r.M.toFixed(1)}  Flavor: Salt=${r.Salt.toFixed(1)}, Sauce=${r.Sauce.toFixed(1)}  After: Light=${r.Light.toFixed(1)}, Hearty=${r.Hearty.toFixed(1)}`,`Tags: ${r.tagTexture}・${r.tagFlavor}・${r.tagAfter}`].join('\n');el('r-detail').textContent=detail;const payload={type:{baseCode:r.code,baseName:r.baseName,displayName:r.name},tags:{texture:r.tagTexture,flavor:r.tagFlavor,after:r.tagAfter},counts:{R:r.R_base,L:r.L_base,F:r.F,S:r.S,K:r.K,C:r.C,Q:r.Q,M:r.M,Salt:r.Salt,Sauce:r.Sauce,Light:r.Light,Hearty:r.Hearty},adjusted:{Rf:r.Rf,Lf:r.Lf,R_adj:r.R_adj,L_adj:r.L_adj},quality:qa,answers,generatedAt:new Date().toISOString()};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=el('btn-export');a.href=url;a.download=`MEAT-BTI_${r.code}.json`;}
 
-async function copyResult(){const name=el('r-type-name').textContent;const code=el('r-type-code').textContent;const tags=[el('tag-texture').textContent,el('tag-flavor').textContent,el('tag-after').textContent].join('・');const text=`MEAT-BTI v7.0\n部位タイプ：${name}（${code}）\nタグ：${tags}`;try{await navigator.clipboard.writeText(text);el('btn-copy').textContent='コピーしました！';setTimeout(()=>el('btn-copy').textContent='結果をコピー',1500);}catch{alert('コピーに失敗しました');}}
+async function copyResult(){const name=el('r-type-name').textContent;const code=el('r-type-code').textContent;const tags=[el('tag-texture').textContent,el('tag-flavor').textContent,el('tag-after').textContent].join('・');const text=`MEAT-BTI v7.1\n部位タイプ：${name}（${code}）\nタグ：${tags}`;try{await navigator.clipboard.writeText(text);el('btn-copy').textContent='コピーしました！';setTimeout(()=>el('btn-copy').textContent='結果をコピー',1500);}catch{alert('コピーに失敗しました');}}
 
 // Start（#btn-start / #btn-start-2 / data-action="start"）をまとめて拾う
 addEventListener('click',(ev)=>{ const t=ev.target.closest('#btn-start, #btn-start-2, [data-action="start"]'); if(!t) return; ev.preventDefault(); start(); });
