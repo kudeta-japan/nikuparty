@@ -37,7 +37,7 @@
     /* ====== HERO ====== */
     .hero{position:relative;background:var(--grad);padding:28px 18px 20px;overflow:hidden}
     @media(min-width:860px){.hero{padding:40px 28px 26px}}
-    .hero-inner{display:grid;gap:18px}
+    .hero-inner{display:grid;gap:18px;position:relative;z-index:1}
     .eyebrow{display:inline-flex;gap:8px;align-items:center;background:rgba(255,255,255,.08);border:1px solid #222a3a;color:#dfe7f5;padding:6px 10px;border-radius:999px;font-size:12px}
     .spark{filter:drop-shadow(0 2px 8px rgba(255,209,102,.35))}
     .h1{font-size:clamp(26px,5.6vw,40px);line-height:1.2;font-weight:900;margin:0}
@@ -49,17 +49,11 @@
     .btn:hover{transform:translateY(-1px)}
     .btn.primary{background:linear-gradient(180deg,var(--acc),#ff4e36);color:#111;border:none;box-shadow:0 12px 26px rgba(255,113,91,.35)}
     .subnote{color:var(--muted);font-size:12px}
-
     .types{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
     @media(min-width:720px){.types{grid-template-columns:repeat(6,1fr)}}
     .type-chip{background:#121726;border:1px solid #2a3140;border-radius:12px;padding:10px 10px;text-align:center;font-weight:700;white-space:nowrap}
-
-    .float{position:absolute;opacity:.55;user-select:none;pointer-events:none;font-size:28px}
-    .f1{left:6%; top:18%; animation:floatY 6s ease-in-out infinite}
-    .f2{left:86%; top:14%; animation:floatY 7s ease-in-out infinite reverse}
-    .f3{left:12%; bottom:8%; animation:floatY 8s ease-in-out infinite}
-    .f4{left:74%; bottom:10%; animation:floatY 9s ease-in-out infinite reverse}
-    @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    /* Decorative emojis disabled to avoid overlap */
+    .float{display:none !important;}50%{transform:translateY(-8px)}}
 
     /* ---- QUIZ ---- */
     .section{padding:16px}
@@ -114,11 +108,7 @@
       </header>
 
       <!-- ===== HERO / START ===== -->
-      <section id="screen-start" class="hero">
-        <div class="float f1">🥩</div>
-        <div class="float f2">🍷</div>
-        <div class="float f3">🔥</div>
-        <div class="float f4">🎉</div>
+      <section id="screen-start" class="hero"><!-- decorative floats removed -->
 
         <div class="hero-inner">
           <span class="eyebrow"><span class="spark">✨</span> KU-DETA 限定 ・ 11/15</span>
