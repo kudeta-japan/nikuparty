@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>MEAT-BTI v7.4｜20問・6択（前提つき）</title>
-<meta name="description" content="5問×4ページ＝全20問。各設問に前提（状況）を明示。6段階リッカート（中立なし）・無作為順/左右入替・一貫性チェック。基本12タイプ＋シークレット『シャトーブリアン』。"/>
+<title>MEAT-BTI v7.5｜20問・6択（岐阜ローカル & 簡潔前提）</title>
+<meta name="description" content="5問×4ページ＝全20問。岐阜ローカルの簡潔な前提つき。6段階（中立なし）・無作為順/左右入替・一貫性チェック。基本12タイプ＋シークレット『シャトーブリアン』。"/>
 
 <!-- GA4（サイト共通：G-V39MNGQD5H） -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-V39MNGQD5H"></script>
@@ -44,7 +44,7 @@
   .badge{background:#121829;border:1px solid #2a3245;color:#dfe7f5;border-radius:999px;padding:6px 10px;font-size:12px}
   .cta-row{display:flex;align-items:center;gap:12px;margin-top:8px;flex-wrap:wrap}
   .btn{appearance:none;border:1px solid var(--bd);background:#151a23;color:var(--ink);padding:12px 16px;border-radius:12px;font-weight:800;cursor:pointer;transition:transform .06s ease, box-shadow .15s ease}
-  .btn:hover{transform:translateY{-1px}}
+  .btn:hover{transform:translateY(-1px)}
   .btn.primary{background:linear-gradient(180deg,var(--acc),#ff4e36);color:#111;border:none;box-shadow:0 12px 26px rgba(255,113,91,.35)}
   .subnote{color:var(--muted);font-size:12px}
   .types{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
@@ -58,9 +58,9 @@
   .bar{height:6px;background:#141721;border:1px solid var(--bd);border-radius:999px;overflow:hidden;width:220px}
   .bar>div{height:100%;width:0%;background:linear-gradient(90deg,var(--acc),var(--acc2))}
   .qgrid{display:grid;gap:12px}
-  .qitem{background:#111522;border:1px solid #2a3140;border-radius:14px;padding:12px}
-  .ctx{display:flex;gap:8px;align-items:center;color:#aeb8ce;font-size:12px;margin-bottom:8px}
-  .ctx span{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:6px;background:#1a2133;border:1px solid #2b3650;color:#dfe7f5;font-size:11px}
+  .qitem{background:#111522;border:1px solid #2a3140;border-radius:14px;padding:14px}
+  /* ← ラベルは消し、前提テキストを大きく＆簡潔に */
+  .ctx{color:#e7ecf8;font-weight:700;font-size:clamp(14px,2.8vw,16px);margin:-2px 0 8px 0}
   .lr{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:stretch;pointer-events:none}
   .side{background:#0f1522;border:1px solid #272f41;border-radius:12px;padding:10px;min-height:66px;display:flex;align-items:center;justify-content:center;text-align:center}
   .side b{font-size:clamp(14px,2.6vw,17px)}
@@ -93,7 +93,7 @@
 <main class="app">
   <div class="card">
     <header>
-      <div class="brand"><div class="logo">🥩</div><div class="title">MEAT-BTI v7.4（20問・前提つき）</div></div>
+      <div class="brand"><div class="logo">🥩</div><div class="title">MEAT-BTI v7.5（20問・岐阜ローカル前提）</div></div>
       <button id="btn-start" class="btn primary" data-action="start">診断をはじめる</button>
     </header>
 
@@ -102,7 +102,7 @@
       <div class="hero-inner">
         <span class="eyebrow">✨ KU-DETA 限定 ・ 11/15</span>
         <h1 class="h1">肉好きのための性格診断。<br>あなたはどの <span style="color:var(--acc2)">“部位タイプ”</span>？</h1>
-        <p class="lead">全20問、各設問に<b>具体的な前提（状況）</b>を記載。6段階スケール（中立なし）。味覚と食事シーンのクセから判定します。</p>
+        <p class="lead">全20問。岐阜ローカルの<b>短い前提</b>付き／6段階スケール（中立なし）。味覚と食事シーンのクセから判定します。</p>
         <div class="badges">
           <span class="badge">6択 × 20問</span>
           <span class="badge">無作為順・左右入替</span>
@@ -131,12 +131,12 @@
         <div id="qgrid" class="qgrid"><!-- 5問がここに出る --></div>
 
         <div class="q-foot">
-          <div>※左右のカードは説明のみ（クリック不可）</div>
+          <div>※左右カードは説明のみ（クリック不可）</div>
           <div style="display:flex;gap:10px">
             <button id="btn-next" class="btn primary disabled">次の5問へ</button>
           </div>
         </div>
-        <div class="progress-note">各問の丸いドットで選択。左（青）⇔右（赤）に行くほど強い選好。</div>
+        <div class="progress-note">丸いドットで選択。左（青）⇔右（赤）ほど強い。</div>
       </section>
 
       <!-- RESULT -->
@@ -191,90 +191,50 @@
       </section>
     </div>
 
-    <footer>© KU-DETA / ニクパーティ — MEAT-BTI v7.4</footer>
+    <footer>© KU-DETA / ニクパーティ — MEAT-BTI v7.5</footer>
   </div>
 </main>
 
 <script>
-/* ==== Question Bank（各問に ctx=前提）20問 ==== */
+/* ==== Question Bank（岐阜ローカル & 簡潔前提）20問 ==== */
 const BANK = [
   // ── RL（赤身R vs コクL）5問 ──
-  {id:1,  axis:"RL",
-    ctx:"焼肉店で最初の一皿を注文。どちらに惹かれる？",
-    a:"脂少なめで赤身の旨みを味わいたい", b:"サシの入ったコクで満足したい"},
-  {id:2,  axis:"RL",
-    ctx:"平日の夜。明日も早いかも…食後の感じは？",
-    a:"食後は軽やかに終えたい", b:"しっかり満腹・余韻を楽しみたい"},
-  {id:3,  axis:"RL",
-    ctx:"同じ価格の赤身/霜降りを勧められたら？",
-    a:"味はキレ重視（さっぱり）", b:"味はコク重視（濃厚）"},
-  {id:19, axis:"RL",
-    ctx:"看板カルビと赤身の名物、メインで一皿だけ選ぶなら？",
-    a:"赤身中心のメニューを選びたい", b:"脂ののった名物を味わいたい"},
-  {id:4,  axis:"RL",
-    ctx:"店長が“ヒレ/タン”と“サーロイン/カルビ”を推している場面。",
-    a:"ヒレやタンに惹かれる", b:"サーロインやカルビに惹かれる"},
+  {id:1,  axis:"RL", ctx:"KU-DETAで最初の一皿。", a:"脂少なめで赤身を味わう", b:"サシのコクで満足したい"},
+  {id:2,  axis:"RL", ctx:"平日夜、岐阜駅近でサクッと。", a:"軽く終える", b:"しっかり満腹まで"},
+  {id:3,  axis:"RL", ctx:"同価格の赤身と霜降り。", a:"キレ重視（さっぱり）", b:"コク重視（濃厚）"},
+  {id:19, axis:"RL", ctx:"名物カルビ vs 赤身名物を1皿。", a:"赤身を選ぶ", b:"名物カルビを選ぶ"},
+  {id:4,  axis:"RL", ctx:"店長の推し：ヒレ/タン or サーロイン/カルビ。", a:"ヒレ・タンに惹かれる", b:"サーロイン・カルビに惹かれる"},
 
   // ── TX（噛み応えQ vs とろけM）3問 ──
-  {id:5,  axis:"TX",
-    ctx:"カットを選べるお店。食べ口はどちらが理想？",
-    a:"歯切れよく噛むほど旨い食感が好き", b:"とろける柔らかさが好き"},
-  {id:6,  axis:"TX",
-    ctx:"焼き加減を伝えるとしたら？",
-    a:"薄切り・レア寄りが好み", b:"厚切り・ミディアム〜ウェルが安心"},
-  {id:7,  axis:"TX",
-    ctx:"あなたが焼き担当。火入れの方針は？",
-    a:"火は通しすぎずサッと", b:"しっかり火入れして落ち着かせたい"},
+  {id:5,  axis:"TX", ctx:"カット指定OKのお店。", a:"歯切れ良い噛み応え", b:"とろける柔らかさ"},
+  {id:6,  axis:"TX", ctx:"焼き加減の希望は？", a:"薄切り・レア寄り", b:"厚切り・ミディアム以上"},
+  {id:7,  axis:"TX", ctx:"あなたが焼き担当。", a:"サッと火入れ", b:"しっかり火入れ"},
 
   // ── FL（塩 Salt vs ソース Sauce）2問 ──
-  {id:8,  axis:"FL",
-    ctx:"味付けを選ぶとしたら？テーブルには塩・レモンと特製ダレがある。",
-    a:"レモン・塩・わさびなどシンプル派", b:"甘辛ダレ/ガリバタ/チーズなどソース派"},
-  {id:9,  axis:"FL",
-    ctx:"香りの演出も選べる店。あなたは？",
-    a:"肉本来の香りを活かしたい", b:"ソースの香りや演出で盛り上げたい"},
+  {id:8,  axis:"FL", ctx:"卓上は塩と特製ダレ。", a:"シンプル派（塩・レモン）", b:"ソース派（甘辛・ガリバタ等）"},
+  {id:9,  axis:"FL", ctx:"香りの演出も選べる。", a:"肉の香りを活かす", b:"ソース香で盛り上げる"},
 
   // ── FS（テンポ F vs じっくり S）3問 ──
-  {id:10, axis:"FS",
-    ctx:"七輪を囲む少人数の会。網は1枚だけ。焼きの回し方は？",
-    a:"強火でサッと焼いて回転良く食べたい", b:"弱〜中火でじっくり育てて食べたい"},
-  {id:11, axis:"FS",
-    ctx:"“コース or アラカルト”を選べる店。",
-    a:"料理はテンポ良く次々出てくると嬉しい", b:"コースでゆっくり出てくる方が嬉しい"},
-  {id:12, axis:"FS",
-    ctx:"目当ての店が混んでいる夜。あなたは？",
-    a:"混んでいたら次の店へ移るタイプ", b:"席が気に入れば一軒で腰を据える"},
+  {id:10, axis:"FS", ctx:"七輪1台の少人数。", a:"強火で回転良く", b:"弱〜中火でじっくり"},
+  {id:11, axis:"FS", ctx:"“コース or アラカルト”。", a:"テンポ良く次々", b:"ゆっくりコース"},
+  {id:12, axis:"FS", ctx:"玉宮が混む金曜。", a:"他店へ移動する", b:"気に入れば腰を据える"},
 
   // ── KC（定番 K vs 変化 C）4問 ──
-  {id:13, axis:"KC",
-    ctx:"最初の一皿、どちらから始める？",
-    a:"まずは定番の塩タン・王道カットから", b:"その店の限定/変わり種を先に試したい"},
-  {id:14, axis:"KC",
-    ctx:"4人でシェア注文。オーダーの仕方は？",
-    a:"注文は最初にまとめて段取り良く", b:"様子を見ながらその都度追加したい"},
-  {id:20, axis:"KC",
-    ctx:"SNSにも上げるかもしれない夜。選ぶ基準は？",
-    a:"写真より味を最優先したい", b:"“映え”の盛り付けが好き"},
-  {id:15, axis:"KC",
-    ctx:"初参加の人もいる会社飲み。食べ方は？",
-    a:"食べ方やマナーはきっちり守りたい", b:"型に縛られず楽しく食べられればOK"},
+  {id:13, axis:"KC", ctx:"最初の一皿。", a:"塩タン・王道から", b:"限定・変わり種から"},
+  {id:14, axis:"KC", ctx:"4人でシェア注文。", a:"最初にまとめて段取り", b:"様子見で都度追加"},
+  {id:20, axis:"KC", ctx:"今日はSNSにも上げる夜。", a:"味優先で選ぶ", b:"映え優先で選ぶ"},
+  {id:15, axis:"KC", ctx:"会社メンバーも参加。", a:"マナー重視で食べる", b:"型に縛られず楽しむ"},
 
   // ── AF（余白 Light vs 完結 Hearty）3問 ──
-  {id:16, axis:"AF",
-    ctx:"締めの注文タイミング。あなたは？",
-    a:"〆はなし/スープ程度で十分", b:"〆はご飯・冷麺・デザートまでしっかり"},
-  {id:17, axis:"AF",
-    ctx:"最初のドリンクを選ぶなら？",
-    a:"ハイボール/すっきり系", b:"甘めカクテルや濃いドリンクも欲しい"},
-  {id:18, axis:"AF",
-    ctx:"21時。二軒目の予定があるかも？",
-    a:"食後は二軒目で軽く続けたい", b:"この店で完結して満腹で締めたい"},
+  {id:16, axis:"AF", ctx:"締めのタイミング。", a:"〆なし/軽めでOK", b:"ご飯・冷麺・デザートまで"},
+  {id:17, axis:"AF", ctx:"最初の一杯。", a:"ハイボール/すっきり系", b:"甘め/濃い系も欲しい"},
+  {id:18, axis:"AF", ctx:"21時、玉宮で二軒目あるかも。", a:"軽く続けたい", b:"ここで完結したい"},
 ];
 
 function decorateBankRandomly(bank){return bank.map(q=>({...q,flip:Math.random()<0.5}))}
 const OPP={R:"L",L:"R",F:"S",S:"F",K:"C",C:"K"};
 
-/* 代表（相性計算用 8コード→名前） */
+/* 代表（相性計算） */
 const CODE_REPR={
   "R-F-K":"ヒレ","R-F-C":"タン","R-S-K":"イチボ","R-S-C":"ランプ",
   "L-F-K":"リブロース","L-F-C":"サーロイン","L-S-K":"ザブトン","L-S-C":"カルビ"
@@ -327,7 +287,7 @@ function renderPage(){
     const left=q.flip?q.b:q.a; const right=q.flip?q.a:q.b;
     const wrap=document.createElement('div'); wrap.className='qitem'; wrap.dataset.qid=q.id;
     wrap.innerHTML=`
-      <div class="ctx"><span>状況</span>${q.ctx}</div>
+      <div class="ctx">${q.ctx}</div>
       <div class="lr" aria-label="左右の比較文">
         <div class="side"><b>${left}</b></div>
         <div class="side"><b>${right}</b></div>
@@ -419,14 +379,15 @@ function applyPage(){
 }
 
 /* ==== ページ遷移 ==== */
-el('btn-next').addEventListener('click', ()=>{
-  if(el('btn-next').classList.contains('disabled')) return;
+document.getElementById('btn-next').addEventListener('click', ()=>{
+  const btn = document.getElementById('btn-next');
+  if(btn.classList.contains('disabled')) return;
   applyPage();
   if(page < TOTAL_PAGES-1){ page++; renderPage(); }
   else{ showResult(); }
 });
 
-/* ==== 判定ロジック（前バージョン踏襲）==== */
+/* ==== 判定ロジック ==== */
 function strongEdge(axis){let e=0;for(const a of answers){if(a.axis!==axis)continue;if(a.valForA>=3)e++; else if(a.valForA<=-3)e--;}return e;}
 function axisSeed(axis){let s=0;for(const a of answers){if(axis!=='ALL'&&a.axis!==axis)continue;s+=(a.id*31)+((a.uiVal+3)*13);}return s & 1;}
 function decideAxis(A,B,AL,BL,relA,relB,strongAxis,seed){if(A>B)return AL;if(B>A)return BL;const wA=A+relA,wB=B+relB;if(wA>wB)return AL;if(wB>wA)return BL;const edge=strongEdge(strongAxis);if(edge>0)return AL;if(edge<0)return BL;return seed?BL:AL;}
@@ -462,7 +423,7 @@ function computeResult(){
   let baseName=pickSubtype(code,{Q,M,Salt,Sauce,Light,Hearty});
   let name=baseName;
 
-  // シークレット：シャトーブリアン（約2%狙いの厳しめ条件）
+  // シークレット：シャトーブリアン（約2%狙い）
   const dRL=Math.max(0,(RL==='R'?Rf-Lf:Lf-Rf));
   const dFS=Math.max(0,(FS==='F'?F-S:S-F));
   const dKC=Math.max(0,(KC==='K'?K-C:C-K));
@@ -556,7 +517,7 @@ const retry=document.getElementById('btn-retry'); if(retry) retry.addEventListen
 const copy=document.getElementById('btn-copy'); if(copy) copy.addEventListener('click',async()=>{
   const name=el('r-type-name').textContent, code=el('r-type-code').textContent;
   const tags=[el('tag-texture').textContent,el('tag-flavor').textContent,el('tag-after').textContent].join('・');
-  const text=`MEAT-BTI v7.4\n部位タイプ：${name}（${code}）\nタグ：${tags}`;
+  const text=`MEAT-BTI v7.5\n部位タイプ：${name}（${code}）\nタグ：${tags}`;
   try{await navigator.clipboard.writeText(text); el('btn-copy').textContent='コピーしました！'; setTimeout(()=>el('btn-copy').textContent='結果をコピー',1500);}catch{alert('コピーに失敗しました');}
 });
 </script>
