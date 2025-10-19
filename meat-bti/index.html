@@ -6,7 +6,7 @@
 <title>MEAT-BTI v7.5｜20問・6択（岐阜ローカル & 簡潔前提）</title>
 <meta name="description" content="5問×4ページ＝全20問。岐阜ローカルの簡潔な前提つき。6段階（中立なし）・無作為順/左右入替・一貫性チェック。基本12タイプ＋シークレット『シャトーブリアン』。"/>
 
-<!-- GA4（サイト共通：G-V39MNGQD5H） -->
+<!-- GA4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-V39MNGQD5H"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -19,7 +19,6 @@
   :root{
     --bg:#090b10; --panel:#0f1219; --ink:#f5f8ff; --muted:#b7c3d6;
     --acc:#ff715b; --acc2:#ffd166; --bd:#1b2030; --shadow:0 10px 30px rgba(0,0,0,.35);
-    --good:#35d19d; --warn:#ffd166; --blue:#59b3ff;
   }
   html,body{height:100%}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;letter-spacing:.02em}
@@ -31,11 +30,26 @@
   .title{font-weight:900}
   .wrap{padding:0}
 
-  /* HERO（LPと同じ構成：背景写真＋暗幕） */
-  .hero{position:relative;min-height:56vh;padding:40px 28px 26px;background:#000;overflow:hidden;border-bottom:1px solid var(--bd)}
+  /* ===== HERO：写真を大きく見せつつ、診断中も固定表示 ===== */
+  .hero{
+    position:relative;min-height:60vh;background:#000;overflow:hidden;
+    border-bottom:1px solid var(--bd);display:grid;align-items:end;
+  }
   .hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.78) contrast(1.05)}
-  .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.1) 0%, rgba(0,0,0,.55) 60%, rgba(0,0,0,.85) 100%)}
-  .hero-inner{position:relative;z-index:1;display:grid;gap:18px}
+  .hero::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(0,0,0,.06) 0%, rgba(0,0,0,.48) 58%, rgba(0,0,0,.86) 100%)}
+  .hero-inner{
+    position:relative;z-index:1;display:grid;gap:18px;
+    /* ← テキストをぐっと下げる（画像がよく見える） */
+    padding: clamp(120px,26vh,220px) 28px 34px;
+  }
+  /* 診断開始後はコンパクトにしつつ、画面上部に固定して常時見える */
+  .hero.compact{
+    min-height:28vh;position:sticky;top:0;z-index:5;box-shadow:0 6px 16px rgba(0,0,0,.25);
+  }
+  .hero.compact .hero-inner{padding: clamp(40px,9vh,90px) 20px 18px}
+  .hero.compact .badges, .hero.compact .types, .hero.compact .cta-row{display:none}
+
   .eyebrow{display:inline-flex;gap:8px;align-items:center;background:rgba(255,255,255,.08);border:1px solid #222a3a;color:#dfe7f5;padding:6px 10px;border-radius:999px;font-size:12px}
   .h1{font-size:clamp(26px,5.6vw,40px);line-height:1.2;font-weight:900;margin:0}
   .lead{color:var(--muted);margin:0}
@@ -72,7 +86,6 @@
   .q-foot{display:flex;justify-content:space-between;align-items:center;margin-top:8px;color:var(--muted);font-size:12px}
   .pill{display:inline-block;padding:6px 12px;border-radius:999px;background:#131726;border:1px solid var(--bd);margin-right:6px}
   .disabled{opacity:.55;pointer-events:none}
-  .progress-note{color:var(--muted);font-size:12px;text-align:center;margin-top:8px}
 
   /* RESULT */
   .result{display:grid;gap:16px}
@@ -93,9 +106,8 @@
       <button id="btn-start" class="btn primary" data-action="start">診断をはじめる</button>
     </header>
 
-    <!-- START -->
-    <section id="screen-start" class="hero">
-      <!-- 追加：ヒーロー背景画像 -->
+    <!-- HERO（常時表示。診断開始後は .compact が付く） -->
+    <section id="hero" class="hero">
       <img src="mbti.jpg" alt="" class="hero-img" />
       <div class="hero-inner">
         <span class="eyebrow">✨ KU-DETA 限定 ・ 11/15</span>
@@ -125,16 +137,13 @@
           <div class="q-index"><span id="page-now">1</span>/4ページ（<span id="q-answered">0</span>/20）</div>
           <div class="bar"><div id="bar"></div></div>
         </div>
-
         <div id="qgrid" class="qgrid"><!-- 5問がここに出る --></div>
-
         <div class="q-foot">
           <div>※左右カードは説明のみ（クリック不可）</div>
           <div style="display:flex;gap:10px">
             <button id="btn-next" class="btn primary disabled">次の5問へ</button>
           </div>
         </div>
-        <div class="progress-note">丸いドットで選択。左（青）⇔右（赤）ほど強い。</div>
       </section>
 
       <!-- RESULT -->
@@ -168,7 +177,7 @@
 </main>
 
 <script>
-/* ==== Question Bank（岐阜ローカル & 簡潔前提）20問 ==== */
+/* ==== Question Bank（省略せず同一） ==== */
 const BANK = [
   {id:1,axis:"RL",ctx:"KU-DETAで最初の一皿。",a:"脂少なめで赤身を味わう",b:"サシのコクで満足したい"},
   {id:2,axis:"RL",ctx:"平日夜、岐阜駅近でサクッと。",a:"軽く終える",b:"しっかり満腹まで"},
@@ -195,12 +204,10 @@ const BANK = [
 function decorateBankRandomly(bank){return bank.map(q=>({...q,flip:Math.random()<0.5}))}
 const OPP={R:"L",L:"R",F:"S",S:"F",K:"C",C:"K"};
 
-/* 代表（相性計算） */
 const CODE_REPR={
   "R-F-K":"ヒレ","R-F-C":"タン","R-S-K":"イチボ","R-S-C":"ランプ",
   "L-F-K":"リブロース","L-F-C":"サーロイン","L-S-K":"ザブトン","L-S-C":"カルビ"
 };
-/* 説明文（12＋CB） */
 const DESCRIPTIONS={
   "ヒレ":"無駄のない上品さと芯の強さが共存するタイプ。情報を整理し、結論をすっきり出すのが得意。味わいはストレートに、素材勝負の一皿を好みます。",
   "タン":"さっぱり塩でキレ良く。テンポの良さと明るさで周囲をほぐすムードメイクが得意。直感が利き、判断もスピーディ。",
@@ -223,15 +230,28 @@ let QUESTIONS=[], page=0, responses={}, answeredCount=0, pageStartAt=0;
 const counts={R:0,L:0,F:0,S:0,K:0,C:0,Q:0,M:0,Salt:0,Sauce:0,Light:0,Hearty:0};
 const answers=[], rtimes=[], rl_items=[], fs_items=[], kc_items=[];
 const el=id=>document.getElementById(id);
-const screenStart=el('screen-start'), screenQuiz=el('screen-quiz'), screenResult=el('screen-result');
-function showScreen(which){screenStart.hidden=which!=='start';screenQuiz.hidden=which!=='quiz';screenResult.hidden=which!=='result';}
+const hero=el('hero');
+const screenQuiz=el('screen-quiz'), screenResult=el('screen-result');
+
+/* 画面切替：ヒーローは常時表示。診断時は .compact を付与 */
+function showScreen(which){
+  if(which==='start'){
+    hero.classList.remove('compact');
+    screenQuiz.hidden=true; screenResult.hidden=true;
+  }else if(which==='quiz'){
+    hero.classList.add('compact');
+    screenQuiz.hidden=false; screenResult.hidden=true;
+  }else if(which==='result'){
+    hero.classList.add('compact');
+    screenQuiz.hidden=true; screenResult.hidden=false;
+  }
+}
 
 /* ==== Flow ==== */
 function start(){
   Object.keys(counts).forEach(k=>counts[k]=0);
   responses={}; answeredCount=0; page=0;
   answers.length=0; rtimes.length=0; rl_items.length=0; fs_items.length=0; kc_items.length=0;
-
   QUESTIONS=decorateBankRandomly([...BANK]).sort(()=>Math.random()-0.5);
   showScreen('quiz'); renderPage();
 }
@@ -265,12 +285,12 @@ function renderPage(){
   grid.querySelectorAll('.dot').forEach(dot=>{
     dot.addEventListener('click', e=>{
       const qid = Number(e.currentTarget.closest('.qitem').dataset.qid);
-      const uiVal = Number(e.currentTarget.dataset.val); // +3..-3
+      const uiVal = Number(e.currentTarget.dataset.val);
       selectDot(qid, uiVal, e.currentTarget);
     })
   });
 
-  // 1..6 のキー割当（このページの“未回答”に順次入力）
+  // 1..6 のキー割当（このページの未回答に順次入力）
   window.onkeydown=(e)=>{
     const map={'1':3,'2':2,'3':1,'4':-1,'5':-2,'6':-3};
     if(!(e.key in map)) return;
@@ -314,14 +334,14 @@ function selectDot(qid, uiVal, btn){
   const startIdx=page*PAGE_SIZE; const slice=QUESTIONS.slice(startIdx, startIdx+PAGE_SIZE);
   setNextEnabled(slice.every(q=>responses[q.id]));
 }
-function setNextEnabled(ok){el('btn-next').classList.toggle('disabled', !ok);}
+function setNextEnabled(ok){document.getElementById('btn-next').classList.toggle('disabled', !ok);}
 
 /* ==== 集計（ページ確定）==== */
 function applyPage(){
   const startIdx=page*PAGE_SIZE; const slice=QUESTIONS.slice(startIdx, startIdx+PAGE_SIZE);
   for(const q of slice){
     const r=responses[q.id]; if(!r) continue;
-    const valForA=(q.flip?-r.uiVal:r.uiVal);  // +3..-3
+    const valForA=(q.flip?-r.uiVal:r.uiVal);
     const towardA=Math.sign(valForA);
     const abs=Math.abs(valForA);
     const w=abs>=3?1.0:abs===2?0.7:0.4;
@@ -348,7 +368,7 @@ document.getElementById('btn-next').addEventListener('click', ()=>{
   else{ showResult(); }
 });
 
-/* ==== 判定ロジック ==== */
+/* ==== 判定ロジック（省略なし） ==== */
 function strongEdge(axis){let e=0;for(const a of answers){if(a.axis!==axis)continue;if(a.valForA>=3)e++; else if(a.valForA<=-3)e--;}return e;}
 function axisSeed(axis){let s=0;for(const a of answers){if(axis!=='ALL'&&a.axis!==axis)continue;s+=(a.id*31)+((a.uiVal+3)*13);}return s & 1;}
 function decideAxis(A,B,AL,BL,relA,relB,strongAxis,seed){if(A>B)return AL;if(B>A)return BL;const wA=A+relA,wB=B+relB;if(wA>wB)return AL;if(wB>wA)return BL;const edge=strongEdge(strongAxis);if(edge>0)return AL;if(edge<0)return BL;return seed?BL:AL;}
@@ -384,7 +404,6 @@ function computeResult(){
   let baseName=pickSubtype(code,{Q,M,Salt,Sauce,Light,Hearty});
   let name=baseName;
 
-  // シークレット：シャトーブリアン（2%前後）
   const dRL=Math.max(0,(RL==='R'?Rf-Lf:Lf-Rf));
   const dFS=Math.max(0,(FS==='F'?F-S:S-F));
   const dKC=Math.max(0,(KC==='K'?K-C:C-K));
@@ -397,8 +416,6 @@ function computeResult(){
 
   return {code,baseName,name,R_base:R,L_base:L,F,S,K,C,Q,M,Salt,Sauce,Light,Hearty,R_adj,L_adj,Rf,Lf,tagTexture,tagFlavor,tagAfter};
 }
-
-/* 相性候補生成 */
 function parseCode(code){const [a,b,c]=code.split('-');return {RL:a,FS:b,KC:c};}
 function allTypeCodes(){return Object.keys(CODE_REPR);}
 function bestMatch(code){
@@ -421,21 +438,20 @@ function bestMatch(code){
 
 /* ==== 結果表示 ==== */
 function showResult(){
-  el('bar').style.width='100%';
+  document.getElementById('bar').style.width='100%';
   const r=computeResult(); showScreen('result');
-  el('r-type-name').textContent=r.name;
-  el('r-type-code').textContent=r.code;
-  el('tag-texture').textContent=r.tagTexture;
-  el('tag-flavor').textContent=r.tagFlavor;
-  el('tag-after').textContent=r.tagAfter;
-  el('r-desc').textContent=DESCRIPTIONS[r.name]||'';
+  document.getElementById('r-type-name').textContent=r.name;
+  document.getElementById('r-type-code').textContent=r.code;
+  document.getElementById('tag-texture').textContent=r.tagTexture;
+  document.getElementById('tag-flavor').textContent=r.tagFlavor;
+  document.getElementById('tag-after').textContent=r.tagAfter;
+  document.getElementById('r-desc').textContent=DESCRIPTIONS[r.name]||'';
   const bm=bestMatch(r.code); const repr=CODE_REPR[bm]||bm;
-  el('r-best').textContent=bm?`${repr}（${bm}）`:'—';
+  document.getElementById('r-best').textContent=bm?`${repr}（${bm}）`:'—';
 
-  // JSONエクスポート
   const payload={type:{baseCode:r.code,baseName:r.baseName,displayName:r.name},tags:{texture:r.tagTexture,flavor:r.tagFlavor,after:r.tagAfter},counts:{R:r.R_base,L:r.L_base,F:r.F,S:r.S,K:r.K,C:r.C,Q:r.Q,M:r.M,Salt:r.Salt,Sauce:r.Sauce,Light:r.Light,Hearty:r.Hearty},answers,generatedAt:new Date().toISOString()};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob); const a=el('btn-export'); a.href=url; a.download=`MEAT-BTI_${r.code}.json`;
+  const url=URL.createObjectURL(blob); const a=document.getElementById('btn-export'); a.href=url; a.download=`MEAT-BTI_${r.code}.json`;
 }
 
 /* Start / Retry */
