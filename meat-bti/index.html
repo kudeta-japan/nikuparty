@@ -4,11 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Meat BTI｜肉診断（20問）</title>
-  <meta name="description" content="Meat BTI｜肉診断。20問の二択に答えるだけで、あなたに合う“肉の12タイプ”を判定します。" />
-  <meta property="og:title" content="Meat BTI｜肉診断（20問）" />
-  <meta property="og:description" content="20問の二択で“肉の12タイプ”を判定。あなたの肉傾向を6軸で可視化。" />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="../hero.png" />
+  <meta name="description" content="二択20問に答えると、あなたに合う“肉のタイプ”を判定。ステップ式でサクサク進みます。" />
   <meta name="theme-color" content="#111111" />
   <style>
     :root{
@@ -16,31 +12,43 @@
       --accent:#ff3b2f; --accent-2:#ffc400;
     }
     *{box-sizing:border-box}
-    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic","YuGothic","Helvetica Neue",Arial,sans-serif;line-height:1.6;scroll-behavior:smooth}
-    img{max-width:100%;display:block}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic","YuGothic","Helvetica Neue",Arial,sans-serif;
+      line-height:1.6}
     a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
     .container{width:min(960px,92vw);margin:0 auto}
-    header{position:sticky;top:0;z-index:40;background:rgba(0,0,0,.55);backdrop-filter:saturate(130%) blur(6px);border-bottom:1px solid var(--border)}
+
+    header{position:sticky;top:0;z-index:50;background:rgba(0,0,0,.55);
+      border-bottom:1px solid var(--border);backdrop-filter:saturate(130%) blur(6px)}
     .nav{display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 12px}
     .brand{display:flex;align-items:center;gap:10px;font-weight:900}
     .logo{width:26px;height:26px;border-radius:8px;background:conic-gradient(from 15deg,var(--accent),var(--accent-2));box-shadow:0 0 0 2px #000 inset}
+    .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,1,1);white-space:nowrap;border:0}
 
-    .main{padding:28px 0 60px}
-    h1{font-size:clamp(28px,4.6vw,44px);line-height:1.15;margin:8px 0 4px}
-    .lead{color:var(--muted)}
+    .main{padding:0 0 60px}
 
+    /* HERO */
+    .hero{position:relative;min-height:62vh;display:flex;align-items:flex-end;overflow:hidden;border-bottom:1px solid var(--border);background:#000}
+    .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05) 0%, rgba(0,0,0,.55) 70%, rgba(0,0,0,.85) 100%);z-index:1}
+    .hero-link{position:absolute;inset:0;z-index:0;display:block}
+    .hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .hero-inner{position:relative;z-index:3;padding:40px 0 28px}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:12px 18px;border-radius:999px;border:1px solid var(--border);background:#1b1b1b;color:#fff;font-weight:800}
+    .btn-primary{background:linear-gradient(135deg,var(--accent),#ff6a50);border-color:#ff6a50}
+
+    /* Cards */
     .card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
     .row{display:grid;gap:16px;grid-template-columns:1fr}
     @media (min-width:860px){.row{grid-template-columns:1.1fr .9fr}}
 
-    .progress-wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .progress-wrap{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
     .bar{position:relative;flex:1;height:8px;border-radius:999px;background:#1e1e1e;overflow:hidden}
     .bar>i{position:absolute;inset:0;width:0;background:linear-gradient(90deg,var(--accent-2),var(--accent))}
     .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#111;font-size:12px}
 
-    /* Quiz */
+    /* Quiz fieldsets (legacy preview area) */
     form{margin-top:10px}
-    #quiz{scroll-margin-top:88px}
     fieldset.q{margin:12px 0;border:1px solid var(--border);background:#151515;padding:16px;border-radius:16px}
     fieldset.q legend{padding:0 6px;font-weight:800;margin-bottom:8px}
     .choices{display:grid;grid-template-columns:1fr;gap:10px}
@@ -49,19 +57,28 @@
     .choice:hover{border-color:#3a3a3a;background:#171717}
     .choice input{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:18px;height:18px}
 
-    .actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px}
-    .btn{display:inline-flex;align-items:center;gap:10px;padding:12px 18px;border-radius:999px;border:1px solid var(--border);background:#1b1b1b;color:#fff;font-weight:800}
-    .btn[disabled]{opacity:.6;pointer-events:none}
-    .btn-primary{background:linear-gradient(135deg,var(--accent),#ff6a50);border-color:#ff6a50}
+    /* Wizard (full-screen overlay) */
+    .no-scroll{overflow:hidden}
+    .wizard{position:fixed;z-index:60;inset:64px 0 0 0;display:none;background:var(--bg)}
+    .wizard.show{display:block}
+    .wizard-header{position:absolute;top:0;left:0;right:0;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.75);backdrop-filter:saturate(130%) blur(6px)}
+    .wizard-header .status{display:flex;gap:10px;align-items:center}
+    .wizard-close{appearance:none;border:1px solid var(--border);background:#111;color:#fff;border-radius:999px;padding:8px 12px}
+    .slides{position:absolute;top:56px;left:0;right:0;bottom:72px;display:flex;transition:transform .45s ease}
+    .slide{flex:0 0 100%;padding:18px;overflow:auto;display:grid;place-items:start}
+    .wizard-footer{position:absolute;left:0;right:0;bottom:0;height:72px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.45));backdrop-filter:saturate(130%) blur(6px)}
+    .wizard-footer .right{display:flex;gap:8px;flex-wrap:wrap}
+    .step-card{width:min(900px,92vw)}
+    .step-title{font-weight:900;font-size:22px;margin:0 0 8px}
+    .step-desc{color:var(--muted);margin:0 0 12px}
 
-    /* Result */
+    /* Result blocks */
     .grid{display:grid;gap:12px}
     .grid-2{grid-template-columns:1fr}
     @media (min-width:860px){.grid-2{grid-template-columns:1fr 1fr}}
     .dim-item{display:flex;align-items:center;gap:10px}
     .dim-item .track{flex:1;height:8px;border-radius:999px;background:#1f1f1f;overflow:hidden}
     .dim-item .fill{height:100%;background:linear-gradient(90deg,var(--accent-2),var(--accent))}
-
     .type-grid{display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))}
     @media (min-width:720px){.type-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
     @media (min-width:1024px){.type-grid{grid-template-columns:repeat(6,minmax(0,1fr))}}
@@ -69,16 +86,6 @@
     .type-card.active{outline:2px solid var(--accent-2);box-shadow:0 0 0 4px rgba(255,196,0,.15)}
 
     footer{border-top:1px solid var(--border);color:var(--muted);padding:22px 0 40px;margin-top:40px}
-      .hero{position:relative;min-height:62vh;display:flex;align-items:flex-end;overflow:hidden;border-bottom:1px solid var(--border);background:#000}@media(min-width:900px){.hero{background-image:url('./hero_meatbti_1600.jpg')}}
-    .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05) 0%, rgba(0,0,0,.55) 70%, rgba(0,0,0,.85) 100%);z-index:1}
-    .hero-inner{position:relative;z-index:2;padding:40px 0 28px}
-    .tag{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.35);font-size:12px}
-    .title-split{font-weight:900;line-height:1.1;margin:10px 0 6px;font-size:clamp(42px,9vw,96px)}
-    .title-split .meat{color:var(--accent-2)}
-    .title-split .bti{color:#69c36b}
-    .subtitle{color:var(--text);opacity:.95;font-size:clamp(16px,2.4vw,28px)}
-  .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,1,1);white-space:nowrap;border:0}
-  .hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
   </style>
 </head>
 <body>
@@ -92,66 +99,65 @@
   </header>
 
   <main class="main">
+    <!-- HERO -->
     <section class="hero" id="top" aria-label="Meat BTI Hero">
-      <a href="mbti.png" target="_blank" rel="noopener"><img class="hero-img" src="mbti.png" alt="" aria-hidden="true"></a>
+      <a class="hero-link" href="mbti.png" target="_blank" rel="noopener">
+        <img class="hero-img" src="mbti.png" alt="">
+      </a>
       <div class="container hero-inner">
-        <span class="sr-only">Meat BTI（肉診断）のヒーロー画像</span>
-        <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
           <button id="startBtn" type="button" class="btn btn-primary">診断する</button>
           <a href="../index.html" class="btn">街コンTOPへ</a>
         </div>
       </div>
     </section>
-    <div class="container">
+
+    <!-- 説明＋（レガシーの見出しだけ残す） -->
+    <div class="container" style="padding:28px 0">
       <div class="row">
         <section class="card">
-          <h1>肉診断（Meat BTI）</h1>
-          <p class="lead">二択の<strong>全20問</strong>。所要<strong>1〜2分</strong>。直感でお答えください。<br>結果は6軸の傾向と、あなたに合う<strong>“肉の12タイプ”</strong>を提示します。</p>
-
+          <h1 style="margin:6px 0 8px">肉診断（Meat BTI）</h1>
+          <p class="lead">二択の<strong>全20問</strong>。直感でお答えください。<br>結果は6軸の傾向と12タイプのおすすめを表示します。</p>
           <div class="progress-wrap">
             <div class="pill" id="progressText">0/20 回答済み</div>
             <div class="pill" id="stepInfo">Step 1/4</div>
             <div class="bar" aria-hidden="true"><i id="progressBar"></i></div>
           </div>
-            <div class="bar" aria-hidden="true"><i id="progressBar"></i></div>
-          </div>
-
-          <form id="quiz"></form>
-          <div class="actions">
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <button type="button" id="reset" class="btn">リセット</button>
-              <button type="button" id="save" class="btn">途中保存</button>
-              <button type="button" id="load" class="btn">保存を読み込み</button>
-            </div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <button type="button" id="prev" class="btn" disabled>前の5問へ</button>
-              <button type="button" id="next" class="btn">次の5問へ</button>
-              <button type="submit" form="quiz" id="submit" class="btn btn-primary" disabled>結果を見る</button>
-            </div>
-          </div>
-            <button type="submit" form="quiz" id="submit" class="btn btn-primary" disabled>結果を見る</button>
-          </div>
+          <!-- レガシーフォームの表示はウィザードに置換するので空置き -->
+          <form id="quizLegacy"></form>
         </section>
-
-        <aside class="card" id="sidebar">
+        <aside class="card">
           <h2 style="margin:6px 0 8px;font-size:18px">診断の考え方</h2>
           <ol style="margin:0 0 10px 18px;padding:0">
             <li>6軸（SOC/RICH/PACE/NOV/TEXT/VALUE）の回答をA/Bで集計</li>
-            <li>各タイプに設定された <strong>重み（−3〜+3）</strong> と回答ベクトルの内積を計算</li>
-            <li>スコアが最も高いタイプを提示（次点2つも表示）</li>
+            <li>各タイプの重み（−3〜+3）と回答ベクトルの内積を算出</li>
+            <li>スコア最大のタイプ＋次点2つを提示</li>
           </ol>
-          <p class="lead" style="font-size:12px">※重みは提供表に基づき設定。信頼度は回答の偏りから算出（60–95%）。</p>
         </aside>
       </div>
-
-      <section id="resultWrap" class="card" style="display:none;margin-top:16px">
-        <div id="result"></div>
-        <div class="actions" style="margin-top:16px">
-          <button class="btn" id="copy">結果をコピー</button>
-          <a class="btn pill" href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'})">もう一度診断する</a>
-        </div>
-      </section>
     </div>
+
+    <!-- Wizard overlay -->
+    <section id="wizard" class="wizard" aria-hidden="true">
+      <div class="wizard-header">
+        <div class="status">
+          <div class="pill" id="wProgressText">0/20 回答済み</div>
+          <div class="pill" id="wStepInfo">Step 1/4</div>
+        </div>
+        <button id="wizardClose" class="wizard-close" type="button">閉じる</button>
+      </div>
+      <div id="slides" class="slides"><!-- steps will be injected --></div>
+      <div class="wizard-footer">
+        <div class="left">
+          <button type="button" id="wReset" class="btn">リセット</button>
+        </div>
+        <div class="right">
+          <button type="button" id="wPrev" class="btn" disabled>前の5問へ</button>
+          <button type="button" id="wNext" class="btn">次の5問へ</button>
+          <button type="button" id="wSubmit" class="btn btn-primary" disabled>結果を見る</button>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer>
@@ -162,9 +168,12 @@
 
   <script>
   (function(){
-    const $ = (sel)=>document.querySelector(sel);
+    const $ = (s)=>document.querySelector(s);
 
-    // ===== Data =====
+    // Year
+    $('#y').textContent = new Date().getFullYear();
+
+    // ===== 20 Questions =====
     const QUESTIONS = [
       {"id":1,"text":"焼き肉かステーキか","A":"ステーキでじっくり味わいたい","B":"焼き肉でワイワイ楽しみたい","dimension":"SOC"},
       {"id":2,"text":"焼き肉の一皿目は？","A":"タン塩で口を整える","B":"カルビで景気づけ","dimension":"RICH"},
@@ -188,39 +197,42 @@
       {"id":20,"text":"演出・体験に対する好み","A":"落ち着きと完成度を重視","B":"目の前で焼き上げ/フランベなど演出歓迎","dimension":"NOV"}
     ];
 
+    // ===== 12 Types (weights) =====
     const TYPE_WEIGHTS = [
-      { id:'HIRE', name:'ヒレ', desc:'最上級の赤身。雑味が少なくしっとり柔らか。', w:{RICH:-2, NOV:-1, SOC:-2, PACE:-2, VALUE:-2, TEXT:-2} },
-      { id:'CHATEAU', name:'シャトーブリアン', desc:'ヒレ中心部。究極のやわらかさと上品さ。', w:{RICH:-3, NOV:-1, SOC:-3, PACE:-2, VALUE:-3, TEXT:-2} },
-      { id:'MISUJI', name:'ミスジ', desc:'細かなサシでとろける肩の希少部位。', w:{RICH:-1, NOV:-1, SOC:-2, PACE:-1, VALUE:-2, TEXT:-2} },
-      { id:'ICHIBO', name:'イチボ', desc:'赤身主体にほどよいサシ。香ばし派にも。', w:{RICH:-1, NOV:0, SOC:-1, PACE:-1, VALUE:-1, TEXT:1} },
-      { id:'RUMP', name:'ランプ', desc:'赤身の旨みしっかり。軽やかで万能。', w:{RICH:-1, NOV:2, SOC:-1, PACE:-1, VALUE:-1, TEXT:-1} },
-      { id:'RIB', name:'リブロース', desc:'脂の甘みとジューシーさが魅力。', w:{RICH:2, NOV:-1, SOC:1, PACE:-1, VALUE:-1, TEXT:-1} },
-      { id:'SIRLOIN', name:'サーロイン', desc:'王道のコクと香り。満足感高い。', w:{RICH:2, NOV:0, SOC:2, PACE:1, VALUE:0, TEXT:-1} },
-      { id:'ZABUTON', name:'ザブトン', desc:'肩ロース芯。濃厚な霜降りでリッチ。', w:{RICH:2, NOV:-1, SOC:-2, PACE:-1, VALUE:-1, TEXT:-2} },
-      { id:'KALBI', name:'カルビ', desc:'脂の旨さでがっつり満足。みんなで楽しい。', w:{RICH:3, NOV:0, SOC:3, PACE:2, VALUE:1, TEXT:0} },
-      { id:'HARAMI', name:'ハラミ', desc:'赤身感とジューシーさの両立。', w:{RICH:1, NOV:0, SOC:2, PACE:2, VALUE:1, TEXT:2} },
-      { id:'KAINOMI', name:'カイノミ', desc:'赤身と脂のバランスに優れた隠れ人気。', w:{RICH:1, NOV:-1, SOC:1, PACE:1, VALUE:0, TEXT:1} },
-      { id:'TONGUE', name:'タン', desc:'コリコリ食感。レモン塩がよく合う。', w:{RICH:-2, NOV:1, SOC:2, PACE:2, VALUE:0, TEXT:2} }
+      { id:'HIRE',     name:'ヒレ',           desc:'最上級の赤身。雑味が少なくしっとり柔らか。',      w:{RICH:-2, NOV:-1, SOC:-2, PACE:-2, VALUE:-2, TEXT:-2} },
+      { id:'CHATEAU',  name:'シャトーブリアン', desc:'ヒレ中心部。究極のやわらかさと上品さ。',          w:{RICH:-3, NOV:-1, SOC:-3, PACE:-2, VALUE:-3, TEXT:-2} },
+      { id:'MISUJI',   name:'ミスジ',         desc:'細かなサシでとろける肩の希少部位。',               w:{RICH:-1, NOV:-1, SOC:-2, PACE:-1, VALUE:-2, TEXT:-2} },
+      { id:'ICHIBO',   name:'イチボ',         desc:'赤身主体にほどよいサシ。香ばし派にも。',             w:{RICH:-1, NOV:0,  SOC:-1, PACE:-1, VALUE:-1, TEXT:1} },
+      { id:'RUMP',     name:'ランプ',         desc:'赤身の旨みしっかり。軽やかで万能。',                 w:{RICH:-1, NOV:2,  SOC:-1, PACE:-1, VALUE:-1, TEXT:-1} },
+      { id:'RIB',      name:'リブロース',     desc:'脂の甘みとジューシーさが魅力。',                     w:{RICH:2,  NOV:-1, SOC:1,  PACE:-1, VALUE:-1, TEXT:-1} },
+      { id:'SIRLOIN',  name:'サーロイン',     desc:'王道のコクと香り。満足感高い。',                     w:{RICH:2,  NOV:0,  SOC:2,  PACE:1,  VALUE:0,  TEXT:-1} },
+      { id:'ZABUTON',  name:'ザブトン',       desc:'肩ロース芯。濃厚な霜降りでリッチ。',                 w:{RICH:2,  NOV:-1, SOC:-2, PACE:-1, VALUE:-1, TEXT:-2} },
+      { id:'KALBI',    name:'カルビ',         desc:'脂の旨さでがっつり満足。みんなで楽しい。',           w:{RICH:3,  NOV:0,  SOC:3,  PACE:2,  VALUE:1,  TEXT:0} },
+      { id:'HARAMI',   name:'ハラミ',         desc:'赤身感とジューシーさの両立。',                       w:{RICH:1,  NOV:0,  SOC:2,  PACE:2,  VALUE:1,  TEXT:2} },
+      { id:'KAINOMI',  name:'カイノミ',       desc:'赤身と脂のバランスに優れた隠れ人気。',               w:{RICH:1,  NOV:-1, SOC:1,  PACE:1,  VALUE:0,  TEXT:1} },
+      { id:'TONGUE',   name:'タン',           desc:'コリコリ食感。レモン塩がよく合う。',                 w:{RICH:-2, NOV:1,  SOC:2,  PACE:2,  VALUE:0,  TEXT:2} }
     ];
 
-    // ===== Wizard Elements =====
-    const wizard = $('#wizard');
-    const slides = $('#slides');
+    // ===== Wizard elements =====
+    const wizard   = $('#wizard');
+    const slides   = $('#slides');
     const startBtn = $('#startBtn');
     const closeBtn = $('#wizardClose');
-    const wPrev = $('#wPrev');
-    const wNext = $('#wNext');
-    const wSubmit = $('#wSubmit');
-    const wReset = $('#wReset');
+    const wPrev    = $('#wPrev');
+    const wNext    = $('#wNext');
+    const wSubmit  = $('#wSubmit');
+    const wReset   = $('#wReset');
     const wProgressText = $('#wProgressText');
-    const wStepInfo = $('#wStepInfo');
+    const wStepInfo     = $('#wStepInfo');
+    const progText = $('#progressText');
+    const progBar  = $('#progressBar');
+    const stepInfo = $('#stepInfo');
 
-    // Build slides (4 steps + result)
+    // ===== Build slides (5問×4 + 結果) =====
     function buildSlides(){
       slides.innerHTML = '';
       const form = document.createElement('form');
       form.id = 'quizW';
-      form.className = 'quiz-form';
       slides.appendChild(form);
 
       for(let s=0;s<4;s++){
@@ -229,7 +241,7 @@
         const card = document.createElement('div');
         card.className = 'card step-card';
         card.innerHTML = `<h3 class="step-title">Step ${s+1}/4</h3><p class="step-desc">直感でA/Bを選んでください（この画面は5問）</p>`;
-        const start = s*5; const end = Math.min((s+1)*5, QUESTIONS.length);
+        const start = s*5, end = Math.min((s+1)*5, QUESTIONS.length);
         for(let i=start;i<end;i++){
           const q = QUESTIONS[i];
           const fs = document.createElement('fieldset');
@@ -245,57 +257,64 @@
         wrap.appendChild(card);
         form.appendChild(wrap);
       }
-      // result slide
       const res = document.createElement('div');
       res.className = 'slide';
       res.innerHTML = `<div class="card step-card" id="result"><h3 class="step-title">診断結果</h3></div>`;
       slides.appendChild(res);
+
+      // ラジオ変更で進捗更新
+      slides.addEventListener('change', (e)=>{ if(e.target.matches('input[type="radio"]')) updateUI(); });
     }
 
-    function currentAnswered(){
-      const data = new FormData(document.getElementById('quizW'));
-      let count = 0; QUESTIONS.forEach(q=>{ if(data.get(`q${q.id}`)) count++; });
+    // ===== Stepper =====
+    const STEP_SIZE=5; let step=0; // 0..3（4は結果画面）
+    function dataCount(){
+      const form = $('#quizW'); if(!form) return 0;
+      let count = 0; QUESTIONS.forEach(q=>{ if(form.querySelector(`input[name="q${q.id}"]:checked`)) count++; });
       return count;
     }
-
-    function stepAnswered(step){
-      const form = document.getElementById('quizW');
-      const start = step*5; const end = Math.min((step+1)*5, QUESTIONS.length);
+    function stepFilled(s){
+      const form = $('#quizW'); if(!form) return false;
+      const start = s*STEP_SIZE, end = Math.min((s+1)*STEP_SIZE, QUESTIONS.length);
       for(let i=start;i<end;i++){
-        const q=QUESTIONS[i];
-        if(!form.querySelector(`input[name="q${q.id}"]:checked`)) return false;
+        if(!form.querySelector(`input[name="q${QUESTIONS[i].id}"]:checked`)) return false;
       }
       return true;
     }
-
-    let step = 0; // 0..3, 4 is result
     function updateUI(){
-      const answered = currentAnswered();
+      const answered = dataCount();
       wProgressText.textContent = `${answered}/20 回答済み`;
       wStepInfo.textContent = step<=3 ? `Step ${step+1}/4` : '結果';
-      wPrev.disabled = step === 0;
-      wNext.disabled = (step >= 3) || !stepAnswered(step);
-      wSubmit.disabled = answered !== 20;
+      if(progText) progText.textContent = `${answered}/20 回答済み`;
+      if(progBar)  progBar.style.width = `${Math.round(answered/20*100)}%`;
+      if(stepInfo) stepInfo.textContent = step<=3 ? `Step ${step+1}/4` : '結果';
+      wPrev.disabled = step===0;
+      wNext.disabled = (step>=3) || !stepFilled(step);
+      wSubmit.disabled = (answered!==20);
       slides.style.transform = `translateX(-${step*100}%)`;
     }
 
-    // scoring helpers
+    // ===== Scoring =====
     function collectScores(){
-      const scores={};
-      const form = document.getElementById('quizW');
+      const scores={}; const form=$('#quizW'); if(!form) return scores;
       QUESTIONS.forEach(q=>{
-        const sel=form.querySelector(`input[name="q${q.id}"]:checked`);
+        const sel = form.querySelector(`input[name="q${q.id}"]:checked`);
         if(!sel) return; const v=sel.value; const d=q.dimension;
         if(!scores[d]) scores[d]={A:0,B:0}; scores[d][v]++;
-      }); return scores;
+      });
+      return scores;
     }
     function scoreVector(scores){
       const dims=['RICH','NOV','SOC','PACE','VALUE','TEXT'];
-      const vec={}; dims.forEach(d=>{ const s=scores[d]||{A:0,B:0}; vec[d]=(s.B-s.A); }); return vec;
+      const vec={}; dims.forEach(d=>{ const s=scores[d]||{A:0,B:0}; vec[d]=(s.B-s.A); });
+      return vec;
     }
     function rankTypes(scores){
       const v=scoreVector(scores);
-      return TYPE_WEIGHTS.map(t=>{ let s=0; for(const k in t.w){ s += (t.w[k]||0)*(v[k]||0); } return {...t, score:s}; }).sort((a,b)=>b.score-a.score);
+      return TYPE_WEIGHTS.map(t=>{
+        let s=0; for(const k in t.w){ s += (t.w[k]||0)*(v[k]||0); }
+        return {...t, score:s};
+      }).sort((a,b)=>b.score-a.score);
     }
     function calcConfidence(scores){
       const dims=['SOC','RICH','PACE','NOV','TEXT','VALUE'];
@@ -304,17 +323,19 @@
     }
     function dimBars(scores){
       const INFO={SOC:{A:'少人数・会話',B:'大人数・にぎやか'},RICH:{A:'さっぱり赤身',B:'リッチ・サシ'},PACE:{A:'段取り・慎重',B:'テンポ・直感'},NOV:{A:'定番重視',B:'新しいもの好き'},TEXT:{A:'しっとり/レア',B:'香ばし/噛み応え'},VALUE:{A:'質重視',B:'量・コスパ'}};
-      return Object.keys(INFO).map(k=>{ const s=scores[k]||{A:0,B:0}; const tot=s.A+s.B; const pct=tot?Math.round(s.B*100/tot):50; const lean=s.A===s.B?'バランス':(s.A>s.B?INFO[k].A:INFO[k].B); return `<div class="dim-item"><div style="min-width:150px"><strong>${k}</strong>：${lean} <span class="lead" style="font-size:12px">(${s.A}A/${s.B}B)</span></div><div class="track"><div class="fill" style="width:${pct}%"></div></div></div>`; }).join('');
+      return Object.keys(INFO).map(k=>{
+        const s=scores[k]||{A:0,B:0}; const tot=s.A+s.B; const pct=tot?Math.round(s.B*100/tot):50;
+        const lean=s.A===s.B?'バランス':(s.A>s.B?INFO[k].A:INFO[k].B);
+        return `<div class="dim-item"><div style="min-width:150px"><strong>${k}</strong>：${lean} <span class="pill" style="opacity:.8">${s.A}A/${s.B}B</span></div><div class="track"><div class="fill" style="width:${pct}%"></div></div></div>`;
+      }).join('');
     }
     function typeGrid(selectedId){
       return `<div class="type-grid">${TYPE_WEIGHTS.map(t=>`<div class="type-card ${t.id===selectedId?'active':''}"><div class="lead" style="font-size:12px">${t.id}</div><div style="font-weight:900">${t.name}</div></div>`).join('')}</div>`;
     }
-
     function showResult(){
       const scores = collectScores();
       const ranked = rankTypes(scores);
-      const primary = ranked[0];
-      const alt = ranked.slice(1,3);
+      const primary = ranked[0], alt = ranked.slice(1,3);
       const confidence = calcConfidence(scores);
       const bars = dimBars(scores);
       const soc=scores.SOC||{A:0,B:0}, pace=scores.PACE||{A:0,B:0}, nov=scores.NOV||{A:0,B:0}, val=scores.VALUE||{A:0,B:0};
@@ -326,12 +347,12 @@
 
       const res = $('#result');
       res.innerHTML = `
-        <div class="lead" style="font-size:12px">選定結果（信頼度 ${confidence}%）</div>
+        <div class="pill" style="margin-bottom:6px">信頼度 ${confidence}%</div>
         <div style="font-size:28px;font-weight:900;line-height:1.2">${primary.name} <span class="pill">${primary.id}</span></div>
         <div class="lead" style="margin:4px 0 8px">${primary.desc}</div>
-        <div>近い候補：${neighbors||'-'}</div>
+        <div>近い候補：${neighbors || '-'}</div>
         <div style="margin-top:10px">${typeGrid(primary.id)}</div>
-        <div class="spacer"></div>
+        <div class="spacer" style="height:12px"></div>
         <div class="card">
           <h4 style="margin:0 0 6px">あなたの傾向</h4>
           <div class="grid" style="gap:8px">${bars}</div>
@@ -344,47 +365,36 @@
             </ul>
           </div>
         </div>`;
-      step = 4; // move to result screen
+      step = 4;
       slides.style.transform = `translateX(-400%)`;
-      wPrev.disabled = false;
-      wNext.disabled = true;
-      wSubmit.disabled = true;
-      wStepInfo.textContent = '結果';
+      updateUI();
     }
 
-    // ===== Events =====
-    if(startBtn){
-      startBtn.addEventListener('click', ()=>{
-        // build once
-        if(!slides.children.length) buildSlides();
-        document.body.classList.add('no-scroll');
-        wizard.classList.add('show');
-        step = 0;
-        updateUI();
-      });
-    }
-    if(closeBtn){
-      closeBtn.addEventListener('click', ()=>{
-        wizard.classList.remove('show');
-        document.body.classList.remove('no-scroll');
-      });
-    }
-    if(wPrev) wPrev.addEventListener('click', ()=>{ if(step>0){ step--; updateUI(); } });
-    if(wNext) wNext.addEventListener('click', ()=>{ if(step<3 && stepAnswered(step)){ step++; updateUI(); } });
-    if(wSubmit) wSubmit.addEventListener('click', ()=>{ if(currentAnswered()===20){ showResult(); } });
-
-    // Listen for changes on the dynamic form (event delegation)
-    slides.addEventListener('change', (e)=>{
-      if(e.target && e.target.matches('input[type="radio"]')) updateUI();
-    });
-
-    // Optional: hash open
-    if(location.hash==='#quiz'){
+    // ===== Open Wizard (確実に動くよう二重でハンドラ) =====
+    function openWizard(){
       if(!slides.children.length) buildSlides();
       document.body.classList.add('no-scroll');
       wizard.classList.add('show');
+      step = 0;
       updateUI();
     }
+    if(startBtn) startBtn.addEventListener('click', (e)=>{ e.preventDefault(); openWizard(); });
+    document.addEventListener('click', (e)=>{ if(e.target && (e.target.id==='startBtn' || e.target.closest('#startBtn'))) { e.preventDefault(); openWizard(); } });
+
+    // Nav buttons
+    if(closeBtn) closeBtn.addEventListener('click', ()=>{ wizard.classList.remove('show'); document.body.classList.remove('no-scroll'); });
+    if(wPrev)    wPrev.addEventListener('click', ()=>{ if(step>0){ step--; updateUI(); } });
+    if(wNext)    wNext.addEventListener('click', ()=>{ if(step<3 && stepFilled(step)){ step++; updateUI(); } });
+    if(wSubmit)  wSubmit.addEventListener('click', ()=>{ if(dataCount()===20){ showResult(); } });
+
+    // Reset
+    if(wReset)   wReset.addEventListener('click', ()=>{
+      const form = $('#quizW'); if(form) form.reset();
+      step = 0; updateUI();
+    });
+
+    // Hash open
+    if(location.hash==='#quiz'){ openWizard(); }
   })();
   </script>
 </body>
