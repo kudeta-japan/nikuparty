@@ -8,7 +8,7 @@
   <meta property="og:title" content="Meat BTI｜肉診断（20問）" />
   <meta property="og:description" content="20問の二択で“肉の12タイプ”を判定。あなたの肉傾向を6軸で可視化。" />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="../mbti.png" />
+  <meta property="og:image" content="../hero.png" />
   <meta name="theme-color" content="#111111" />
   <style>
     :root{
@@ -164,21 +164,7 @@
   (function(){
     const $ = (sel)=>document.querySelector(sel);
 
-    // Elements
-    const quizEl = $('#quiz');
-    const progressText = $('#progressText');
-    const progressBar = $('#progressBar');
-    const stepInfo = $('#stepInfo');
-    const submitBtn = $('#submit');
-    const prevBtn = $('#prev');
-    const nextBtn = $('#next');
-    const resetBtn = $('#reset');
-    const saveBtn = $('#save');
-    const loadBtn = $('#load');
-    const resultWrap = $('#resultWrap');
-    const resultEl = $('#result');
-
-    // Data (20Q)
+    // ===== Data =====
     const QUESTIONS = [
       {"id":1,"text":"焼き肉かステーキか","A":"ステーキでじっくり味わいたい","B":"焼き肉でワイワイ楽しみたい","dimension":"SOC"},
       {"id":2,"text":"焼き肉の一皿目は？","A":"タン塩で口を整える","B":"カルビで景気づけ","dimension":"RICH"},
@@ -202,7 +188,6 @@
       {"id":20,"text":"演出・体験に対する好み","A":"落ち着きと完成度を重視","B":"目の前で焼き上げ/フランベなど演出歓迎","dimension":"NOV"}
     ];
 
-    // 12タイプ：重み
     const TYPE_WEIGHTS = [
       { id:'HIRE', name:'ヒレ', desc:'最上級の赤身。雑味が少なくしっとり柔らか。', w:{RICH:-2, NOV:-1, SOC:-2, PACE:-2, VALUE:-2, TEXT:-2} },
       { id:'CHATEAU', name:'シャトーブリアン', desc:'ヒレ中心部。究極のやわらかさと上品さ。', w:{RICH:-3, NOV:-1, SOC:-3, PACE:-2, VALUE:-3, TEXT:-2} },
@@ -218,58 +203,88 @@
       { id:'TONGUE', name:'タン', desc:'コリコリ食感。レモン塩がよく合う。', w:{RICH:-2, NOV:1, SOC:2, PACE:2, VALUE:0, TEXT:2} }
     ];
 
-    // Build form
-    function buildForm(){
-      if(!quizEl) return;
-      quizEl.innerHTML='';
-      QUESTIONS.forEach((q,i)=>{
-        const fs=document.createElement('fieldset');
-        fs.className='q';
-        fs.innerHTML=`<legend><strong>Q${i+1}.</strong> ${q.text}</legend>
-          <div class="choices">
-            <label class="choice"><input type="radio" name="q${q.id}" value="A" required> ${q.A}</label>
-            <label class="choice"><input type="radio" name="q${q.id}" value="B"> ${q.B}</label>
-          </div>`;
-        quizEl.appendChild(fs);
-      });
+    // ===== Wizard Elements =====
+    const wizard = $('#wizard');
+    const slides = $('#slides');
+    const startBtn = $('#startBtn');
+    const closeBtn = $('#wizardClose');
+    const wPrev = $('#wPrev');
+    const wNext = $('#wNext');
+    const wSubmit = $('#wSubmit');
+    const wReset = $('#wReset');
+    const wProgressText = $('#wProgressText');
+    const wStepInfo = $('#wStepInfo');
+
+    // Build slides (4 steps + result)
+    function buildSlides(){
+      slides.innerHTML = '';
+      const form = document.createElement('form');
+      form.id = 'quizW';
+      form.className = 'quiz-form';
+      slides.appendChild(form);
+
+      for(let s=0;s<4;s++){
+        const wrap = document.createElement('div');
+        wrap.className = 'slide';
+        const card = document.createElement('div');
+        card.className = 'card step-card';
+        card.innerHTML = `<h3 class="step-title">Step ${s+1}/4</h3><p class="step-desc">直感でA/Bを選んでください（この画面は5問）</p>`;
+        const start = s*5; const end = Math.min((s+1)*5, QUESTIONS.length);
+        for(let i=start;i<end;i++){
+          const q = QUESTIONS[i];
+          const fs = document.createElement('fieldset');
+          fs.className = 'q';
+          fs.innerHTML = `
+            <legend><strong>Q${i+1}.</strong> ${q.text}</legend>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="q${q.id}" value="A" required> ${q.A}</label>
+              <label class="choice"><input type="radio" name="q${q.id}" value="B"> ${q.B}</label>
+            </div>`;
+          card.appendChild(fs);
+        }
+        wrap.appendChild(card);
+        form.appendChild(wrap);
+      }
+      // result slide
+      const res = document.createElement('div');
+      res.className = 'slide';
+      res.innerHTML = `<div class="card step-card" id="result"><h3 class="step-title">診断結果</h3></div>`;
+      slides.appendChild(res);
     }
 
-    function answeredCount(){
-      return QUESTIONS.reduce((n,q)=> n + (quizEl.querySelector(`input[name="q${q.id}"]:checked`)?1:0), 0);
+    function currentAnswered(){
+      const data = new FormData(document.getElementById('quizW'));
+      let count = 0; QUESTIONS.forEach(q=>{ if(data.get(`q${q.id}`)) count++; });
+      return count;
     }
 
-    // Stepper (5問ずつ)
-    const STEP_SIZE=5; let currentStep=0; // 0..3
     function stepAnswered(step){
-      const start=step*STEP_SIZE; const end=Math.min((step+1)*STEP_SIZE, QUESTIONS.length);
+      const form = document.getElementById('quizW');
+      const start = step*5; const end = Math.min((step+1)*5, QUESTIONS.length);
       for(let i=start;i<end;i++){
         const q=QUESTIONS[i];
-        if(!quizEl.querySelector(`input[name="q${q.id}"]:checked`)) return false;
+        if(!form.querySelector(`input[name="q${q.id}"]:checked`)) return false;
       }
       return true;
     }
-    function showStep(step){
-      currentStep=Math.max(0,Math.min(3,step));
-      const fields=[...quizEl.querySelectorAll('fieldset.q')];
-      fields.forEach((fs,i)=>{ fs.style.display = (i>=currentStep*STEP_SIZE && i<(currentStep+1)*STEP_SIZE)?'':'none'; });
-      updateProgress();
+
+    let step = 0; // 0..3, 4 is result
+    function updateUI(){
+      const answered = currentAnswered();
+      wProgressText.textContent = `${answered}/20 回答済み`;
+      wStepInfo.textContent = step<=3 ? `Step ${step+1}/4` : '結果';
+      wPrev.disabled = step === 0;
+      wNext.disabled = (step >= 3) || !stepAnswered(step);
+      wSubmit.disabled = answered !== 20;
+      slides.style.transform = `translateX(-${step*100}%)`;
     }
 
-    function updateProgress(){
-      const a=answeredCount();
-      if(progressText) progressText.textContent=`${a}/${QUESTIONS.length} 回答済み`;
-      if(progressBar) progressBar.style.width=`${Math.round(100*a/QUESTIONS.length)}%`;
-      if(stepInfo) stepInfo.textContent=`Step ${currentStep+1}/4`;
-      if(prevBtn) prevBtn.disabled = currentStep===0;
-      if(nextBtn) nextBtn.disabled = currentStep>=3 || !stepAnswered(currentStep);
-      if(submitBtn) submitBtn.disabled = a !== QUESTIONS.length;
-    }
-
-    // Scoring
+    // scoring helpers
     function collectScores(){
       const scores={};
+      const form = document.getElementById('quizW');
       QUESTIONS.forEach(q=>{
-        const sel=quizEl.querySelector(`input[name="q${q.id}"]:checked`);
+        const sel=form.querySelector(`input[name="q${q.id}"]:checked`);
         if(!sel) return; const v=sel.value; const d=q.dimension;
         if(!scores[d]) scores[d]={A:0,B:0}; scores[d][v]++;
       }); return scores;
@@ -295,63 +310,81 @@
       return `<div class="type-grid">${TYPE_WEIGHTS.map(t=>`<div class="type-card ${t.id===selectedId?'active':''}"><div class="lead" style="font-size:12px">${t.id}</div><div style="font-weight:900">${t.name}</div></div>`).join('')}</div>`;
     }
 
-    function renderResult(scores){
-      const ranked=rankTypes(scores); const primary=ranked[0]; const alt=ranked.slice(1,3); const confidence=calcConfidence(scores); const bars=dimBars(scores);
+    function showResult(){
+      const scores = collectScores();
+      const ranked = rankTypes(scores);
+      const primary = ranked[0];
+      const alt = ranked.slice(1,3);
+      const confidence = calcConfidence(scores);
+      const bars = dimBars(scores);
       const soc=scores.SOC||{A:0,B:0}, pace=scores.PACE||{A:0,B:0}, nov=scores.NOV||{A:0,B:0}, val=scores.VALUE||{A:0,B:0};
       const seat=(soc.B>soc.A)?'大テーブルでワイワイ':(soc.A>soc.B?'2〜3人で会話重視':'どちらもOK');
       const order=(pace.B>pace.A)?'アラカルト中心':(pace.A>pace.B?'コース中心':'両方OK');
       const creative=(nov.B>nov.A)?'限定・創作も積極的に':'定番中心で';
       const value=(val.B>val.A)?'ボリューム満足派':'質重視派';
       const neighbors = alt.map(n=>`<span class="pill">${n.name}</span>`).join(' ');
-      resultEl.innerHTML = `
-        <h2 style="margin:6px 0 10px">診断結果</h2>
-        <div class="grid grid-2">
-          <div class="card" style="background:#111">
-            <div class="lead" style="font-size:12px">選定結果（信頼度 ${confidence}%）</div>
-            <div style="font-size:28px;font-weight:900;line-height:1.2">${primary.name} <span class="pill">${primary.id}</span></div>
-            <div class="lead" style="margin:4px 0 8px">${primary.desc}</div>
-            <div>近い候補：${neighbors||'-'}</div>
-            <div style="margin-top:10px">${typeGrid(primary.id)}</div>
-          </div>
-          <div class="card">
-            <h3 style="margin:0 0 6px">あなたの傾向</h3>
-            <div class="grid" style="gap:8px">${bars}</div>
-            <div style="margin-top:12px">
-              <h4 style="margin:0 0 6px">食べ方・席の提案</h4>
-              <ul style="margin:0;padding-left:18px">
-                <li><strong>席・流れ：</strong>${seat}／${order}</li>
-                <li><strong>攻め方：</strong>${creative}</li>
-                <li><strong>価値観：</strong>${value}</li>
-              </ul>
-            </div>
+
+      const res = $('#result');
+      res.innerHTML = `
+        <div class="lead" style="font-size:12px">選定結果（信頼度 ${confidence}%）</div>
+        <div style="font-size:28px;font-weight:900;line-height:1.2">${primary.name} <span class="pill">${primary.id}</span></div>
+        <div class="lead" style="margin:4px 0 8px">${primary.desc}</div>
+        <div>近い候補：${neighbors||'-'}</div>
+        <div style="margin-top:10px">${typeGrid(primary.id)}</div>
+        <div class="spacer"></div>
+        <div class="card">
+          <h4 style="margin:0 0 6px">あなたの傾向</h4>
+          <div class="grid" style="gap:8px">${bars}</div>
+          <div style="margin-top:12px">
+            <h4 style="margin:0 0 6px">食べ方・席の提案</h4>
+            <ul style="margin:0;padding-left:18px">
+              <li><strong>席・流れ：</strong>${seat}／${order}</li>
+              <li><strong>攻め方：</strong>${creative}</li>
+              <li><strong>価値観：</strong>${value}</li>
+            </ul>
           </div>
         </div>`;
-      resultWrap.style.display='block';
-      resultWrap.scrollIntoView({behavior:'smooth',block:'start'});
+      step = 4; // move to result screen
+      slides.style.transform = `translateX(-400%)`;
+      wPrev.disabled = false;
+      wNext.disabled = true;
+      wSubmit.disabled = true;
+      wStepInfo.textContent = '結果';
     }
 
-    function startScroll(){ const t=$('#quiz'); if(t) t.scrollIntoView({behavior:'smooth',block:'start'}); }
-
-    // Wiring
-    if(quizEl){
-      quizEl.addEventListener('change', ()=>{ updateProgress(); });
-      quizEl.addEventListener('submit', (e)=>{ e.preventDefault(); if(answeredCount()===QUESTIONS.length){ renderResult(collectScores()); } });
+    // ===== Events =====
+    if(startBtn){
+      startBtn.addEventListener('click', ()=>{
+        // build once
+        if(!slides.children.length) buildSlides();
+        document.body.classList.add('no-scroll');
+        wizard.classList.add('show');
+        step = 0;
+        updateUI();
+      });
     }
-    if(prevBtn) prevBtn.addEventListener('click', ()=>{ showStep(currentStep-1); startScroll(); });
-    if(nextBtn) nextBtn.addEventListener('click', ()=>{ if(stepAnswered(currentStep)){ showStep(currentStep+1); startScroll(); } });
-    if(submitBtn) submitBtn.addEventListener('click', (e)=>{ e.preventDefault(); if(answeredCount()===QUESTIONS.length){ renderResult(collectScores()); } });
+    if(closeBtn){
+      closeBtn.addEventListener('click', ()=>{
+        wizard.classList.remove('show');
+        document.body.classList.remove('no-scroll');
+      });
+    }
+    if(wPrev) wPrev.addEventListener('click', ()=>{ if(step>0){ step--; updateUI(); } });
+    if(wNext) wNext.addEventListener('click', ()=>{ if(step<3 && stepAnswered(step)){ step++; updateUI(); } });
+    if(wSubmit) wSubmit.addEventListener('click', ()=>{ if(currentAnswered()===20){ showResult(); } });
 
-    const KEY='meatBTI:v1';
-    if(saveBtn) saveBtn.addEventListener('click',()=>{ const data = QUESTIONS.reduce((o,q)=>{ const el=quizEl.querySelector(`input[name="q${q.id}"]:checked`); o[q.id]=el?el.value:null; return o; },{}); localStorage.setItem(KEY, JSON.stringify(data)); saveBtn.textContent='保存しました'; setTimeout(()=>saveBtn.textContent='途中保存',1500); });
-    if(loadBtn) loadBtn.addEventListener('click',()=>{ const data = JSON.parse(localStorage.getItem(KEY)||'{}'); QUESTIONS.forEach(q=>{ const v=data[q.id]; if(!v) return; const el=quizEl.querySelector(`input[name="q${q.id}"][value="${v}"]`); if(el) el.checked=true; }); updateProgress(); });
+    // Listen for changes on the dynamic form (event delegation)
+    slides.addEventListener('change', (e)=>{
+      if(e.target && e.target.matches('input[type="radio"]')) updateUI();
+    });
 
-    const startBtn = document.getElementById('startBtn');
-    if(startBtn) startBtn.addEventListener('click', (e)=>{ e.preventDefault(); showStep(0); startScroll(); });
-
-    // Init
-    buildForm();
-    showStep(0);
-    if(location.hash==='#quiz'){ startScroll(); }
+    // Optional: hash open
+    if(location.hash==='#quiz'){
+      if(!slides.children.length) buildSlides();
+      document.body.classList.add('no-scroll');
+      wizard.classList.add('show');
+      updateUI();
+    }
   })();
   </script>
 </body>
