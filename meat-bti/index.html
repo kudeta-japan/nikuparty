@@ -16,7 +16,7 @@
       --accent:#ff3b2f; --accent-2:#ffc400;
     }
     *{box-sizing:border-box}
-    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic","YuGothic","Helvetica Neue",Arial,sans-serif;line-height:1.6}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic","YuGothic","Helvetica Neue",Arial,sans-serif;line-height:1.6;scroll-behavior:smooth}
     img{max-width:100%;display:block}
     a{color:inherit;text-decoration:none}
     .container{width:min(960px,92vw);margin:0 auto}
@@ -40,6 +40,7 @@
 
     /* Quiz */
     form{margin-top:10px}
+    #quiz{scroll-margin-top:88px}
     fieldset.q{margin:12px 0;border:1px solid var(--border);background:#151515;padding:16px;border-radius:16px}
     fieldset.q legend{padding:0 6px;font-weight:800;margin-bottom:8px}
     .choices{display:grid;grid-template-columns:1fr;gap:10px}
@@ -68,15 +69,16 @@
     .type-card.active{outline:2px solid var(--accent-2);box-shadow:0 0 0 4px rgba(255,196,0,.15)}
 
     footer{border-top:1px solid var(--border);color:var(--muted);padding:22px 0 40px;margin-top:40px}
-      .hero{position:relative;min-height:62vh;display:flex;align-items:flex-end;overflow:hidden;border-bottom:1px solid var(--border);background:center/cover no-repeat url('./hero_meatbti_1200.jpg')}@media(min-width:900px){.hero{background-image:url('./hero_meatbti_1600.jpg')}}
-    .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.1) 0%, rgba(0,0,0,.6) 80%, rgba(0,0,0,.85) 100%)}
-    .hero-inner{position:relative;z-index:1;padding:40px 0 28px}
+      .hero{position:relative;min-height:62vh;display:flex;align-items:flex-end;overflow:hidden;border-bottom:1px solid var(--border);background:#000}@media(min-width:900px){.hero{background-image:url('./hero_meatbti_1600.jpg')}}
+    .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05) 0%, rgba(0,0,0,.55) 70%, rgba(0,0,0,.85) 100%);z-index:1}
+    .hero-inner{position:relative;z-index:2;padding:40px 0 28px}
     .tag{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.35);font-size:12px}
     .title-split{font-weight:900;line-height:1.1;margin:10px 0 6px;font-size:clamp(42px,9vw,96px)}
     .title-split .meat{color:var(--accent-2)}
     .title-split .bti{color:#69c36b}
     .subtitle{color:var(--text);opacity:.95;font-size:clamp(16px,2.4vw,28px)}
   .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,1,1);white-space:nowrap;border:0}
+  .hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
   </style>
 </head>
 <body>
@@ -91,10 +93,11 @@
 
   <main class="main">
     <section class="hero" id="top" aria-label="Meat BTI Hero">
+      <img class="hero-img" src="hero_meatbti_1200.jpg" srcset="hero_meatbti_1200.jpg 1200w, hero_meatbti_1600.jpg 1600w" alt="" aria-hidden="true"/>
       <div class="container hero-inner">
         <span class="sr-only">Meat BTI（肉診断）のヒーロー画像</span>
         <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
-          <a href="#quiz" class="btn btn-primary">診断をはじめる</a>
+          <button id="startBtn" type="button" class="btn btn-primary">診断をはじめる</button>
           <a href="../index.html" class="btn">街コンTOPへ</a>
         </div>
       </div>
@@ -149,257 +152,169 @@
   </footer>
 
   <script>
-  // Year
-  document.getElementById('y').textContent = new Date().getFullYear();
+  (function(){
+    const $ = (sel)=>document.querySelector(sel);
+    const $$ = (sel)=>Array.from(document.querySelectorAll(sel));
 
-  // ===== Data =====
-  const QUESTIONS = [
-    {"id":1,"text":"焼き肉かステーキか","A":"ステーキでじっくり味わいたい","B":"焼き肉でワイワイ楽しみたい","dimension":"SOC"},
-    {"id":2,"text":"焼き肉の一皿目は？","A":"タン塩で口を整える","B":"カルビで景気づけ","dimension":"RICH"},
-    {"id":3,"text":"ステーキを食べるなら？","A":"赤身の旨み重視","B":"サーロインのコク重視","dimension":"RICH"},
-    {"id":4,"text":"2回目のデート、どっちに行く？","A":"肉バルで落ち着いて会話","B":"焼き肉で距離を一気に縮める","dimension":"SOC"},
-    {"id":5,"text":"3回目のデートで肉バル：注文は？","A":"コースで段取りよく","B":"アラカルトで直感的に選ぶ","dimension":"PACE"},
-    {"id":6,"text":"最初の注文スタイル","A":"まず定番を人数分、様子見","B":"気になるものを少量ずつ早めに味見","dimension":"NOV"},
-    {"id":7,"text":"火入れの好み","A":"低温/レアでしっとり","B":"強火で香ばしく","dimension":"TEXT"},
-    {"id":8,"text":"味付けの第一選択","A":"塩・レモン・わさびなどシンプル","B":"甘辛ダレ・特製ソース","dimension":"RICH"},
-    {"id":9,"text":"合わせ方の主役は？","A":"ワイン・お酒中心で単品を楽しむ","B":"白ごはん必須でがっつり","dimension":"VALUE"},
-    {"id":10,"text":"注文ペース","A":"一皿ずつ小まめに様子を見て追加","B":"まとめてドンと頼んで回す","dimension":"PACE"},
-    {"id":11,"text":"食感の好み","A":"とろける柔らかさ","B":"噛みごたえ・肉感","dimension":"TEXT"},
-    {"id":12,"text":"お店選びの進め方","A":"早めにリサーチして予約","B":"当日のノリで行き先を決める","dimension":"PACE"},
-    {"id":13,"text":"新メニューへの態度","A":"まずは“いつもの定番”から","B":"限定や創作も積極的に試す","dimension":"NOV"},
-    {"id":14,"text":"予算の使い方","A":"量は控えめでも“質”に投資","B":"コスパ重視で満足量を確保","dimension":"VALUE"},
-    {"id":15,"text":"人数の好み","A":"2〜3人でじっくり","B":"大人数でワイワイ","dimension":"SOC"},
-    {"id":16,"text":"テーブルでの役割","A":"皆の好みを聞きながら調整（聞き役）","B":"テキパキ仕切って注文（号令役）","dimension":"PACE"},
-    {"id":17,"text":"焼き台/環境の好み","A":"無煙＆清潔で快適に集中","B":"炭火の香りや煙もごちそう","dimension":"TEXT"},
-    {"id":18,"text":"部位の選び方","A":"赤身中心で部位違いを味わう","B":"サシ入りを少量ずつ堪能","dimension":"RICH"},
-    {"id":19,"text":"締めの一品","A":"冷麺やスープでさっぱり締める","B":"クッパやビビンバで満腹まで","dimension":"VALUE"},
-    {"id":20,"text":"演出・体験に対する好み","A":"落ち着きと完成度を重視","B":"目の前で焼き上げ/フランベなど演出歓迎","dimension":"NOV"}
-  ];
+    const quizEl = $('#quiz');
+    const progressText = $('#progressText');
+    const progressBar = $('#progressBar');
+    const submitBtn = $('#submit');
+    const resetBtn = $('#reset');
+    const saveBtn = $('#save');
+    const loadBtn = $('#load');
+    const resultWrap = $('#resultWrap');
+    const resultEl = $('#result');
 
-  // 12タイプ（必要に応じ編集）
-  // 12タイプ（重み付きマッチング）
-  const TYPE_WEIGHTS = [
-    { id:'HIRE', name:'ヒレ', desc:'最上級の赤身。雑味が少なくしっとり柔らか。', w:{RICH:-2, NOV:-1, SOC:-2, PACE:-2, VALUE:-2, TEXT:-2} },
-    { id:'CHATEAU', name:'シャトーブリアン', desc:'ヒレ中心部。究極のやわらかさと上品さ。', w:{RICH:-3, NOV:-1, SOC:-3, PACE:-2, VALUE:-3, TEXT:-2} },
-    { id:'MISUJI', name:'ミスジ', desc:'細かなサシでとろける肩の希少部位。', w:{RICH:-1, NOV:-1, SOC:-2, PACE:-1, VALUE:-2, TEXT:-2} },
-    { id:'ICHIBO', name:'イチボ', desc:'赤身主体にほどよいサシ。香ばし派にも。', w:{RICH:-1, NOV:0, SOC:-1, PACE:-1, VALUE:-1, TEXT:1} },
-    { id:'RUMP', name:'ランプ', desc:'赤身の旨みしっかり。軽やかで万能。', w:{RICH:-1, NOV:2, SOC:-1, PACE:-1, VALUE:-1, TEXT:-1} },
-    { id:'RIB', name:'リブロース', desc:'脂の甘みとジューシーさが魅力。', w:{RICH:2, NOV:-1, SOC:1, PACE:-1, VALUE:-1, TEXT:-1} },
-    { id:'SIRLOIN', name:'サーロイン', desc:'王道のコクと香り。満足感高い。', w:{RICH:2, NOV:0, SOC:2, PACE:1, VALUE:0, TEXT:-1} },
-    { id:'ZABUTON', name:'ザブトン', desc:'肩ロース芯。濃厚な霜降りでリッチ。', w:{RICH:2, NOV:-1, SOC:-2, PACE:-1, VALUE:-1, TEXT:-2} },
-    { id:'KALBI', name:'カルビ', desc:'脂の旨さでがっつり満足。みんなで楽しい。', w:{RICH:3, NOV:0, SOC:3, PACE:2, VALUE:1, TEXT:0} },
-    { id:'HARAMI', name:'ハラミ', desc:'赤身感とジューシーさの両立。', w:{RICH:1, NOV:0, SOC:2, PACE:2, VALUE:1, TEXT:2} },
-    { id:'KAINOMI', name:'カイノミ', desc:'赤身と脂のバランスに優れた隠れ人気。', w:{RICH:1, NOV:-1, SOC:1, PACE:1, VALUE:0, TEXT:1} },
-    { id:'TONGUE', name:'タン', desc:'コリコリ食感。レモン塩がよく合う。', w:{RICH:-2, NOV:1, SOC:2, PACE:2, VALUE:0, TEXT:2} }
-  ];
+    const QUESTIONS = [
+      {"id":1,"text":"焼き肉かステーキか","A":"ステーキでじっくり味わいたい","B":"焼き肉でワイワイ楽しみたい","dimension":"SOC"},
+      {"id":2,"text":"焼き肉の一皿目は？","A":"タン塩で口を整える","B":"カルビで景気づけ","dimension":"RICH"},
+      {"id":3,"text":"ステーキを食べるなら？","A":"赤身の旨み重視","B":"サーロインのコク重視","dimension":"RICH"},
+      {"id":4,"text":"2回目のデート、どっちに行く？","A":"肉バルで落ち着いて会話","B":"焼き肉で距離を一気に縮める","dimension":"SOC"},
+      {"id":5,"text":"3回目のデートで肉バル：注文は？","A":"コースで段取りよく","B":"アラカルトで直感的に選ぶ","dimension":"PACE"},
+      {"id":6,"text":"最初の注文スタイル","A":"まず定番を人数分、様子見","B":"気になるものを少量ずつ早めに味見","dimension":"NOV"},
+      {"id":7,"text":"火入れの好み","A":"低温/レアでしっとり","B":"強火で香ばしく","dimension":"TEXT"},
+      {"id":8,"text":"味付けの第一選択","A":"塩・レモン・わさびなどシンプル","B":"甘辛ダレ・特製ソース","dimension":"RICH"},
+      {"id":9,"text":"合わせ方の主役は？","A":"ワイン・お酒中心で単品を楽しむ","B":"白ごはん必須でがっつり","dimension":"VALUE"},
+      {"id":10,"text":"注文ペース","A":"一皿ずつ小まめに様子を見て追加","B":"まとめてドンと頼んで回す","dimension":"PACE"},
+      {"id":11,"text":"食感の好み","A":"とろける柔らかさ","B":"噛みごたえ・肉感","dimension":"TEXT"},
+      {"id":12,"text":"お店選びの進め方","A":"早めにリサーチして予約","B":"当日のノリで行き先を決める","dimension":"PACE"},
+      {"id":13,"text":"新メニューへの態度","A":"まずは“いつもの定番”から","B":"限定や創作も積極的に試す","dimension":"NOV"},
+      {"id":14,"text":"予算の使い方","A":"量は控えめでも“質”に投資","B":"コスパ重視で満足量を確保","dimension":"VALUE"},
+      {"id":15,"text":"人数の好み","A":"2〜3人でじっくり","B":"大人数でワイワイ","dimension":"SOC"},
+      {"id":16,"text":"テーブルでの役割","A":"皆の好みを聞きながら調整（聞き役）","B":"テキパキ仕切って注文（号令役）","dimension":"PACE"},
+      {"id":17,"text":"焼き台/環境の好み","A":"無煙＆清潔で快適に集中","B":"炭火の香りや煙もごちそう","dimension":"TEXT"},
+      {"id":18,"text":"部位の選び方","A":"赤身中心で部位違いを味わう","B":"サシ入りを少量ずつ堪能","dimension":"RICH"},
+      {"id":19,"text":"締めの一品","A":"冷麺やスープでさっぱり締める","B":"クッパやビビンバで満腹まで","dimension":"VALUE"},
+      {"id":20,"text":"演出・体験に対する好み","A":"落ち着きと完成度を重視","B":"目の前で焼き上げ/フランベなど演出歓迎","dimension":"NOV"}
+    ];
 
-  // ===== Build UI =====
-  const quizEl = document.getElementById('quiz');
-  const progressText = document.getElementById('progressText');
-  const progressBar = document.getElementById('progressBar');
-  const submitBtn = document.getElementById('submit');
-  const resetBtn = document.getElementById('reset');
-  const saveBtn = document.getElementById('save');
-  const loadBtn = document.getElementById('load');
-  const resultWrap = document.getElementById('resultWrap');
-  const resultEl = document.getElementById('result');
+    const TYPE_WEIGHTS = [
+      { id:'HIRE', name:'ヒレ', desc:'最上級の赤身。雑味が少なくしっとり柔らか。', w:{RICH:-2, NOV:-1, SOC:-2, PACE:-2, VALUE:-2, TEXT:-2} },
+      { id:'CHATEAU', name:'シャトーブリアン', desc:'ヒレ中心部。究極のやわらかさと上品さ。', w:{RICH:-3, NOV:-1, SOC:-3, PACE:-2, VALUE:-3, TEXT:-2} },
+      { id:'MISUJI', name:'ミスジ', desc:'細かなサシでとろける肩の希少部位。', w:{RICH:-1, NOV:-1, SOC:-2, PACE:-1, VALUE:-2, TEXT:-2} },
+      { id:'ICHIBO', name:'イチボ', desc:'赤身主体にほどよいサシ。香ばし派にも。', w:{RICH:-1, NOV:0, SOC:-1, PACE:-1, VALUE:-1, TEXT:1} },
+      { id:'RUMP', name:'ランプ', desc:'赤身の旨みしっかり。軽やかで万能。', w:{RICH:-1, NOV:2, SOC:-1, PACE:-1, VALUE:-1, TEXT:-1} },
+      { id:'RIB', name:'リブロース', desc:'脂の甘みとジューシーさが魅力。', w:{RICH:2, NOV:-1, SOC:1, PACE:-1, VALUE:-1, TEXT:-1} },
+      { id:'SIRLOIN', name:'サーロイン', desc:'王道のコクと香り。満足感高い。', w:{RICH:2, NOV:0, SOC:2, PACE:1, VALUE:0, TEXT:-1} },
+      { id:'ZABUTON', name:'ザブトン', desc:'肩ロース芯。濃厚な霜降りでリッチ。', w:{RICH:2, NOV:-1, SOC:-2, PACE:-1, VALUE:-1, TEXT:-2} },
+      { id:'KALBI', name:'カルビ', desc:'脂の旨さでがっつり満足。みんなで楽しい。', w:{RICH:3, NOV:0, SOC:3, PACE:2, VALUE:1, TEXT:0} },
+      { id:'HARAMI', name:'ハラミ', desc:'赤身感とジューシーさの両立。', w:{RICH:1, NOV:0, SOC:2, PACE:2, VALUE:1, TEXT:2} },
+      { id:'KAINOMI', name:'カイノミ', desc:'赤身と脂のバランスに優れた隠れ人気。', w:{RICH:1, NOV:-1, SOC:1, PACE:1, VALUE:0, TEXT:1} },
+      { id:'TONGUE', name:'タン', desc:'コリコリ食感。レモン塩がよく合う。', w:{RICH:-2, NOV:1, SOC:2, PACE:2, VALUE:0, TEXT:2} }
+    ];
 
-  function buildForm(){
-    quizEl.innerHTML = '';
-    QUESTIONS.forEach((q, i)=>{
-      const fs = document.createElement('fieldset');
-      fs.className = 'q'; fs.dataset.dimension = q.dimension;
-      fs.innerHTML = `
-        <legend><strong>Q${i+1}.</strong> ${q.text}</legend>
-        <div class="choices">
-          <label class="choice"><input type="radio" name="q${q.id}" value="A" required> ${q.A}</label>
-          <label class="choice"><input type="radio" name="q${q.id}" value="B"> ${q.B}</label>
+    function buildForm(){
+      if(!quizEl) return;
+      quizEl.innerHTML='';
+      QUESTIONS.forEach((q,i)=>{
+        const fs=document.createElement('fieldset');
+        fs.className='q'; fs.dataset.dimension=q.dimension;
+        fs.innerHTML=`<legend><strong>Q${i+1}.</strong> ${q.text}</legend>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="q${q.id}" value="A" required> ${q.A}</label>
+            <label class="choice"><input type="radio" name="q${q.id}" value="B"> ${q.B}</label>
+          </div>`;
+        quizEl.appendChild(fs);
+      });
+    }
+
+    function answeredCount(){ return QUESTIONS.reduce((n,q)=> n + (quizEl.querySelector(`input[name="q${q.id}"]:checked`)?1:0), 0); }
+    function updateProgress(){
+      const a=answeredCount();
+      if(progressText) progressText.textContent=`${a}/${QUESTIONS.length} 回答済み`;
+      if(progressBar) progressBar.style.width=`${Math.round(100*a/QUESTIONS.length)}%`;
+      if(submitBtn) submitBtn.disabled = a !== QUESTIONS.length;
+    }
+    function collectScores(){
+      const scores={};
+      QUESTIONS.forEach(q=>{
+        const sel=quizEl.querySelector(`input[name="q${q.id}"]:checked`);
+        if(!sel) return; const v=sel.value; const d=q.dimension;
+        if(!scores[d]) scores[d]={A:0,B:0}; scores[d][v]++;
+      }); return scores;
+    }
+    function scoreVector(scores){
+      const dims=['RICH','NOV','SOC','PACE','VALUE','TEXT'];
+      const vec={}; dims.forEach(d=>{ const s=scores[d]||{A:0,B:0}; vec[d]=(s.B-s.A); });
+      return vec;
+    }
+    function rankTypes(scores){
+      const v=scoreVector(scores);
+      return TYPE_WEIGHTS.map(t=>{
+        let s=0; for(const k in t.w){ s += (t.w[k]||0)*(v[k]||0); }
+        return {...t, score:s};
+      }).sort((a,b)=> b.score-a.score);
+    }
+    function calcConfidence(scores){
+      const dims=['SOC','RICH','PACE','NOV','TEXT','VALUE'];
+      let sum=0,n=0; dims.forEach(d=>{ const s=scores[d]; if(!s) return; const tot=s.A+s.B; if(!tot) return; sum+=Math.abs(s.A-s.B)/tot; n++; });
+      const m=n?sum/n:.5; return Math.round(60+m*35);
+    }
+    function dimBars(scores){
+      const INFO={SOC:{A:'少人数・会話',B:'大人数・にぎやか'},RICH:{A:'さっぱり赤身',B:'リッチ・サシ'},PACE:{A:'段取り・慎重',B:'テンポ・直感'},NOV:{A:'定番重視',B:'新しいもの好き'},TEXT:{A:'しっとり/レア',B:'香ばし/噛み応え'},VALUE:{A:'質重視',B:'量・コスパ'}};
+      return Object.keys(INFO).map(k=>{ const s=scores[k]||{A:0,B:0}; const tot=s.A+s.B; const pct=tot?Math.round(s.B*100/tot):50; const lean=s.A===s.B?'バランス':(s.A>s.B?INFO[k].A:INFO[k].B); return `<div class="dim-item"><div style="min-width:150px"><strong>${k}</strong>：${lean} <span class="lead" style="font-size:12px">(${s.A}A/${s.B}B)</span></div><div class="track"><div class="fill" style="width:${pct}%"></div></div></div>`; }).join('');
+    }
+    function typeGrid(selectedId){
+      return `<div class="type-grid">${TYPE_WEIGHTS.map(t=>`<div class="type-card ${t.id===selectedId?'active':''}"><div class="lead" style="font-size:12px">${t.id}</div><div style="font-weight:900">${t.name}</div></div>`).join('')}</div>`;
+    }
+    function renderResult(scores){
+      const ranked=rankTypes(scores); const primary=ranked[0]; const alt=ranked.slice(1,3); const confidence=calcConfidence(scores); const bars=dimBars(scores);
+      const soc=scores.SOC||{A:0,B:0}, pace=scores.PACE||{A:0,B:0}, nov=scores.NOV||{A:0,B:0}, val=scores.VALUE||{A:0,B:0};
+      const seat=(soc.B>soc.A)?'大テーブルでワイワイ':(soc.A>soc.B?'2〜3人で会話重視':'どちらもOK');
+      const order=(pace.B>pace.A)?'アラカルト中心':(pace.A>pace.B?'コース中心':'両方OK');
+      const creative=(nov.B>nov.A)?'限定・創作も積極的に':'定番中心で';
+      const value=(val.B>val.A)?'ボリューム満足派':'質重視派';
+      const neighbors = alt.map(n=>`<span class="pill">${n.name}</span>`).join(' ');
+      resultEl.innerHTML = `
+        <h2 style="margin:6px 0 10px">診断結果</h2>
+        <div class="grid grid-2">
+          <div class="card" style="background:#111">
+            <div class="lead" style="font-size:12px">選定結果（信頼度 ${confidence}%）</div>
+            <div style="font-size:28px;font-weight:900;line-height:1.2">${primary.name} <span class="pill">${primary.id}</span></div>
+            <div class="lead" style="margin:4px 0 8px">${primary.desc}</div>
+            <div>近い候補：${neighbors||'-'}</div>
+            <div style="margin-top:10px">${typeGrid(primary.id)}</div>
+          </div>
+          <div class="card">
+            <h3 style="margin:0 0 6px">あなたの傾向</h3>
+            <div class="grid" style="gap:8px">${bars}</div>
+            <div style="margin-top:12px">
+              <h4 style="margin:0 0 6px">食べ方・席の提案</h4>
+              <ul style="margin:0;padding-left:18px">
+                <li><strong>席・流れ：</strong>${seat}／${order}</li>
+                <li><strong>攻め方：</strong>${creative}</li>
+                <li><strong>価値観：</strong>${value}</li>
+              </ul>
+            </div>
+          </div>
         </div>`;
-      quizEl.appendChild(fs);
-    });
-  }
+      resultWrap.style.display='block';
+      resultWrap.scrollIntoView({behavior:'smooth',block:'start'});
+    }
 
-  function answeredCount(){
-    return QUESTIONS.reduce((acc,q)=> acc + (quizEl.querySelector(`input[name="q${q.id}"]:checked`)?1:0), 0);
-  }
-  function updateProgress(){
-    const a = answeredCount();
-    progressText.textContent = `${a}/${QUESTIONS.length} 回答済み`;
-    progressBar.style.width = `${Math.round(100*a/QUESTIONS.length)}%`;
-    submitBtn.disabled = a !== QUESTIONS.length;
-  }
+    function startScroll(){ const t = document.getElementById('quiz'); if(!t) return; t.scrollIntoView({behavior:'smooth', block:'start'}); }
 
-  function collectScores(){
-    const scores = {};
-    QUESTIONS.forEach(q=>{
-      const sel = quizEl.querySelector(`input[name="q${q.id}"]:checked`);
-      if(!sel) return; const v = sel.value; const d = q.dimension;
-      if(!scores[d]) scores[d] = {A:0,B:0};
-      scores[d][v]++;
-    });
-    return scores;
-  }
+    // Event wires
+    if(quizEl){ quizEl.addEventListener('change', updateProgress); quizEl.addEventListener('submit', (e)=>{ e.preventDefault(); renderResult(collectScores()); }); }
+    if(submitBtn){ submitBtn.addEventListener('click', (e)=>{ e.preventDefault(); if(!submitBtn.disabled){ renderResult(collectScores()); } else { // 未回答がある場合は先頭へ
+        const first = QUESTIONS.find(q=> !quizEl.querySelector(`input[name="q${q.id}"]:checked`));
+        const fs = first && quizEl.querySelector(`input[name="q${first.id}"]`); if(fs){ fs.scrollIntoView({behavior:'smooth', block:'center'});} }
+    }); }
+    if(resetBtn){ resetBtn.addEventListener('click', ()=>{ quizEl.reset(); updateProgress(); resultWrap.style.display='none'; window.scrollTo({top:0,behavior:'smooth'}); }); }
 
-  function sideAB(s){ return (s?.B > s?.A) ? 'B' : (s?.A > s?.B ? 'A' : 'EQ'); }
-  function diff(scores, dim){ const s=scores[dim]||{A:0,B:0}; return (s.B - s.A); }
+    const KEY='meatBTI:v1';
+    if(saveBtn){ saveBtn.addEventListener('click',()=>{ const data = QUESTIONS.reduce((o,q)=>{ const el=quizEl.querySelector(`input[name="q${q.id}"]:checked`); o[q.id]=el?el.value:null; return o; },{}); localStorage.setItem(KEY, JSON.stringify(data)); saveBtn.textContent='保存しました'; setTimeout(()=>saveBtn.textContent='途中保存',1500); }); }
+    if(loadBtn){ loadBtn.addEventListener('click',()=>{ const data = JSON.parse(localStorage.getItem(KEY)||'{}'); QUESTIONS.forEach(q=>{ const v=data[q.id]; if(!v) return; const el=quizEl.querySelector(`input[name="q${q.id}"][value="${v}"]`); if(el) el.checked=true; }); updateProgress(); }); }
 
-  function scoreVector(scores){
-    const dims = ['RICH','NOV','SOC','PACE','VALUE','TEXT'];
-    const vec = {};
-    dims.forEach(d=>{ const s=scores[d]||{A:0,B:0}; vec[d] = (s.B - s.A); }); // A側=負, B側=正
-    return vec;
-  }
+    const startBtn = document.getElementById('startBtn');
+    if(startBtn){ startBtn.addEventListener('click', (e)=>{ e.preventDefault(); startScroll(); }); }
 
-  function rankTypes(scores){
-    const v = scoreVector(scores);
-    const ranks = TYPE_WEIGHTS.map(t=>{
-      let s=0; for(const k in t.w){ s += (t.w[k]||0) * (v[k]||0); }
-      return { ...t, score:s };
-    }).sort((a,b)=> b.score - a.score);
-    return ranks;
-  }
-
-  function calcConfidence(scores){(scores){
-    const dims = ['SOC','RICH','PACE','NOV','TEXT','VALUE'];
-    let sum=0,n=0; dims.forEach(d=>{const s=scores[d]; if(!s) return; const tot=s.A+s.B; if(!tot) return; sum+=Math.abs(s.A-s.B)/tot; n++;});
-    const m = n? sum/n : .5; return Math.round(60+m*35); // 60–95
-  }
-
-  function dimBars(scores){
-    const INFO = {
-      SOC:{A:'少人数・会話',B:'大人数・にぎやか'},
-      RICH:{A:'さっぱり赤身',B:'リッチ・サシ'},
-      PACE:{A:'段取り・慎重',B:'テンポ・直感'},
-      NOV:{A:'定番重視',B:'新しいもの好き'},
-      TEXT:{A:'しっとり/レア',B:'香ばし/噛み応え'},
-      VALUE:{A:'質重視',B:'量・コスパ'}
-    };
-    return Object.keys(INFO).map(k=>{
-      const s=scores[k]||{A:0,B:0}; const tot=s.A+s.B; const pct = tot? Math.round(s.B*100/tot):50;
-      const lean = s.A===s.B?'バランス':(s.A>s.B?INFO[k].A:INFO[k].B);
-      return `<div class="dim-item"><div style="min-width:150px"><strong>${k}</strong>：${lean} <span class="lead" style="font-size:12px">(${s.A}A/${s.B}B)</span></div><div class="track"><div class="fill" style="width:${pct}%"></div></div></div>`;
-    }).join('');
-  }
-
-  function typeGrid(selectedId){
-    return `<div class="type-grid">${TYPE_WEIGHTS.map(t=>`
-      <div class="type-card ${t.id===selectedId?'active':''}">
-        <div class="lead" style="font-size:12px">${t.id}</div>
-        <div style="font-weight:900">${t.name}</div>
-      </div>`).join('')}</div>`;
-  }"><div class="lead" style="font-size:12px">${t.id}</div><div style="font-weight:900">${t.name}</div><div class="lead" style="font-size:12px">${t.quadr}</div></div>`).join('')}</div>`;
-  }
-
-  function renderResult(scores){
-    const ranked = rankTypes(scores);
-    const primary = ranked[0];
-    const alt = ranked.slice(1,3);
-    const confidence = calcConfidence(scores);
-    const bars = dimBars(scores);
-
-    // contextual tips
-    const soc=scores.SOC||{A:0,B:0}, pace=scores.PACE||{A:0,B:0}, nov=scores.NOV||{A:0,B:0}, val=scores.VALUE||{A:0,B:0};
-    const seat = (soc.B>soc.A)?'大テーブルでワイワイ':(soc.A>soc.B?'2〜3人で会話重視':'どちらもOK');
-    const order = (pace.B>pace.A)?'アラカルト中心':(pace.A>pace.B?'コース中心':'両方OK');
-    const creative = (nov.B>nov.A)?'限定・創作も積極的に':'定番中心で';
-    const value = (val.B>val.A)?'ボリューム満足派':'質重視派';
-
-    const neighborTags = alt.map(n=>`<span class="pill">${n.name}</span>`).join(' ');
-
-    resultEl.innerHTML = `
-      <h2 style="margin:6px 0 10px">診断結果</h2>
-      <div class="grid grid-2">
-        <div class="card" style="background:#111">
-          <div class="lead" style="font-size:12px">選定結果（信頼度 ${confidence}%）</div>
-          <div style="font-size:28px;font-weight:900;line-height:1.2">${primary.name} <span class="pill">${primary.id}</span></div>
-          <div class="lead" style="margin:4px 0 8px">${primary.desc}</div>
-          <div>近い候補：${neighborTags||'-'}</div>
-          <div style="margin-top:10px">${typeGrid(primary.id)}</div>
-        </div>
-        <div class="card">
-          <h3 style="margin:0 0 6px">あなたの傾向</h3>
-          <div class="grid" style="gap:8px">${bars}</div>
-          <div style="margin-top:12px">
-            <h4 style="margin:0 0 6px">食べ方・席の提案</h4>
-            <ul style="margin:0;padding-left:18px">
-              <li><strong>席・流れ：</strong>${seat}／${order}</li>
-              <li><strong>攻め方：</strong>${creative}</li>
-              <li><strong>価値観：</strong>${value}</li>
-            </ul>
-          </div>
-        </div>
-      </div>`;
-    resultWrap.style.display='block';
-    resultWrap.scrollIntoView({behavior:'smooth',block:'start'});
-  }, pace=scores.PACE||{A:0,B:0}, nov=scores.NOV||{A:0,B:0}, val=scores.VALUE||{A:0,B:0};
-    const seat = (soc.B>soc.A)?'大テーブルでワイワイ':(soc.A>soc.B?'2〜3人で会話重視':'どちらもOK');
-    const order = (pace.B>pace.A)?'アラカルト中心':(pace.A>pace.B?'コース中心':'両方OK');
-    const creative = (nov.B>nov.A)?'限定・創作も積極的に':'定番中心で';
-    const value = (val.B>val.A)?'ボリューム満足派':'質重視派';
-
-    const neighbors = pick.neighbors.map(n=>`<span class="pill">${n.name}</span>`).join(' ');
-
-    resultEl.innerHTML = `
-      <h2 style="margin:6px 0 10px">診断結果</h2>
-      <div class="grid grid-2">
-        <div class="card" style="background:#111">
-          <div class="lead" style="font-size:12px">選定結果（信頼度 ${confidence}%）</div>
-          <div style="font-size:28px;font-weight:900;line-height:1.2">${pick.primary.name} <span class="pill">${pick.primary.id}</span></div>
-          <div class="lead" style="margin:4px 0 8px">${pick.primary.quadr}｜${CUT_TYPES.find(t=>t.id===pick.primary.id).desc}</div>
-          <div>近い候補：${neighbors||'-'}</div>
-          <div style="margin-top:10px">${typeGrid(pick.primary.id)}</div>
-        </div>
-        <div class="card">
-          <h3 style="margin:0 0 6px">あなたの傾向</h3>
-          <div class="grid" style="gap:8px">${bars}</div>
-          <div style="margin-top:12px">
-            <h4 style="margin:0 0 6px">食べ方・席の提案</h4>
-            <ul style="margin:0;padding-left:18px">
-              <li><strong>席・流れ：</strong>${seat}／${order}</li>
-              <li><strong>攻め方：</strong>${creative}</li>
-              <li><strong>価値観：</strong>${value}</li>
-            </ul>
-          </div>
-        </div>
-      </div>`;
-    resultWrap.style.display='block';
-    resultWrap.scrollIntoView({behavior:'smooth',block:'start'});
-  }
-
-  // Events
-  quizEl.addEventListener('change', updateProgress);
-
-  function computeAndRender(){
-    const scores = collectScores();
-    renderResult(scores);
-  }
-
-  document.getElementById('quiz').addEventListener('submit', (e)=>{ e.preventDefault(); computeAndRender(); });
-  submitBtn.addEventListener('click', (e)=>{ e.preventDefault(); if(!submitBtn.disabled) computeAndRender(); });
-
-  resetBtn.addEventListener('click', ()=>{
-    quizEl.reset();
+    // Init
+    buildForm();
     updateProgress();
-    resultWrap.style.display='none';
-    window.scrollTo({top:0,behavior:'smooth'});
-  });
-
-  // simple localStorage helpers
-  const KEY='meatBTI:v1';
-  saveBtn.addEventListener('click',()=>{
-    const data = QUESTIONS.reduce((o,q)=>{const el=quizEl.querySelector(`input[name="q${q.id}"]:checked`);o[q.id]=el?el.value:null;return o;},{});
-    localStorage.setItem(KEY, JSON.stringify(data));
-    saveBtn.textContent='保存しました'; setTimeout(()=>saveBtn.textContent='途中保存',1500);
-  });
-  loadBtn.addEventListener('click',()=>{
-    const data = JSON.parse(localStorage.getItem(KEY)||'{}');
-    QUESTIONS.forEach(q=>{const v=data[q.id]; if(!v) return; const el=quizEl.querySelector(`input[name="q${q.id}"][value="${v}"]`); if(el) el.checked=true;});
-    updateProgress();
-  });
-
-  // Init
-  buildForm();
-  updateProgress();
+    if(location.hash==='#quiz'){ startScroll(); }
+  })();
   </script>
 </body>
 </html>
