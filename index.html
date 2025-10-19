@@ -4,9 +4,8 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ニクパーティ - Meet Meat Night｜Cheese Meat Mania KU-DETA</title>
-<meta name="description" content="Cheese Meat Mania KU-DETAが贈る大人の出会いイベント『ニクパーティ - Meet Meat Night -』。11/15(土) 19:00〜 岐阜。美味しいお肉×ドキドキの出会い。早期予約特典あり。">
+<meta name="description" content="Cheese Meat Mania KU-DETAが贈る『ニクパーティ - Meet Meat Night -』。11/15(土) 19:00〜 岐阜。お肉×出会いの一夜。早期予約特典＆グループ割あり。">
 <meta name="theme-color" content="#090b10">
-
 <style>
   :root{
     --bg:#090b10; --panel:#0f1219; --ink:#f5f8ff; --muted:#b7c3d6;
@@ -14,6 +13,9 @@
     --grad: radial-gradient(1200px 600px at 10% -10%, rgba(255,113,91,.25), transparent 40%),
             radial-gradient(1200px 600px at 110% 110%, rgba(255,209,102,.2), transparent 40%),
             linear-gradient(180deg,#0a0d14,#0b0e15 50%, #0d111a);
+    --male:#2a8ecf; --male2:#159f8b;
+    --female:#8b5ad8; --female2:#d96bc4;
+    --lime:#d7ff6a;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
@@ -22,18 +24,25 @@
   a{color:inherit;text-decoration:none}
   img{max-width:100%;display:block}
   .container{width:min(1040px,92vw);margin:0 auto}
+
+  /* Buttons & chips */
   .btn{appearance:none;border:1px solid var(--bd);background:#151a23;color:var(--ink);
     padding:12px 16px;border-radius:12px;font-weight:800;cursor:pointer;transition:transform .06s ease, box-shadow .15s ease}
   .btn:hover{transform:translateY(-1px)}
   .btn.primary{background:linear-gradient(180deg,var(--acc),#ff4e36);color:#111;border:none;box-shadow:0 12px 26px rgba(255,113,91,.35)}
   .badge{display:inline-flex;align-items:center;gap:8px;background:#121829;border:1px solid #2a3245;color:#dfe7f5;padding:6px 10px;border-radius:999px;font-size:12px}
-  .card{background:var(--panel);border:1px solid var(--bd);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
-  .section{padding:28px}
+
+  /* Shell */
   header.nav{position:sticky;top:0;z-index:20;background:rgba(9,11,16,.55);backdrop-filter:saturate(130%) blur(8px);
     border-bottom:1px solid var(--bd)}
   .nav-inner{height:64px;display:flex;align-items:center;justify-content:space-between}
   .brand{display:flex;align-items:center;gap:10px;font-weight:900}
   .logo{width:30px;height:30px;border-radius:10px;background:conic-gradient(from 140deg,var(--acc),var(--acc2));display:grid;place-items:center;color:#111}
+  .card{background:var(--panel);border:1px solid var(--bd);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+  .section{padding:28px}
+  .divider{height:1px;background:#1b2030;margin:12px 0}
+  .list{margin:0;padding-left:18px}
+  .h2{font-weight:900;font-size:clamp(20px,4.8vw,26px);margin:0 0 6px}
 
   /* HERO */
   .hero{position:relative;min-height:64vh;display:grid;align-items:end;border-bottom:1px solid var(--bd);background:#000;overflow:hidden}
@@ -45,15 +54,34 @@
   .lead{color:var(--muted);margin:6px 0 0}
   .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
 
-  /* Content blocks */
-  .split{display:grid;gap:18px;grid-template-columns:1fr}
-  @media(min-width:860px){.split{grid-template-columns:1.2fr .8fr}}
-  .h2{font-weight:900;font-size:clamp(20px,4.8vw,26px);margin:0 0 6px}
-  .list{margin:0;padding-left:18px}
-  .divider{height:1px;background:#1b2030;margin:12px 0}
-
   /* Early bird */
   .early{background:linear-gradient(180deg,rgba(255,209,102,.08),transparent);border-color:#3a2f15}
+
+  /* Split */
+  .split{display:grid;gap:18px;grid-template-columns:1fr}
+  @media(min-width:860px){.split{grid-template-columns:1.2fr .8fr}}
+
+  /* Pricing */
+  .pricing{display:grid;gap:18px;grid-template-columns:1fr}
+  @media(min-width:860px){.pricing{grid-template-columns:1fr 1fr}}
+  .p-card{border:1px solid var(--bd);border-radius:20px;overflow:hidden;background:#0e121a}
+  .p-head{padding:16px 18px;color:#fff;font-weight:900;display:flex;align-items:center;gap:12px}
+  .p-head.male{background:linear-gradient(90deg,var(--male),var(--male2))}
+  .p-head.female{background:linear-gradient(90deg,var(--female),var(--female2))}
+  .p-body{padding:14px 16px}
+  .p-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:14px 0;border-top:1px dashed #273046}
+  .p-row:first-child{border-top:none}
+  .label{color:#c9d3e9}
+  .yen{font-variant-numeric:tabular-nums}
+  .old{color:#9aa7c3}
+  .new{font-size:clamp(22px,4.5vw,34px);font-weight:900;text-shadow:0 3px 0 rgba(0,0,0,.25)}
+  .seal{display:inline-grid;place-items:center;background:var(--lime);color:#111;border-radius:999px;
+        width:64px;height:64px;font-weight:900}
+  .seal small{display:block;font-size:11px;line-height:1}
+  .seal b{font-size:16px;line-height:1.1}
+  .no1{color:#ff7a7a;font-weight:900;margin-right:6px;text-shadow:0 2px 0 rgba(0,0,0,.25)}
+  .dim{opacity:.55}
+  .note{color:#89a0c8;font-size:12px;margin-top:10px}
 
   /* Form */
   form{display:grid;gap:12px}
@@ -77,9 +105,9 @@
   <div class="container nav-inner">
     <div class="brand"><div class="logo">🥩</div><div>ニクパーティ</div></div>
     <nav style="display:flex;gap:10px;align-items:center">
+      <a class="badge" href="#price">料金</a>
       <a class="badge" href="#entry">参加申込み</a>
-      <a class="badge" href="#about">概要</a>
-      <a class="badge" href="meat-bti/" title="事前お楽しみ診断">Meat BTI</a>
+      <a class="badge" href="meat-bti/" title="事前お楽しみ診断">Meat BTI β版</a>
     </nav>
   </div>
 </header>
@@ -100,7 +128,7 @@
   </div>
 </section>
 
-<main class="container" id="about">
+<main class="container">
   <!-- 早期予約特典 -->
   <section class="card section early" aria-labelledby="early">
     <h2 id="early" class="h2">🍾 早期予約特典（〜10月25日まで）</h2>
@@ -113,7 +141,7 @@
     </ul>
   </section>
 
-  <!-- 募集要項 / イベント説明 -->
+  <!-- 募集要項 -->
   <section class="split">
     <article class="card section">
       <h2 class="h2">👩‍❤️‍👨 募集要項</h2>
@@ -127,30 +155,110 @@
       <p>「気になるあの人」との距離が縮まる、クーデターだけの特別な夜。</p>
     </article>
 
-    <aside class="card section">
-      <h2 class="h2">イベント概要</h2>
+    <aside class="card section" id="price">
+      <h2 class="h2">前売り料金表（グループ割）</h2>
       <div class="divider"></div>
-      <p>Cheese Meat Mania KU-DETA が贈る “ニクパーティ - Meet Meat Night -”。<br>
-      美味しいお肉と、ちょっとドキドキする出会いの体験をミックスした、大人の社交場です。</p>
-      <ul class="list">
-        <li>フリードリンク＆肉ビュッフェで会話もスムーズ</li>
-        <li>投票制マッチングで、さりげなく気持ちを伝えられる</li>
-        <li>事前の「Meat BTI」診断で話題づくりもOK</li>
-      </ul>
+      <p class="help">通常価格と、人数に応じた<strong>グループ割適応価格</strong>を並記しています。</p>
     </aside>
   </section>
 
+  <!-- 料金カード（男性・女性） -->
+  <section class="pricing">
+    <!-- 男性 -->
+    <article class="p-card">
+      <div class="p-head male">
+        <div style="width:44px;height:44px;border-radius:999px;background:rgba(0,0,0,.15);display:grid;place-items:center">👨</div>
+        <div style="font-size:20px;letter-spacing:.4em">男　性</div>
+      </div>
+      <div class="p-body">
+        <div class="p-row">
+          <div class="label">通常価格（1名様）</div>
+          <div class="new yen">6,500円</div>
+        </div>
+        <div class="p-row">
+          <div class="label">2名様 <span class="old yen dim">13,000円</span></div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="seal"><small>¥</small><b>500</b><small>OFF</small></div>
+            <div class="new yen"><span class="no1">人気No.1</span>12,500円</div>
+          </div>
+        </div>
+        <div class="p-row">
+          <div class="label">3名様 <span class="old yen dim">19,500円</span></div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="seal"><small>¥</small><b>1,000</b><small>OFF</small></div>
+            <div class="new yen">18,500円</div>
+          </div>
+        </div>
+        <div class="p-row">
+          <div class="label">4名様 <span class="old yen dim">26,000円</span></div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="seal"><small>¥</small><b>1,500</b><small>OFF</small></div>
+            <div class="new yen">24,500円</div>
+          </div>
+        </div>
+        <div class="p-row">
+          <div class="label">5名様 <span class="old yen dim">32,500円</span></div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="seal"><small>¥</small><b>2,000</b><small>OFF</small></div>
+            <div class="new yen">30,500円</div>
+          </div>
+        </div>
+        <p class="note">※価格は税込。割引は合計金額からの値引きです。</p>
+      </div>
+    </article>
+
+    <!-- 女性 -->
+    <article class="p-card">
+      <div class="p-head female">
+        <div style="width:44px;height:44px;border-radius:999px;background:rgba(0,0,0,.15);display:grid;place-items:center">👩</div>
+        <div style="font-size:20px;letter-spacing:.4em">女　性</div>
+      </div>
+      <div class="p-body">
+        <div class="p-row">
+          <div class="label">通常価格（1名様）</div>
+          <div class="new yen">3,500円</div>
+        </div>
+        <div class="p-row">
+          <div class="label">2名様 <span class="old yen dim">7,000円</span></div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="seal"><small>¥</small><b>500</b><small>OFF</small></div>
+            <div class="new yen"><span class="no1">人気No.1</span>6,500円</div>
+          </div>
+        </div>
+        <div class="p-row">
+          <div class="label">3名様 <span class="old yen dim">10,500円</span></div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="seal"><small>¥</small><b>1,000</b><small>OFF</small></div>
+            <div class="new yen">9,500円</div>
+          </div>
+        </div>
+        <div class="p-row">
+          <div class="label">4名様 <span class="old yen dim">14,000円</span></div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="seal"><small>¥</small><b>1,500</b><small>OFF</small></div>
+            <div class="new yen">12,500円</div>
+          </div>
+        </div>
+        <div class="p-row">
+          <div class="label">5名様 <span class="old yen dim">17,500円</span></div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="seal"><small>¥</small><b>2,000</b><small>OFF</small></div>
+            <div class="new yen">15,500円</div>
+          </div>
+        </div>
+        <p class="note">※価格は税込。割引は合計金額からの値引きです。</p>
+      </div>
+    </article>
+  </section>
+
   <!-- 申込みフォーム -->
-  <section id="entry" class="card section" aria-labelledby="entry-title">
+  <section id="entry" class="card section" aria-labelledby="entry-title" style="margin-top:18px">
     <h2 id="entry-title" class="h2">👇 参加申込みフォーム</h2>
     <div class="divider"></div>
-
-    <!-- 成功/エラー表示 -->
     <div id="msg" class="success" style="display:none">送信ありがとうございました！担当よりご連絡いたします。</div>
 
-    <!-- NOTE: FormspreeのエンドポイントIDに置き換えてください -->
+    <!-- Formspree のIDに差し替えてください -->
     <form id="form" action="https://formspree.io/f/XXXXXXXX" method="POST">
-      <!-- 送信時の件名など（任意） -->
       <input type="hidden" name="_subject" value="【ニクパーティ】参加申込み">
       <input type="hidden" name="event" value="ニクパーティ - Meet Meat Night（11/15 19:00〜）">
 
@@ -197,7 +305,6 @@
         <textarea id="notes" name="notes" rows="4" placeholder="例）甲殻類アレルギーあり。19:30頃の到着になります。"></textarea>
       </div>
 
-      <!-- 簡易スパム対策（honeypot） -->
       <input type="text" name="_gotcha" style="display:none">
 
       <label class="agree">
@@ -222,14 +329,12 @@
   // 年号
   document.getElementById('y').textContent = new Date().getFullYear();
 
-  // Formspree Ajax送信（ページ遷移なし）
+  // Formspree Ajax送信（ID差し替え後に有効）
   const form = document.getElementById('form');
   const msg = document.getElementById('msg');
   form.addEventListener('submit', async (e)=>{
-    // FormspreeのID未設定なら通常送信
     const url = form.getAttribute('action');
-    if(!url || /XXXXXXXX/.test(url)) return; // 置き換え前は通常のフォーム動作に委譲
-
+    if(!url || /XXXXXXXX/.test(url)) return; // 置き換え前は通常送信
     e.preventDefault();
     const data = new FormData(form);
     try{
