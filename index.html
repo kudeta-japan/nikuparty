@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#0b0a0a">
 <style>
   :root{
-    /* ===== KU-DETA palette (Cheese / Tomato / Basil / Wine) ===== */
+    /* ===== KU-DETA palette ===== */
     --bg:#0b0a0a; --panel:#141111; --ink:#fff9ef; --muted:#ccbfae; --bd:#2a2421;
     --cheese:#ffd966; --tomato:#ff6b4a; --basil:#3fbf7b; --basil-deep:#1a9c63;
     --wine:#9b4a8f; --wine-deep:#c86b9e;
@@ -48,7 +48,7 @@
   .list{margin:0;padding-left:18px}
   .h2{font-weight:900;font-size:clamp(20px,4.8vw,26px);margin:0 0 6px}
 
-  /* ===== HERO（縦長化） ===== */
+  /* ===== HERO（縦長） ===== */
   .hero{position:relative;min-height:72vh;display:grid;align-items:end;border-bottom:1px solid var(--bd);background:#000;overflow:hidden}
   .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;filter:brightness(.78) contrast(1.05)}
   .hero::before{content:"";position:absolute;inset:0;background:var(--grad-hero)}
@@ -98,9 +98,7 @@
   .teaser .points{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
   .chip{background:#1a1513;border:1px solid #4a3a16;color:#ffe6a8;border-radius:999px;padding:6px 10px;font-size:12px}
   .teaser .cta{margin-top:8px}
-  @media(min-width:860px){
-    .teaser-inner{grid-template-columns:1.2fr .8fr}
-  }
+  @media(min-width:860px){ .teaser-inner{grid-template-columns:1.2fr .8fr} }
 
   /* Floating CTA */
   .float-cta{position:fixed;right:18px;bottom:18px;z-index:30}
@@ -108,7 +106,7 @@
     background:linear-gradient(180deg,var(--cheese),#f7c84a);color:#2a1e0b;border:none;box-shadow:0 12px 26px rgba(247,200,74,.35);font-weight:900}
   .pulse{position:absolute;inset:-6px;border-radius:999px;border:2px solid rgba(247,200,74,.6);animation:pulse 1.8s infinite}
   @keyframes pulse{0%{transform:scale(.9);opacity:.8}70%{transform:scale(1.15);opacity:0}100%{opacity:0}}
-  
+
   /* Form */
   form{display:grid;gap:12px}
   .field{display:grid;gap:6px}
@@ -130,8 +128,8 @@
     <nav style="display:flex;gap:10px;align-items:center">
       <a class="badge" href="#price">料金</a>
       <a class="badge" href="#entry">参加申込み</a>
-      <!-- 目立つBTIボタン -->
-      <a class="btn cheese" href="meat-bti/" title="事前お楽しみ診断">事前コンテンツ：Meat BTI 診断　β版</a>
+      <!-- 強調ボタン（文言から「事前コンテンツ」を削除） -->
+      <a class="btn cheese" href="meat-bti/" title="Meat BTI 診断">Meat BTI 診断</a>
     </nav>
   </div>
 </header>
@@ -147,18 +145,18 @@
     <p class="lead">「美味しいお肉 × ドキドキの出会い」 笑顔が溢れる、非日常の夜をお届けします。</p>
     <div class="cta">
       <a class="btn primary" href="#entry">👇 参加申込みはこちら</a>
-      <!-- ヒーロー内も目立たせる -->
-      <a class="btn cheese" href="meat-bti/">事前コンテンツ：Meat BTI 診断</a>
+      <!-- ヒーロー内ボタンも置換 -->
+      <a class="btn cheese" href="meat-bti/">Meat BTI 診断</a>
     </div>
   </div>
 </section>
 
 <main class="container">
-  <!-- ===== Meat BTI teaser big card ===== -->
+  <!-- ===== BTI teaser ===== -->
   <section class="teaser card" aria-labelledby="bti-teaser">
     <div class="teaser-inner">
       <div>
-        <h3 id="bti-teaser">事前コンテンツ：<span style="color:var(--cheese)">Meat BTI 診断</span></h3>
+        <h3 id="bti-teaser"><span style="color:var(--cheese)">Meat BTI 診断</span></h3>
         <p>会話の“最初の一皿”に。20問・6段階で、あなたの<strong>“部位タイプ”</strong>を判定します。</p>
         <div class="points">
           <span class="chip">⏱ 所要1〜2分</span>
@@ -170,7 +168,6 @@
         </div>
       </div>
       <div style="display:grid;place-items:center">
-        <!-- 画像がなくてもOK。あればここに小さなサムネを置けます -->
         <div style="width:min(420px,100%);aspect-ratio:16/9;border:1px dashed #4a3a16;border-radius:14px;display:grid;place-items:center;color:#ffe6a8;opacity:.9">
           Meat BTI Teaser
         </div>
@@ -211,7 +208,7 @@
     </aside>
   </section>
 
-  <!-- 料金カード（男性・女性） -->
+  <!-- 料金カード -->
   <section class="pricing">
     <!-- 男性 -->
     <article class="p-card">
@@ -220,38 +217,11 @@
         <div style="font-size:20px;letter-spacing:.4em">男　性</div>
       </div>
       <div class="p-body">
-        <div class="p-row">
-          <div class="label">通常価格（1名様）</div>
-          <div class="new yen">6,500円</div>
-        </div>
-        <div class="p-row">
-          <div class="label">2名様 <span class="old yen dim">13,000円</span></div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div class="seal"><small>¥</small><b>500</b><small>OFF</small></div>
-            <div class="new yen"><span class="no1">人気No.1</span>12,500円</div>
-          </div>
-        </div>
-        <div class="p-row">
-          <div class="label">3名様 <span class="old yen dim">19,500円</span></div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div class="seal"><small>¥</small><b>1,000</b><small>OFF</small></div>
-            <div class="new yen">18,500円</div>
-          </div>
-        </div>
-        <div class="p-row">
-          <div class="label">4名様 <span class="old yen dim">26,000円</span></div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div class="seal"><small>¥</small><b>1,500</b><small>OFF</small></div>
-            <div class="new yen">24,500円</div>
-          </div>
-        </div>
-        <div class="p-row">
-          <div class="label">5名様 <span class="old yen dim">32,500円</span></div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div class="seal"><small>¥</small><b>2,000</b><small>OFF</small></div>
-            <div class="new yen">30,500円</div>
-          </div>
-        </div>
+        <div class="p-row"><div class="label">通常価格（1名様）</div><div class="new yen">6,500円</div></div>
+        <div class="p-row"><div class="label">2名様 <span class="old yen dim">13,000円</span></div><div style="display:flex;align-items:center;gap:10px"><div class="seal"><small>¥</small><b>500</b><small>OFF</small></div><div class="new yen"><span class="no1">人気No.1</span>12,500円</div></div></div>
+        <div class="p-row"><div class="label">3名様 <span class="old yen dim">19,500円</span></div><div style="display:flex;align-items:center;gap:10px"><div class="seal"><small>¥</small><b>1,000</b><small>OFF</small></div><div class="new yen">18,500円</div></div></div>
+        <div class="p-row"><div class="label">4名様 <span class="old yen dim">26,000円</span></div><div style="display:flex;align-items:center;gap:10px"><div class="seal"><small>¥</small><b>1,500</b><small>OFF</small></div><div class="new yen">24,500円</div></div></div>
+        <div class="p-row"><div class="label">5名様 <span class="old yen dim">32,500円</span></div><div style="display:flex;align-items:center;gap:10px"><div class="seal"><small>¥</small><b>2,000</b><small>OFF</small></div><div class="new yen">30,500円</div></div></div>
         <p class="note">※価格は税込。割引は合計金額からの値引きです。</p>
       </div>
     </article>
@@ -263,38 +233,11 @@
         <div style="font-size:20px;letter-spacing:.4em">女　性</div>
       </div>
       <div class="p-body">
-        <div class="p-row">
-          <div class="label">通常価格（1名様）</div>
-          <div class="new yen">3,500円</div>
-        </div>
-        <div class="p-row">
-          <div class="label">2名様 <span class="old yen dim">7,000円</span></div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div class="seal"><small>¥</small><b>500</b><small>OFF</small></div>
-            <div class="new yen"><span class="no1">人気No.1</span>6,500円</div>
-          </div>
-        </div>
-        <div class="p-row">
-          <div class="label">3名様 <span class="old yen dim">10,500円</span></div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div class="seal"><small>¥</small><b>1,000</b><small>OFF</small></div>
-            <div class="new yen">9,500円</div>
-          </div>
-        </div>
-        <div class="p-row">
-          <div class="label">4名様 <span class="old yen dim">14,000円</span></div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div class="seal"><small>¥</small><b>1,500</b><small>OFF</small></div>
-            <div class="new yen">12,500円</div>
-          </div>
-        </div>
-        <div class="p-row">
-          <div class="label">5名様 <span class="old yen dim">17,500円</span></div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div class="seal"><small>¥</small><b>2,000</b><small>OFF</small></div>
-            <div class="new yen">15,500円</div>
-          </div>
-        </div>
+        <div class="p-row"><div class="label">通常価格（1名様）</div><div class="new yen">3,500円</div></div>
+        <div class="p-row"><div class="label">2名様 <span class="old yen dim">7,000円</span></div><div style="display:flex;align-items:center;gap:10px"><div class="seal"><small>¥</small><b>500</b><small>OFF</small></div><div class="new yen"><span class="no1">人気No.1</span>6,500円</div></div></div>
+        <div class="p-row"><div class="label">3名様 <span class="old yen dim">10,500円</span></div><div style="display:flex;align-items:center;gap:10px"><div class="seal"><small>¥</small><b>1,000</b><small>OFF</small></div><div class="new yen">9,500円</div></div></div>
+        <div class="p-row"><div class="label">4名様 <span class="old yen dim">14,000円</span></div><div style="display:flex;align-items:center;gap:10px"><div class="seal"><small>¥</small><b>1,500</b><small>OFF</small></div><div class="new yen">12,500円</div></div></div>
+        <div class="p-row"><div class="label">5名様 <span class="old yen dim">17,500円</span></div><div style="display:flex;align-items:center;gap:10px"><div class="seal"><small>¥</small><b>2,000</b><small>OFF</small></div><div class="new yen">15,500円</div></div></div>
         <p class="note">※価格は税込。割引は合計金額からの値引きです。</p>
       </div>
     </article>
@@ -356,7 +299,7 @@
 
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
         <button class="btn primary" type="submit">上記内容で申込み</button>
-        <a class="btn cheese" href="meat-bti/">事前：Meat BTI で話題づくり</a>
+        <a class="btn cheese" href="meat-bti/">Meat BTI 診断</a>
       </div>
       <p class="help">送信後、自動返信メールが届きます。届かない場合は迷惑メールをご確認ください。</p>
     </form>
@@ -367,11 +310,11 @@
   © <span id="y"></span> Cheese Meat Mania KU-DETA / ニクパーティ
 </footer>
 
-<!-- フローティングCTA -->
+<!-- フローティングCTA（文言を置換） -->
 <div class="float-cta" aria-hidden="false">
   <span class="pulse" aria-hidden="true"></span>
-  <a href="meat-bti/" aria-label="事前コンテンツ：Meat BTI 診断へ">
-    🔥 事前コンテンツ：Meat BTI 診断
+  <a href="meat-bti/" aria-label="Meat BTI 診断へ">
+    🔥 Meat BTI 診断
   </a>
 </div>
 
