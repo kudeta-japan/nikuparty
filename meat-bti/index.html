@@ -59,7 +59,6 @@
   .bar>div{height:100%;width:0%;background:linear-gradient(90deg,var(--acc),var(--acc2))}
   .qgrid{display:grid;gap:12px}
   .qitem{background:#111522;border:1px solid #2a3140;border-radius:14px;padding:14px}
-  /* ← ラベルは消し、前提テキストを大きく＆簡潔に */
   .ctx{color:#e7ecf8;font-weight:700;font-size:clamp(14px,2.8vw,16px);margin:-2px 0 8px 0}
   .lr{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:stretch;pointer-events:none}
   .side{background:#0f1522;border:1px solid #272f41;border-radius:12px;padding:10px;min-height:66px;display:flex;align-items:center;justify-content:center;text-align:center}
@@ -84,8 +83,6 @@
   .big{font-size:clamp(26px,6vw,34px);font-weight:900}
   .desc{margin-top:10px;line-height:1.9}
   .mono{font-family:ui-monospace,Menlo,Consolas,monospace}
-  .meter{height:10px;background:#141721;border:1px solid var(--bd);border-radius:999px;overflow:hidden}
-  .meter>div{height:100%;width:0%;background:linear-gradient(90deg,var(--good),var(--warn))}
   footer{padding:10px 16px 16px;color:var(--muted);font-size:12px}
 </style>
 </head>
@@ -157,32 +154,8 @@
             </div>
           </div>
 
-          <div class="r-card">
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
-              <strong>信頼度</strong>
-              <button class="btn" id="btn-copy">結果をコピー</button>
-            </div>
-            <div style="display:grid;gap:8px;margin-top:8px">
-              <div>総合：<span id="conf-overall-text">—</span>
-                <div class="meter"><div id="conf-overall" style="width:0%"></div></div>
-              </div>
-              <div>R/L：<span id="conf-rl-text">—</span>
-                <div class="meter"><div id="conf-rl" style="width:0%"></div></div>
-              </div>
-              <div>F/S：<span id="conf-fs-text">—</span>
-                <div class="meter"><div id="conf-fs" style="width:0%"></div></div>
-              </div>
-              <div>K/C：<span id="conf-kc-text">—</span>
-                <div class="meter"><div id="conf-kc" style="width:0%"></div></div>
-              </div>
-              <div class="hint" id="quality-hints"></div>
-            </div>
-          </div>
+          <!-- ※信頼度カード（削除）／詳細カード（削除） -->
 
-          <div class="r-card">
-            <strong>詳細（集計値）</strong>
-            <pre class="mono" id="r-detail" style="white-space:pre-wrap;margin-top:8px;color:var(--muted)"></pre>
-          </div>
           <div style="display:flex;justify-content:space-between;gap:10px">
             <button class="btn" id="btn-retry">最初から</button>
             <a class="btn primary" href="#" id="btn-export" download>結果をJSONで保存</a>
@@ -437,6 +410,25 @@ function computeResult(){
   return {code,baseName,name,R_base:R,L_base:L,F,S,K,C,Q,M,Salt,Sauce,Light,Hearty,R_adj,L_adj,Rf,Lf,tagTexture,tagFlavor,tagAfter};
 }
 
+/* ==== 結果表示 ==== */
+function showResult(){
+  el('bar').style.width='100%';
+  const r=computeResult(); showScreen('result');
+  el('r-type-name').textContent=r.name;
+  el('r-type-code').textContent=r.code;
+  el('tag-texture').textContent=r.tagTexture;
+  el('tag-flavor').textContent=r.tagFlavor;
+  el('tag-after').textContent=r.tagAfter;
+  el('r-desc').textContent=DESCRIPTIONS[r.name]||'';
+  const bm=bestMatch(r.code); const repr=CODE_REPR[bm]||bm;
+  el('r-best').textContent=bm?`${repr}（${bm}）`:'—';
+
+  // JSONエクスポート（維持）
+  const payload={type:{baseCode:r.code,baseName:r.baseName,displayName:r.name},tags:{texture:r.tagTexture,flavor:r.tagFlavor,after:r.tagAfter},counts:{R:r.R_base,L:r.L_base,F:r.F,S:r.S,K:r.K,C:r.C,Q:r.Q,M:r.M,Salt:r.Salt,Sauce:r.Sauce,Light:r.Light,Hearty:r.Hearty},answers,generatedAt:new Date().toISOString()};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob); const a=el('btn-export'); a.href=url; a.download=`MEAT-BTI_${r.code}.json`;
+}
+
 function parseCode(code){const [a,b,c]=code.split('-');return {RL:a,FS:b,KC:c};}
 function allTypeCodes(){return Object.keys(CODE_REPR);}
 function bestMatch(code){
@@ -457,69 +449,9 @@ function bestMatch(code){
   return best;
 }
 
-/* ==== 信頼度 ==== */
-function smoothedRatio(a,b,prior=1.2){const p=(a+prior)/(a+b+2*prior);return p;}
-function axisConfidence(a,b){const p=smoothedRatio(a,b);return Math.max(p,1-p);}
-function kr20(items){const k=items.length;if(k<2)return null;const mean=items.reduce((s,x)=>s+x,0)/k;const vari=items.reduce((s,x)=>s+(x-mean)**2,0)/k;const totalVar=k*mean*(1-mean);if(totalVar===0)return null;return (k/(k-1))*(1-(k*vari)/totalVar);}
-function percentile(arr,p){const a=[...arr].sort((x,y)=>x-y);const i=Math.floor((a.length-1)*p);return a[i]??0;}
-function qualityAssess(r){
-  const confRL=axisConfidence(r.R_base,r.L_base), confFS=axisConfidence(r.F,r.S), confKC=axisConfidence(r.K,r.C);
-  const overall=Math.round(((confRL+confFS+confKC)/3)*100);
-  const alphaRL=kr20(rl_items), alphaFS=kr20(fs_items), alphaKC=kr20(kc_items);
-  const medRT=percentile(rtimes,0.5);
-  const tooFast=rtimes.filter(ms=>ms<300).length>=5;
-  const posBias=Math.max(answers.filter(a=>a.uiVal>0).length,answers.filter(a=>a.uiVal<0).length)/answers.length;
-  let notes=[]; if(alphaRL!==null && alphaRL<0.4) notes.push('R/Lの回答一貫性がやや低いかも');
-  if(alphaFS!==null && alphaFS<0.4) notes.push('F/Sの回答一貫性がやや低いかも');
-  if(alphaKC!==null && alphaKC<0.4) notes.push('K/Cの回答一貫性がやや低いかも');
-  if(tooFast) notes.push('非常に速い回答が多い（連打の可能性）');
-  if(posBias>0.9) notes.push('左/右どちらかに極端に偏った選択');
-  return {confRL,confFS,confKC,overall,alphaRL,alphaFS,alphaKC,medRT,tooFast,posBias,notes};
-}
-function setMeter(id,pct){el(id).style.width=pct+'%';const tId=id+'-text';if(el(tId)) el(tId).textContent=Math.round(pct)+'%';}
-
-/* ==== 結果表示 ==== */
-function showResult(){
-  el('bar').style.width='100%';
-  const r=computeResult(); showScreen('result');
-  el('r-type-name').textContent=r.name;
-  el('r-type-code').textContent=r.code;
-  el('tag-texture').textContent=r.tagTexture;
-  el('tag-flavor').textContent=r.tagFlavor;
-  el('tag-after').textContent=r.tagAfter;
-  el('r-desc').textContent=DESCRIPTIONS[r.name]||'';
-  const bm=bestMatch(r.code); const repr=CODE_REPR[bm]||bm;
-  el('r-best').textContent=bm?`${repr}（${bm}）`:'—';
-
-  const qa=qualityAssess(r);
-  setMeter('conf-overall',qa.overall); el('conf-overall-text').textContent=`${qa.overall}% ${qa.overall>=75?'（高）':qa.overall>=60?'（中）':'（低）'}`;
-  setMeter('conf-rl',qa.confRL*100); el('conf-rl-text').textContent=`${Math.round(qa.confRL*100)}%`;
-  setMeter('conf-fs',qa.confFS*100); el('conf-fs-text').textContent=`${Math.round(qa.confFS*100)}%`;
-  setMeter('conf-kc',qa.confKC*100); el('conf-kc-text').textContent=`${Math.round(qa.confKC*100)}%`;
-
-  const detail=[
-    `Code: ${r.code} / Base: ${r.baseName} / Display: ${r.name}`,
-    `R/L base: R=${r.R_base.toFixed(1)}, L=${r.L_base.toFixed(1)}  adj: R+${r.R_adj}, L+${r.L_adj}  → Rf=${r.Rf.toFixed(1)}, Lf=${r.Lf.toFixed(1)}`,
-    `F/S: F=${r.F.toFixed(1)}, S=${r.S.toFixed(1)}`,
-    `K/C: K=${r.K.toFixed(1)}, C=${r.C.toFixed(1)}`,
-    `Texture: Q=${r.Q.toFixed(1)}, M=${r.M.toFixed(1)}  Flavor: Salt=${r.Salt.toFixed(1)}, Sauce=${r.Sauce.toFixed(1)}  After: Light=${r.Light.toFixed(1)}, Hearty=${r.Hearty.toFixed(1)}`
-  ].join('\n');
-  el('r-detail').textContent=detail;
-
-  const payload={type:{baseCode:r.code,baseName:r.baseName,displayName:r.name},tags:{texture:r.tagTexture,flavor:r.tagFlavor,after:r.tagAfter},counts:{R:r.R_base,L:r.L_base,F:r.F,S:r.S,K:r.K,C:r.C,Q:r.Q,M:r.M,Salt:r.Salt,Sauce:r.Sauce,Light:r.Light,Hearty:r.Hearty},answers,generatedAt:new Date().toISOString()};
-  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob); const a=el('btn-export'); a.href=url; a.download=`MEAT-BTI_${r.code}.json`;
-}
-
-/* Start / Retry / Copy */
+/* Start / Retry */
 addEventListener('click',(ev)=>{ const t=ev.target.closest('#btn-start,#btn-start-2'); if(!t) return; ev.preventDefault(); start(); });
 const retry=document.getElementById('btn-retry'); if(retry) retry.addEventListener('click',()=>{showScreen('start')});
-const copy=document.getElementById('btn-copy'); if(copy) copy.addEventListener('click',async()=>{
-  const name=el('r-type-name').textContent, code=el('r-type-code').textContent;
-  const tags=[el('tag-texture').textContent,el('tag-flavor').textContent,el('tag-after').textContent].join('・');
-  const text=`MEAT-BTI v7.5\n部位タイプ：${name}（${code}）\nタグ：${tags}`;
-  try{await navigator.clipboard.writeText(text); el('btn-copy').textContent='コピーしました！'; setTimeout(()=>el('btn-copy').textContent='結果をコピー',1500);}catch{alert('コピーに失敗しました');}
-});
 </script>
 </body>
 </html>
