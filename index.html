@@ -1,358 +1,367 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Meat BTI｜肉診断（20問）</title>
-  <meta name="description" content="Meat BTI｜肉診断。20問の二択に答えるだけで、あなたに合う“肉の12タイプ”を判定します。" />
-  <meta property="og:title" content="Meat BTI｜肉診断（20問）" />
-  <meta property="og:description" content="20問の二択で“肉の12タイプ”を判定。あなたの肉傾向を6軸で可視化。" />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="../mbti.jpg" />
-  <meta name="theme-color" content="#111111" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>ニクパーティ｜11/15（金）KU-DETA｜肉も恋も、ジューシーな夜</title>
+  <meta name="description" content="11/15(金) 18:30 OPEN / 19:00 START / 21:00 CLOSE。定員50名（男女25×25）。肉ビュッフェ＆フリードリンク。申込はフォームから。当日支払い・年齢確認必須。"/>
+  <meta name="format-detection" content="telephone=no">
+
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-V39MNGQD5H"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date()); gtag('config', 'G-V39MNGQD5H');
+  </script>
+
   <style>
     :root{
-      --bg:#0b0b0b; --text:#f7f7f7; --muted:#b8b8b8; --card:#141414; --border:#2a2a2a;
-      --accent:#ff3b2f; --accent-2:#ffc400;
+      --bg:#0b0e14; --ink:#f3f7ff; --muted:#b7c3d6; --panel:#101521; --bd:#1c2233;
+      --acc:#ff715b; --acc2:#ffd166; --ok:#2ed39a; --warn:#ffd166;
+      --shadow:0 12px 30px rgba(0,0,0,.35);
     }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic","YuGothic","Helvetica Neue",Arial,sans-serif;line-height:1.6;scroll-behavior:smooth}
-    img{max-width:100%;display:block}
-    a{color:inherit;text-decoration:none}
-    .container{width:min(960px,92vw);margin:0 auto}
-    header{position:sticky;top:0;z-index:40;background:rgba(0,0,0,.55);backdrop-filter:saturate(130%) blur(6px);border-bottom:1px solid var(--border)}
-    .nav{display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 12px}
-    .brand{display:flex;align-items:center;gap:10px;font-weight:900}
-    .logo{width:26px;height:26px;border-radius:8px;background:conic-gradient(from 15deg,var(--accent),var(--accent-2));box-shadow:0 0 0 2px #000 inset}
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;letter-spacing:.02em}
 
-    .main{padding:28px 0 60px}
-    h1{font-size:clamp(28px,4.6vw,44px);line-height:1.15;margin:8px 0 4px}
-    .lead{color:var(--muted)}
+    /* header */
+    .topbar{position:sticky;top:0;z-index:50;background:rgba(11,14,20,.7);backdrop-filter:blur(8px);border-bottom:1px solid var(--bd)}
+    .topbar-inner{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:10px 16px}
+    .brand{display:flex;align-items:center;gap:10px}
+    .logo{width:36px;height:36px;border-radius:10px;background:conic-gradient(from 140deg,var(--acc),var(--acc2));display:grid;place-items:center;color:#111;font-weight:900}
+    .nav{display:flex;gap:12px;flex-wrap:wrap}
+    .btn{appearance:none;border:1px solid var(--bd);background:#151b27;color:var(--ink);padding:10px 14px;border-radius:12px;font-weight:800;cursor:pointer;transition:transform .06s, box-shadow .15s}
+    .btn:hover{transform:translateY(-1px)}
+    .btn.primary{background:linear-gradient(180deg,var(--acc),#ff4e36);color:#111;border:none;box-shadow:0 10px 24px rgba(255,113,91,.35)}
+    .btn.ghost{background:transparent}
+    .btn.big{padding:14px 18px;border-radius:14px}
 
-    .card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
-    .row{display:grid;gap:16px;grid-template-columns:1fr}
-    @media (min-width:860px){.row{grid-template-columns:1.1fr .9fr}}
+    /* hero */
+    .hero{position:relative;isolation:isolate}
+    .hero::before{content:"";position:absolute;inset:0;background:
+      linear-gradient(180deg,rgba(0,0,0,.45),rgba(0,0,0,.55) 35%,rgba(0,0,0,.65));
+      z-index:0}
+    .hero img{display:block;width:100%;height:64vh;object-fit:cover;object-position:center}
+    @media(min-width:960px){.hero img{height:72vh}}
+    .hero-inner{position:absolute;inset:0;z-index:1;display:grid;align-content:center}
+    .hero-content{max-width:1080px;margin:0 auto;padding:0 18px;display:grid;gap:14px}
+    .eyebrow{display:inline-flex;gap:8px;align-items:center;background:rgba(255,255,255,.08);border:1px solid #222a3a;color:#dfe7f5;padding:6px 10px;border-radius:999px;font-size:12px;width:max-content}
+    h1{margin:0;font-size:clamp(28px,5.6vw,44px);line-height:1.18;font-weight:900}
+    .sub{color:#e9eefc;font-size:clamp(14px,2.8vw,18px)}
+    .badges{display:flex;flex-wrap:wrap;gap:8px}
+    .badge{background:#121829;border:1px solid #2a3245;color:#dfe7f5;border-radius:999px;padding:6px 10px;font-size:12px}
+    .cta-row{display:flex;gap:10px;flex-wrap:wrap}
 
-    .progress-wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-    .bar{position:relative;flex:1;height:8px;border-radius:999px;background:#1e1e1e;overflow:hidden}
-    .bar>i{position:absolute;inset:0;width:0;background:linear-gradient(90deg,var(--accent-2),var(--accent))}
-    .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#111;font-size:12px}
+    /* sections */
+    .wrap{max-width:1080px;margin:0 auto;padding:28px 18px;display:grid;gap:24px}
+    .card{background:var(--panel);border:1px solid var(--bd);border-radius:16px;box-shadow:var(--shadow);padding:16px}
+    .grid{display:grid;gap:16px}
+    @media(min-width:880px){.grid.cols-2{grid-template-columns:1fr 1fr}}
+    h2{margin:0 0 8px 0;font-size:22px}
+    .meta{display:grid;gap:10px}
+    .row{display:flex;gap:10px;align-items:flex-start}
+    .key{min-width:7em;color:var(--muted)}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#131726;border:1px solid var(--bd);margin-right:6px}
+    .muted{color:var(--muted)}
+    .warn{color:var(--warn)}
 
-    /* Quiz */
-    form{margin-top:10px}
-    #quiz{scroll-margin-top:88px}
-    fieldset.q{margin:12px 0;border:1px solid var(--border);background:#151515;padding:16px;border-radius:16px}
-    fieldset.q legend{padding:0 6px;font-weight:800;margin-bottom:8px}
-    .choices{display:grid;grid-template-columns:1fr;gap:10px}
-    @media (min-width:720px){.choices{grid-template-columns:1fr 1fr}}
-    .choice{position:relative;border:1px solid var(--border);background:#131313;border-radius:14px;padding:14px 14px 14px 44px;cursor:pointer;min-height:48px;display:flex;align-items:center}
-    .choice:hover{border-color:#3a3a3a;background:#171717}
-    .choice input{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:18px;height:18px}
+    /* pricing */
+    .price-table{width:100%;border-collapse:separate;border-spacing:0 8px}
+    .price-table th,.price-table td{padding:10px 12px;background:#0f1522;border:1px solid #2a3140}
+    .price-table th{background:#121829;text-align:left}
+    .kicker{font-size:12px;color:var(--muted);margin-top:6px}
 
-    .actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px}
-    .btn{display:inline-flex;align-items:center;gap:10px;padding:12px 18px;border-radius:999px;border:1px solid var(--border);background:#1b1b1b;color:#fff;font-weight:800}
-    .btn[disabled]{opacity:.6;pointer-events:none}
-    .btn-primary{background:linear-gradient(135deg,var(--accent),#ff6a50);border-color:#ff6a50}
+    /* form */
+    form{display:grid;gap:14px}
+    .fields{display:grid;gap:12px}
+    @media(min-width:880px){.fields{grid-template-columns:1fr 1fr}}
+    .field{display:grid;gap:6px}
+    label{font-weight:700}
+    input,select,textarea{padding:12px 12px;border-radius:12px;border:1px solid #2a3140;background:#0f1522;color:var(--ink)}
+    input[type="checkbox"]{width:18px;height:18px}
+    .help{font-size:12px;color:var(--muted)}
+    .totals{background:#0f1522;border:1px solid #2a3140;border-radius:12px;padding:12px}
+    .totals strong{font-size:18px}
+    .hr{height:1px;background:#1e2536;margin:8px 0}
 
-    /* Result */
-    .grid{display:grid;gap:12px}
-    .grid-2{grid-template-columns:1fr}
-    @media (min-width:860px){.grid-2{grid-template-columns:1fr 1fr}}
-    .dim-item{display:flex;align-items:center;gap:10px}
-    .dim-item .track{flex:1;height:8px;border-radius:999px;background:#1f1f1f;overflow:hidden}
-    .dim-item .fill{height:100%;background:linear-gradient(90deg,var(--accent-2),var(--accent))}
+    /* footer */
+    footer{padding:24px 18px;color:var(--muted);text-align:center}
 
-    .type-grid{display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))}
-    @media (min-width:720px){.type-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
-    @media (min-width:1024px){.type-grid{grid-template-columns:repeat(6,minmax(0,1fr))}}
-    .type-card{border:1px solid var(--border);background:#141414;border-radius:14px;padding:10px;text-align:center}
-    .type-card.active{outline:2px solid var(--accent-2);box-shadow:0 0 0 4px rgba(255,196,0,.15)}
+    /* floating sns */
+    .sns-float{position:fixed;right:16px;bottom:16px;z-index:60;display:flex;flex-direction:column;gap:10px}
+    .sns-float a{display:grid;place-items:center;width:46px;height:46px;border-radius:999px;background:#141b2a;border:1px solid #2a3140}
+    .sns-float svg{width:22px;height:22px;fill:#eaf1ff}
 
-    footer{border-top:1px solid var(--border);color:var(--muted);padding:22px 0 40px;margin-top:40px}
-      .hero{position:relative;min-height:62vh;display:flex;align-items:flex-end;overflow:hidden;border-bottom:1px solid var(--border);background:#000}@media(min-width:900px){.hero{background-image:url('./hero_meatbti_1600.jpg')}}
-    .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05) 0%, rgba(0,0,0,.55) 70%, rgba(0,0,0,.85) 100%);z-index:1}
-    .hero-inner{position:relative;z-index:2;padding:40px 0 28px}
-    .tag{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.35);font-size:12px}
-    .title-split{font-weight:900;line-height:1.1;margin:10px 0 6px;font-size:clamp(42px,9vw,96px)}
-    .title-split .meat{color:var(--accent-2)}
-    .title-split .bti{color:#69c36b}
-    .subtitle{color:var(--text);opacity:.95;font-size:clamp(16px,2.4vw,28px)}
-  .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,1,1);white-space:nowrap;border:0}
-  .hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+    /* util */
+    .center{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .ok{color:var(--ok)}
+    a.link{color:#a9c7ff;text-decoration:none;border-bottom:1px dashed #3b5aa8}
   </style>
 </head>
 <body>
-  <header>
-    <div class="container nav">
-      <div class="brand"><span class="logo" aria-hidden="true"></span><span class="sr-only">Meat BTI</span></div>
-      <nav style="display:flex;gap:10px;align-items:center">
-        <a class="pill" href="../index.html">トップへ</a>
+
+  <!-- header -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="logo">🥩</div>
+        <div>
+          <div style="font-weight:900">ニクパーティ</div>
+          <div class="muted" style="font-size:12px">11/15（金）KU-DETA</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <a class="btn ghost" href="#about">概要</a>
+        <a class="btn ghost" href="#price">料金</a>
+        <a class="btn ghost" href="#entry">申込</a>
+        <a class="btn" href="/nikuparty/meat-bti/">MEAT-BTIを受ける</a>
+        <a class="btn primary" href="#entry">申し込む</a>
       </nav>
     </div>
-  </header>
+  </div>
 
-  <main class="main">
-    <section class="hero" id="top" aria-label="Meat BTI Hero">
-      <a href="mbti.png" target="_blank" rel="noopener"><img class="hero-img" src="mbti.png" alt="" aria-hidden="true"></a>
-      <div class="container hero-inner">
-        <span class="sr-only">Meat BTI（肉診断）のヒーロー画像</span>
-        <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
-          <button id="startBtn" type="button" class="btn btn-primary">診断する</button>
-          <a href="../index.html" class="btn">街コンTOPへ</a>
+  <!-- hero (静止) -->
+  <section class="hero" aria-label="Hero">
+    <img src="assets/hero.jpg" alt="KU-DETA店内、肉ビュッフェとグラスが並ぶ夜の雰囲気"/>
+    <div class="hero-inner">
+      <div class="hero-content">
+        <span class="eyebrow">イベント限定｜定員 50名（男女25×25）</span>
+        <h1>肉も恋も、ジューシーな夜</h1>
+        <p class="sub">「いいね」の数より、笑い声の数。KU-DETAが仕掛ける“美味しい出会い”で、恋も友情もつながる夜へ。</p>
+        <div class="badges">
+          <span class="badge">肉ビュッフェ</span>
+          <span class="badge">フリードリンク</span>
+          <span class="badge">20〜40歳 独身限定</span>
+        </div>
+        <div class="cta-row">
+          <a class="btn primary big" href="#entry" id="cta-apply">申し込みフォームへ</a>
+          <a class="btn big" href="/meat-bti/" id="cta-bti">MEAT-BTIを受ける</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="wrap">
+    <!-- about -->
+    <section id="about" class="card">
+      <h2>開催概要</h2>
+      <div class="grid cols-2">
+        <div class="meta">
+          <div class="row"><div class="key">日程</div><div>11/15（金）</div></div>
+          <div class="row"><div class="key">時間</div><div>18:30 OPEN / 19:00 START / 21:00 CLOSE</div></div>
+          <div class="row"><div class="key">会場</div><div>KU-DETA（クーデター）<br><span class="muted">※アクセスは地図アプリで「KU-DETA」で検索</span></div></div>
+          <div class="row"><div class="key">対象</div><div>20〜40歳の独身男女</div></div>
+          <div class="row"><div class="key">定員</div><div>50名（男性25 / 女性25）</div></div>
+          <div class="row"><div class="key">内容</div><div>肉ビュッフェ ＋ フリードリンク</div></div>
+        </div>
+        <div class="meta">
+          <div class="row"><div class="key">ドレスコード</div><div>少しだけラグジュアリー｜スマートカジュアル推奨</div></div>
+          <div class="row"><div class="key">支払い</div><div>当日支払い（現地）</div></div>
+          <div class="row"><div class="key">早割</div><div>10/20までの申込で特典あり（<span class="muted">内容は後日公開</span>）</div></div>
+          <div class="row"><div class="key">注意</div><div>飲酒を伴うため年齢確認を行います。身分証をお持ちください。</div></div>
+          <div class="row"><div class="key">連絡先</div><div><a class="link" href="mailto:kudeta.kanou@gmail.com">kudeta.kanou@gmail.com</a></div></div>
+          <div class="row"><div class="key">SNS</div><div>
+            <span class="pill">@ku_deta_gifu</span> Instagram / TikTok
+          </div></div>
         </div>
       </div>
     </section>
-    <div class="container">
-      <div class="row">
-        <section class="card">
-          <h1>肉診断（Meat BTI）</h1>
-          <p class="lead">二択の<strong>全20問</strong>。所要<strong>1〜2分</strong>。直感でお答えください。<br>結果は6軸の傾向と、あなたに合う<strong>“肉の12タイプ”</strong>を提示します。</p>
 
-          <div class="progress-wrap">
-            <div class="pill" id="progressText">0/20 回答済み</div>
-            <div class="pill" id="stepInfo">Step 1/4</div>
-            <div class="bar" aria-hidden="true"><i id="progressBar"></i></div>
-          </div>
-            <div class="bar" aria-hidden="true"><i id="progressBar"></i></div>
-          </div>
-
-          <form id="quiz"></form>
-          <div class="actions">
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <button type="button" id="reset" class="btn">リセット</button>
-              <button type="button" id="save" class="btn">途中保存</button>
-              <button type="button" id="load" class="btn">保存を読み込み</button>
-            </div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <button type="button" id="prev" class="btn" disabled>前の5問へ</button>
-              <button type="button" id="next" class="btn">次の5問へ</button>
-              <button type="submit" form="quiz" id="submit" class="btn btn-primary" disabled>結果を見る</button>
-            </div>
-          </div>
-            <button type="submit" form="quiz" id="submit" class="btn btn-primary" disabled>結果を見る</button>
-          </div>
-        </section>
-
-        <aside class="card" id="sidebar">
-          <h2 style="margin:6px 0 8px;font-size:18px">診断の考え方</h2>
-          <ol style="margin:0 0 10px 18px;padding:0">
-            <li>6軸（SOC/RICH/PACE/NOV/TEXT/VALUE）の回答をA/Bで集計</li>
-            <li>各タイプに設定された <strong>重み（−3〜+3）</strong> と回答ベクトルの内積を計算</li>
-            <li>スコアが最も高いタイプを提示（次点2つも表示）</li>
-          </ol>
-          <p class="lead" style="font-size:12px">※重みは提供表に基づき設定。信頼度は回答の偏りから算出（60–95%）。</p>
-        </aside>
-      </div>
-
-      <section id="resultWrap" class="card" style="display:none;margin-top:16px">
-        <div id="result"></div>
-        <div class="actions" style="margin-top:16px">
-          <button class="btn" id="copy">結果をコピー</button>
-          <a class="btn pill" href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'})">もう一度診断する</a>
+    <!-- pricing -->
+    <section id="price" class="card">
+      <h2>参加費（当日支払い）</h2>
+      <div class="grid cols-2">
+        <div>
+          <table class="price-table" aria-describedby="price-note">
+            <thead><tr><th>男性</th><th>合計</th></tr></thead>
+            <tbody>
+              <tr><td>1人</td><td>¥6,500</td></tr>
+              <tr><td>2人</td><td>¥12,500</td></tr>
+              <tr><td>3人</td><td>¥18,500</td></tr>
+              <tr><td>4人</td><td>¥24,500</td></tr>
+              <tr><td>5人</td><td>¥30,500</td></tr>
+            </tbody>
+          </table>
         </div>
-      </section>
-    </div>
+        <div>
+          <table class="price-table">
+            <thead><tr><th>女性</th><th>合計</th></tr></thead>
+            <tbody>
+              <tr><td>1人</td><td>¥3,500</td></tr>
+              <tr><td>2人</td><td>¥6,500</td></tr>
+              <tr><td>3人</td><td>¥9,500</td></tr>
+              <tr><td>4人</td><td>¥12,500</td></tr>
+              <tr><td>5人</td><td>¥15,500</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p class="kicker" id="price-note">※男女混合グループは、男女ごとの合計を合算します（上表をそれぞれ適用）。</p>
+    </section>
+
+    <!-- entry -->
+    <section id="entry" class="card">
+      <h2>申し込みフォーム</h2>
+      <form action="https://formspree.io/f/mblzajvd" method="POST" id="applyForm">
+        <div class="fields">
+          <div class="field">
+            <label for="name">代表者氏名<span class="ok">（必須）</span></label>
+            <input id="name" name="代表者氏名" type="text" required>
+          </div>
+          <div class="field">
+            <label for="email">メールアドレス<span class="ok">（必須）</span></label>
+            <input id="email" name="メール" type="email" required>
+          </div>
+
+          <div class="field">
+            <label for="phone">電話番号</label>
+            <input id="phone" name="電話" type="tel" inputmode="numeric" placeholder="ハイフン不要">
+          </div>
+          <div class="field">
+            <label for="age">年齢（代表者）<span class="ok">（必須）</span></label>
+            <select id="age" name="年齢" required>
+              <option value="" selected disabled>選択してください</option>
+              <option>20–24</option><option>25–29</option><option>30–34</option>
+              <option>35–39</option><option>40</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="men">男性人数（0–5）</label>
+            <select id="men" name="男性人数">
+              <option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+            </select>
+            <div class="help">男女別内訳に対応</div>
+          </div>
+          <div class="field">
+            <label for="women">女性人数（0–5）</label>
+            <select id="women" name="女性人数">
+              <option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="note">備考</label>
+            <textarea id="note" name="備考" rows="3" placeholder="同席希望、食物アレルギーなど"></textarea>
+          </div>
+          <div class="field">
+            <label>事前診断（任意）</label>
+            <div class="center">
+              <a class="btn" href="/meat-bti/">MEAT-BTIを受ける</a>
+              <span class="help">※別タブではなく同タブ遷移です</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="totals" aria-live="polite">
+          <div><strong>見積り合計：</strong> <span id="sum">¥0</span></div>
+          <div class="hr"></div>
+          <div>内訳：<span id="breakdown" class="muted">男性0名 / 女性0名</span></div>
+          <div class="kicker">※当日お支払い。早割（〜10/20）の内容は後日公開。</div>
+        </div>
+
+        <label class="center" style="gap:8px">
+          <input type="checkbox" id="agree" required>
+          <span>同意します：<span class="muted">キャンセルポリシー（3日前50% / 当日100%）・年齢確認実施</span></span>
+        </label>
+
+        <!-- hidden auto fields -->
+        <input type="hidden" name="見積り合計" id="h-sum">
+        <input type="hidden" name="見積り内訳" id="h-breakdown">
+
+        <div class="center">
+          <button class="btn primary big" type="submit" id="submitBtn" disabled>この内容で申し込む</button>
+          <span class="help">送信後は確認メールが届きます。</span>
+        </div>
+      </form>
+    </section>
+
+    <!-- notes -->
+    <section class="card">
+      <h2>よくある質問（抜粋）</h2>
+      <div class="grid">
+        <div>
+          <div><strong>Q. 支払い方法は？</strong></div>
+          <div class="muted">A. 当日、現地にてお支払いください。</div>
+        </div>
+        <div>
+          <div><strong>Q. 一人参加も可能？</strong></div>
+          <div class="muted">A. もちろんOKです。会場内でサポートします。</div>
+        </div>
+        <div>
+          <div><strong>Q. 年齢確認はありますか？</strong></div>
+          <div class="muted">A. 受付で身分証をご提示ください（飲酒を伴うため）。</div>
+        </div>
+        <div>
+          <div><strong>Q. キャンセルについて</strong></div>
+          <div class="muted">A. 3日前50% / 当日100% のキャンセル料が発生します。</div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer>
-    <div class="container">
-      <small>© <span id="y"></span> KU-DETA / Meat BTI</small>
-    </div>
+    © KU-DETA / ニクパーティ<br>
+    お問い合わせ：<a class="link" href="mailto:kudeta.kanou@gmail.com">kudeta.kanou@gmail.com</a>
   </footer>
 
+  <!-- 固定表示：SNS -->
+  <div class="sns-float" aria-label="SNSリンク">
+    <a href="https://www.instagram.com/ku_deta_gifu" aria-label="Instagram">
+      <!-- instagram icon -->
+      <svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3a6 6 0 1 1 0 12 6 6 0 0 1 0-12zm0 2.2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6zm5.9-.9a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2z"/></svg>
+    </a>
+    <a href="#" aria-label="TikTok（後で差し替え）">
+      <!-- tiktok icon -->
+      <svg viewBox="0 0 24 24"><path d="M16.5 2c1 .8 2.2 1.3 3.5 1.4v3.1c-1.3 0-2.5-.3-3.5-1v7.6a6.5 6.5 0 1 1-6.5-6.5c.3 0 .6 0 .9.1v3.4c-.3-.1-.6-.1-.9-.1a3 3 0 1 0 3 3V2h2.5z"/></svg>
+    </a>
+  </div>
+
   <script>
-  (function(){
-    const $ = (sel)=>document.querySelector(sel);
+    // 料金テーブル（グループ合計）
+    const MEN = {0:0,1:6500,2:12500,3:18500,4:24500,5:30500};
+    const WOM = {0:0,1:3500,2:6500,3:9500,4:12500,5:15500};
 
-    // Elements
-    const quizEl = $('#quiz');
-    const progressText = $('#progressText');
-    const progressBar = $('#progressBar');
-    const stepInfo = $('#stepInfo');
-    const submitBtn = $('#submit');
-    const prevBtn = $('#prev');
-    const nextBtn = $('#next');
-    const resetBtn = $('#reset');
-    const saveBtn = $('#save');
-    const loadBtn = $('#load');
-    const resultWrap = $('#resultWrap');
-    const resultEl = $('#result');
+    const menSel = document.getElementById('men');
+    const womSel = document.getElementById('women');
+    const sumEl  = document.getElementById('sum');
+    const brEl   = document.getElementById('breakdown');
+    const hSum   = document.getElementById('h-sum');
+    const hBr    = document.getElementById('h-breakdown');
+    const agree  = document.getElementById('agree');
+    const submitBtn = document.getElementById('submitBtn');
+    const form   = document.getElementById('applyForm');
 
-    // Data (20Q)
-    const QUESTIONS = [
-      {"id":1,"text":"焼き肉かステーキか","A":"ステーキでじっくり味わいたい","B":"焼き肉でワイワイ楽しみたい","dimension":"SOC"},
-      {"id":2,"text":"焼き肉の一皿目は？","A":"タン塩で口を整える","B":"カルビで景気づけ","dimension":"RICH"},
-      {"id":3,"text":"ステーキを食べるなら？","A":"赤身の旨み重視","B":"サーロインのコク重視","dimension":"RICH"},
-      {"id":4,"text":"2回目のデート、どっちに行く？","A":"肉バルで落ち着いて会話","B":"焼き肉で距離を一気に縮める","dimension":"SOC"},
-      {"id":5,"text":"3回目のデートで肉バル：注文は？","A":"コースで段取りよく","B":"アラカルトで直感的に選ぶ","dimension":"PACE"},
-      {"id":6,"text":"最初の注文スタイル","A":"まず定番を人数分、様子見","B":"気になるものを少量ずつ早めに味見","dimension":"NOV"},
-      {"id":7,"text":"火入れの好み","A":"低温/レアでしっとり","B":"強火で香ばしく","dimension":"TEXT"},
-      {"id":8,"text":"味付けの第一選択","A":"塩・レモン・わさびなどシンプル","B":"甘辛ダレ・特製ソース","dimension":"RICH"},
-      {"id":9,"text":"合わせ方の主役は？","A":"ワイン・お酒中心で単品を楽しむ","B":"白ごはん必須でがっつり","dimension":"VALUE"},
-      {"id":10,"text":"注文ペース","A":"一皿ずつ小まめに様子を見て追加","B":"まとめてドンと頼んで回す","dimension":"PACE"},
-      {"id":11,"text":"食感の好み","A":"とろける柔らかさ","B":"噛みごたえ・肉感","dimension":"TEXT"},
-      {"id":12,"text":"お店選びの進め方","A":"早めにリサーチして予約","B":"当日のノリで行き先を決める","dimension":"PACE"},
-      {"id":13,"text":"新メニューへの態度","A":"まずは“いつもの定番”から","B":"限定や創作も積極的に試す","dimension":"NOV"},
-      {"id":14,"text":"予算の使い方","A":"量は控えめでも“質”に投資","B":"コスパ重視で満足量を確保","dimension":"VALUE"},
-      {"id":15,"text":"人数の好み","A":"2〜3人でじっくり","B":"大人数でワイワイ","dimension":"SOC"},
-      {"id":16,"text":"テーブルでの役割","A":"皆の好みを聞きながら調整（聞き役）","B":"テキパキ仕切って注文（号令役）","dimension":"PACE"},
-      {"id":17,"text":"焼き台/環境の好み","A":"無煙＆清潔で快適に集中","B":"炭火の香りや煙もごちそう","dimension":"TEXT"},
-      {"id":18,"text":"部位の選び方","A":"赤身中心で部位違いを味わう","B":"サシ入りを少量ずつ堪能","dimension":"RICH"},
-      {"id":19,"text":"締めの一品","A":"冷麺やスープでさっぱり締める","B":"クッパやビビンバで満腹まで","dimension":"VALUE"},
-      {"id":20,"text":"演出・体験に対する好み","A":"落ち着きと完成度を重視","B":"目の前で焼き上げ/フランベなど演出歓迎","dimension":"NOV"}
-    ];
-
-    // 12タイプ：重み
-    const TYPE_WEIGHTS = [
-      { id:'HIRE', name:'ヒレ', desc:'最上級の赤身。雑味が少なくしっとり柔らか。', w:{RICH:-2, NOV:-1, SOC:-2, PACE:-2, VALUE:-2, TEXT:-2} },
-      { id:'CHATEAU', name:'シャトーブリアン', desc:'ヒレ中心部。究極のやわらかさと上品さ。', w:{RICH:-3, NOV:-1, SOC:-3, PACE:-2, VALUE:-3, TEXT:-2} },
-      { id:'MISUJI', name:'ミスジ', desc:'細かなサシでとろける肩の希少部位。', w:{RICH:-1, NOV:-1, SOC:-2, PACE:-1, VALUE:-2, TEXT:-2} },
-      { id:'ICHIBO', name:'イチボ', desc:'赤身主体にほどよいサシ。香ばし派にも。', w:{RICH:-1, NOV:0, SOC:-1, PACE:-1, VALUE:-1, TEXT:1} },
-      { id:'RUMP', name:'ランプ', desc:'赤身の旨みしっかり。軽やかで万能。', w:{RICH:-1, NOV:2, SOC:-1, PACE:-1, VALUE:-1, TEXT:-1} },
-      { id:'RIB', name:'リブロース', desc:'脂の甘みとジューシーさが魅力。', w:{RICH:2, NOV:-1, SOC:1, PACE:-1, VALUE:-1, TEXT:-1} },
-      { id:'SIRLOIN', name:'サーロイン', desc:'王道のコクと香り。満足感高い。', w:{RICH:2, NOV:0, SOC:2, PACE:1, VALUE:0, TEXT:-1} },
-      { id:'ZABUTON', name:'ザブトン', desc:'肩ロース芯。濃厚な霜降りでリッチ。', w:{RICH:2, NOV:-1, SOC:-2, PACE:-1, VALUE:-1, TEXT:-2} },
-      { id:'KALBI', name:'カルビ', desc:'脂の旨さでがっつり満足。みんなで楽しい。', w:{RICH:3, NOV:0, SOC:3, PACE:2, VALUE:1, TEXT:0} },
-      { id:'HARAMI', name:'ハラミ', desc:'赤身感とジューシーさの両立。', w:{RICH:1, NOV:0, SOC:2, PACE:2, VALUE:1, TEXT:2} },
-      { id:'KAINOMI', name:'カイノミ', desc:'赤身と脂のバランスに優れた隠れ人気。', w:{RICH:1, NOV:-1, SOC:1, PACE:1, VALUE:0, TEXT:1} },
-      { id:'TONGUE', name:'タン', desc:'コリコリ食感。レモン塩がよく合う。', w:{RICH:-2, NOV:1, SOC:2, PACE:2, VALUE:0, TEXT:2} }
-    ];
-
-    // Build form
-    function buildForm(){
-      if(!quizEl) return;
-      quizEl.innerHTML='';
-      QUESTIONS.forEach((q,i)=>{
-        const fs=document.createElement('fieldset');
-        fs.className='q';
-        fs.innerHTML=`<legend><strong>Q${i+1}.</strong> ${q.text}</legend>
-          <div class="choices">
-            <label class="choice"><input type="radio" name="q${q.id}" value="A" required> ${q.A}</label>
-            <label class="choice"><input type="radio" name="q${q.id}" value="B"> ${q.B}</label>
-          </div>`;
-        quizEl.appendChild(fs);
-      });
+    function fmtJPY(n){return '¥'+n.toLocaleString('ja-JP');}
+    function calc(){
+      const m = Number(menSel.value||0), w = Number(womSel.value||0);
+      const total = (MEN[m]||0) + (WOM[w]||0);
+      sumEl.textContent = fmtJPY(total);
+      brEl.textContent = `男性${m}名 / 女性${w}名`;
+      hSum.value = total;
+      hBr.value  = `男性${m}名 / 女性${w}名（男性:${fmtJPY(MEN[m]||0)} + 女性:${fmtJPY(WOM[w]||0)}）`;
+      // 0名は送信不可
+      submitBtn.disabled = (m + w === 0) || !agree.checked;
     }
+    menSel.addEventListener('change', calc);
+    womSel.addEventListener('change', calc);
+    agree.addEventListener('change', calc);
+    calc();
 
-    function answeredCount(){
-      return QUESTIONS.reduce((n,q)=> n + (quizEl.querySelector(`input[name="q${q.id}"]:checked`)?1:0), 0);
-    }
+    // GA: CTA 計測（簡易）
+    document.getElementById('cta-apply').addEventListener('click', ()=>{window.gtag&&gtag('event','cta_apply_click');});
+    document.getElementById('cta-bti').addEventListener('click', ()=>{window.gtag&&gtag('event','cta_bti_click');});
 
-    // Stepper (5問ずつ)
-    const STEP_SIZE=5; let currentStep=0; // 0..3
-    function stepAnswered(step){
-      const start=step*STEP_SIZE; const end=Math.min((step+1)*STEP_SIZE, QUESTIONS.length);
-      for(let i=start;i<end;i++){
-        const q=QUESTIONS[i];
-        if(!quizEl.querySelector(`input[name="q${q.id}"]:checked`)) return false;
+    // 送信前バリデーション＆イベント
+    form.addEventListener('submit', (e)=>{
+      const m = Number(menSel.value||0), w = Number(womSel.value||0);
+      if(m + w === 0){
+        e.preventDefault();
+        alert('参加人数を選んでください（男性・女性いずれか1名以上）');
+        return false;
       }
-      return true;
-    }
-    function showStep(step){
-      currentStep=Math.max(0,Math.min(3,step));
-      const fields=[...quizEl.querySelectorAll('fieldset.q')];
-      fields.forEach((fs,i)=>{ fs.style.display = (i>=currentStep*STEP_SIZE && i<(currentStep+1)*STEP_SIZE)?'':'none'; });
-      updateProgress();
-    }
-
-    function updateProgress(){
-      const a=answeredCount();
-      if(progressText) progressText.textContent=`${a}/${QUESTIONS.length} 回答済み`;
-      if(progressBar) progressBar.style.width=`${Math.round(100*a/QUESTIONS.length)}%`;
-      if(stepInfo) stepInfo.textContent=`Step ${currentStep+1}/4`;
-      if(prevBtn) prevBtn.disabled = currentStep===0;
-      if(nextBtn) nextBtn.disabled = currentStep>=3 || !stepAnswered(currentStep);
-      if(submitBtn) submitBtn.disabled = a !== QUESTIONS.length;
-    }
-
-    // Scoring
-    function collectScores(){
-      const scores={};
-      QUESTIONS.forEach(q=>{
-        const sel=quizEl.querySelector(`input[name="q${q.id}"]:checked`);
-        if(!sel) return; const v=sel.value; const d=q.dimension;
-        if(!scores[d]) scores[d]={A:0,B:0}; scores[d][v]++;
-      }); return scores;
-    }
-    function scoreVector(scores){
-      const dims=['RICH','NOV','SOC','PACE','VALUE','TEXT'];
-      const vec={}; dims.forEach(d=>{ const s=scores[d]||{A:0,B:0}; vec[d]=(s.B-s.A); }); return vec;
-    }
-    function rankTypes(scores){
-      const v=scoreVector(scores);
-      return TYPE_WEIGHTS.map(t=>{ let s=0; for(const k in t.w){ s += (t.w[k]||0)*(v[k]||0); } return {...t, score:s}; }).sort((a,b)=>b.score-a.score);
-    }
-    function calcConfidence(scores){
-      const dims=['SOC','RICH','PACE','NOV','TEXT','VALUE'];
-      let sum=0,n=0; dims.forEach(d=>{ const s=scores[d]; if(!s) return; const tot=s.A+s.B; if(!tot) return; sum+=Math.abs(s.A-s.B)/tot; n++; });
-      const m=n?sum/n:.5; return Math.round(60+m*35);
-    }
-    function dimBars(scores){
-      const INFO={SOC:{A:'少人数・会話',B:'大人数・にぎやか'},RICH:{A:'さっぱり赤身',B:'リッチ・サシ'},PACE:{A:'段取り・慎重',B:'テンポ・直感'},NOV:{A:'定番重視',B:'新しいもの好き'},TEXT:{A:'しっとり/レア',B:'香ばし/噛み応え'},VALUE:{A:'質重視',B:'量・コスパ'}};
-      return Object.keys(INFO).map(k=>{ const s=scores[k]||{A:0,B:0}; const tot=s.A+s.B; const pct=tot?Math.round(s.B*100/tot):50; const lean=s.A===s.B?'バランス':(s.A>s.B?INFO[k].A:INFO[k].B); return `<div class="dim-item"><div style="min-width:150px"><strong>${k}</strong>：${lean} <span class="lead" style="font-size:12px">(${s.A}A/${s.B}B)</span></div><div class="track"><div class="fill" style="width:${pct}%"></div></div></div>`; }).join('');
-    }
-    function typeGrid(selectedId){
-      return `<div class="type-grid">${TYPE_WEIGHTS.map(t=>`<div class="type-card ${t.id===selectedId?'active':''}"><div class="lead" style="font-size:12px">${t.id}</div><div style="font-weight:900">${t.name}</div></div>`).join('')}</div>`;
-    }
-
-    function renderResult(scores){
-      const ranked=rankTypes(scores); const primary=ranked[0]; const alt=ranked.slice(1,3); const confidence=calcConfidence(scores); const bars=dimBars(scores);
-      const soc=scores.SOC||{A:0,B:0}, pace=scores.PACE||{A:0,B:0}, nov=scores.NOV||{A:0,B:0}, val=scores.VALUE||{A:0,B:0};
-      const seat=(soc.B>soc.A)?'大テーブルでワイワイ':(soc.A>soc.B?'2〜3人で会話重視':'どちらもOK');
-      const order=(pace.B>pace.A)?'アラカルト中心':(pace.A>pace.B?'コース中心':'両方OK');
-      const creative=(nov.B>nov.A)?'限定・創作も積極的に':'定番中心で';
-      const value=(val.B>val.A)?'ボリューム満足派':'質重視派';
-      const neighbors = alt.map(n=>`<span class="pill">${n.name}</span>`).join(' ');
-      resultEl.innerHTML = `
-        <h2 style="margin:6px 0 10px">診断結果</h2>
-        <div class="grid grid-2">
-          <div class="card" style="background:#111">
-            <div class="lead" style="font-size:12px">選定結果（信頼度 ${confidence}%）</div>
-            <div style="font-size:28px;font-weight:900;line-height:1.2">${primary.name} <span class="pill">${primary.id}</span></div>
-            <div class="lead" style="margin:4px 0 8px">${primary.desc}</div>
-            <div>近い候補：${neighbors||'-'}</div>
-            <div style="margin-top:10px">${typeGrid(primary.id)}</div>
-          </div>
-          <div class="card">
-            <h3 style="margin:0 0 6px">あなたの傾向</h3>
-            <div class="grid" style="gap:8px">${bars}</div>
-            <div style="margin-top:12px">
-              <h4 style="margin:0 0 6px">食べ方・席の提案</h4>
-              <ul style="margin:0;padding-left:18px">
-                <li><strong>席・流れ：</strong>${seat}／${order}</li>
-                <li><strong>攻め方：</strong>${creative}</li>
-                <li><strong>価値観：</strong>${value}</li>
-              </ul>
-            </div>
-          </div>
-        </div>`;
-      resultWrap.style.display='block';
-      resultWrap.scrollIntoView({behavior:'smooth',block:'start'});
-    }
-
-    function startScroll(){ const t=$('#quiz'); if(t) t.scrollIntoView({behavior:'smooth',block:'start'}); }
-
-    // Wiring
-    if(quizEl){
-      quizEl.addEventListener('change', ()=>{ updateProgress(); });
-      quizEl.addEventListener('submit', (e)=>{ e.preventDefault(); if(answeredCount()===QUESTIONS.length){ renderResult(collectScores()); } });
-    }
-    if(prevBtn) prevBtn.addEventListener('click', ()=>{ showStep(currentStep-1); startScroll(); });
-    if(nextBtn) nextBtn.addEventListener('click', ()=>{ if(stepAnswered(currentStep)){ showStep(currentStep+1); startScroll(); } });
-    if(submitBtn) submitBtn.addEventListener('click', (e)=>{ e.preventDefault(); if(answeredCount()===QUESTIONS.length){ renderResult(collectScores()); } });
-
-    const KEY='meatBTI:v1';
-    if(saveBtn) saveBtn.addEventListener('click',()=>{ const data = QUESTIONS.reduce((o,q)=>{ const el=quizEl.querySelector(`input[name="q${q.id}"]:checked`); o[q.id]=el?el.value:null; return o; },{}); localStorage.setItem(KEY, JSON.stringify(data)); saveBtn.textContent='保存しました'; setTimeout(()=>saveBtn.textContent='途中保存',1500); });
-    if(loadBtn) loadBtn.addEventListener('click',()=>{ const data = JSON.parse(localStorage.getItem(KEY)||'{}'); QUESTIONS.forEach(q=>{ const v=data[q.id]; if(!v) return; const el=quizEl.querySelector(`input[name="q${q.id}"][value="${v}"]`); if(el) el.checked=true; }); updateProgress(); });
-
-    const startBtn = document.getElementById('startBtn');
-    if(startBtn) startBtn.addEventListener('click', (e)=>{ e.preventDefault(); showStep(0); startScroll(); });
-
-    // Init
-    buildForm();
-    showStep(0);
-    if(location.hash==='#quiz'){ startScroll(); }
-  })();
+      window.gtag&&gtag('event','entry_submit', {men:m, women:w, total:hSum.value});
+    });
   </script>
 </body>
 </html>
