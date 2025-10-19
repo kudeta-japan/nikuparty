@@ -68,7 +68,7 @@
     .type-card.active{outline:2px solid var(--accent-2);box-shadow:0 0 0 4px rgba(255,196,0,.15)}
 
     footer{border-top:1px solid var(--border);color:var(--muted);padding:22px 0 40px;margin-top:40px}
-      .hero{position:relative;min-height:62vh;display:flex;align-items:flex-end;overflow:hidden;background:url('./hero_meatbti.png') center/cover no-repeat;border-bottom:1px solid var(--border)}
+      .hero{position:relative;min-height:62vh;display:flex;align-items:flex-end;overflow:hidden;border-bottom:1px solid var(--border);background:center/cover no-repeat url('./hero_meatbti_1200.jpg')}@media(min-width:900px){.hero{background-image:url('./hero_meatbti_1600.jpg')}}
     .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.1) 0%, rgba(0,0,0,.6) 80%, rgba(0,0,0,.85) 100%)}
     .hero-inner{position:relative;z-index:1;padding:40px 0 28px}
     .tag{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.35);font-size:12px}
@@ -76,6 +76,7 @@
     .title-split .meat{color:var(--accent-2)}
     .title-split .bti{color:#69c36b}
     .subtitle{color:var(--text);opacity:.95;font-size:clamp(16px,2.4vw,28px)}
+  .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,1,1);white-space:nowrap;border:0}
   </style>
 </head>
 <body>
@@ -91,9 +92,7 @@
   <main class="main">
     <section class="hero" id="top" aria-label="Meat BTI Hero">
       <div class="container hero-inner">
-        <span class="tag">世界初!! &nbsp; MBTI × 肉診断</span>
-        <h1 class="title-split"><span class="meat">Meat</span> <span class="bti">BTI</span></h1>
-        <p class="subtitle">あなたはどの “部位タイプ”？</p>
+        <span class="sr-only">Meat BTI（肉診断）のヒーロー画像</span>
         <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
           <a href="#quiz" class="btn btn-primary">診断をはじめる</a>
           <a href="../index.html" class="btn">街コンTOPへ</a>
@@ -369,8 +368,21 @@
 
   // Events
   quizEl.addEventListener('change', updateProgress);
-  document.getElementById('quiz').addEventListener('submit', (e)=>{e.preventDefault(); renderResult(collectScores());});
-  resetBtn.addEventListener('click', ()=>{quizEl.reset();updateProgress();resultWrap.style.display='none';window.scrollTo({top:0,behavior:'smooth'})});
+
+  function computeAndRender(){
+    const scores = collectScores();
+    renderResult(scores);
+  }
+
+  document.getElementById('quiz').addEventListener('submit', (e)=>{ e.preventDefault(); computeAndRender(); });
+  submitBtn.addEventListener('click', (e)=>{ e.preventDefault(); if(!submitBtn.disabled) computeAndRender(); });
+
+  resetBtn.addEventListener('click', ()=>{
+    quizEl.reset();
+    updateProgress();
+    resultWrap.style.display='none';
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
 
   // simple localStorage helpers
   const KEY='meatBTI:v1';
