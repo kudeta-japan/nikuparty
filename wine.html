@@ -1,281 +1,228 @@
-// KU-DETA 初心者向けワイン会 ランディングページ（単一ファイル / React + Tailwind）
-// 使い方:
-// 1) 下部の CONFIG を書き換えるだけで日時・場所・申込リンクなどを更新できます。
-// 2) LINE予約URLやGoogleフォームURLが決まり次第、cta.link に貼り替えてください。
-// 3) 画像は任意。お店の料理写真や店内写真に差し替えるとCVRが上がります。
-
-export default function WineEventLP() {
-  // ====== CONFIG（ここを書き換えるだけでOK） ======
-  const config = {
-    eventName: "KU-DETA 初心者向けワイン会",
-    normalPrice: 8000,
-    specialPrice: 5000,
-    capacity: 30,
-    wineBudgetNote: "※通常8,000円 → 今回は初回特別価格5,000円（うちワイン代目安3,000円）",
-    date: "2025年11月○日 (土)", // ← 決まり次第更新
-    time: "18:30〜20:30 (120分)", // ← 決まり次第更新
-    place: "KU-DETA（岐阜市○○○-○）", // ← 住所に置換
-    access: "岐阜駅から徒歩○分 / 駐車場○台", // ← 実情に合わせて
-    cta: {
-      label: "LINEで予約する",
-      link: "https://lin.ee/your-line-id", // ← 予約リンクに置換（GoogleフォームでもOK）
-      sub: "※ 定員に達し次第、受付終了"
-    },
-    tel: "058-XXX-XXXX", // ← 店舗電話
-    heroImage: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=1600&auto=format&fit=crop", // 任意差し替え
-    brand: {
-      name: "KU-DETA",
-      tagline: "お肉とワインで、心と体をリフレッシュ。"
-    },
-    // テイスティング候補（例）
-    lineup: [
-      { name: "シャルドネ", country: "フランス" },
-      { name: "ソーヴィニヨン・ブラン", country: "ニュージーランド" },
-      { name: "リースリング", country: "ドイツ" },
-      { name: "サンジョヴェーゼ", country: "イタリア" },
-      { name: "テンプラニーリョ", country: "スペイン" },
-      { name: "カベルネ・ソーヴィニヨン", country: "チリ" }
-    ],
-    // フード例（軽めのペアリング）
-    pairings: [
-      "自家製シャルキュトリー / チーズ2種",
-      "スモークサーモンのカナッペ",
-      "ローストビーフの一口タパス",
-      "季節のフルーツとナッツ"
-    ],
-    // 学べること（初心者向け）
-    learn: [
-      "ぶどう品種と味わいの違い（白・赤の基本）",
-      "ラベルの読み方・選び方のコツ",
-      "家でも失敗しない保管＆温度",
-      "料理に合わせるペアリングの考え方"
-    ],
-    // FAQ（必要に応じて編集）
-    faq: [
-      {
-        q: "ワイン初心者でも大丈夫ですか？",
-        a: "もちろんです。最初の一歩にぴったりな内容で、丁寧にご説明します。"
-      },
-      {
-        q: "どのくらいの量を試飲できますか？",
-        a: "6種類前後を少量ずつ。香りや味わいの違いを楽しみながら進めます。"
-      },
-      {
-        q: "食事はつきますか？",
-        a: "軽いペアリングを数品ご用意します（内容は仕入れにより変更の場合あり）。"
-      },
-      {
-        q: "キャンセルはできますか？",
-        a: "キャンセルポリシーはご予約時にご案内します。お早めのご連絡にご協力ください。"
-      },
-      {
-        q: "車で行ってもいいですか？",
-        a: "飲酒を伴うイベントのため、公共交通機関のご利用を推奨しております。"
-      }
-    ]
-  };
-  // ============================================
-
-  return (
-    <main className="min-h-screen bg-neutral-50 text-neutral-900">
-      {/* HERO */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0">
-          <img src={config.heroImage} alt="ワインのあるテーブル" className="h-full w-full object-cover opacity-70" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-neutral-50" />
-        </div>
-        <div className="relative mx-auto max-w-6xl px-6 pt-20 pb-16 md:pt-28 md:pb-24">
-          <div className="max-w-3xl text-white drop-shadow-sm">
-            <p className="text-sm tracking-widest uppercase">{config.brand.name}</p>
-            <h1 className="mt-3 text-3xl font-bold leading-tight md:text-5xl">
-              {config.eventName}
-            </h1>
-            <p className="mt-4 text-base md:text-lg opacity-90">
-              いろんな品種や国のワインを楽しんで、ちょっと知識がつく。<br className="hidden md:block" />
-              「今度は自分でも買ってみようかな」につながる、やさしいワイン会。
-            </p>
-            <div className="mt-6 flex flex-wrap items-end gap-4">
-              <div className="rounded-2xl bg-white/90 px-5 py-3 text-neutral-900 shadow">
-                <div className="text-xs">通常</div>
-                <div className="text-lg line-through">¥{config.normalPrice.toLocaleString()}</div>
-              </div>
-              <div className="rounded-2xl bg-rose-600 px-6 py-4 shadow-lg">
-                <div className="text-xs text-white/90">特別価格（今回限定）</div>
-                <div className="text-3xl font-extrabold text-white">¥{config.specialPrice.toLocaleString()} <span className="ml-2 text-sm font-medium">税込</span></div>
-              </div>
-              <div className="rounded-2xl bg-white/90 px-5 py-3 text-neutral-900 shadow">
-                <div className="text-xs">定員</div>
-                <div className="text-lg">{config.capacity}名</div>
-              </div>
-            </div>
-            <p className="mt-3 text-sm text-white/90">{config.wineBudgetNote}</p>
-            <ul className="mt-6 flex flex-wrap gap-3 text-sm">
-              <li className="rounded-full bg-white/90 px-4 py-2 text-neutral-900 shadow">初心者歓迎</li>
-              <li className="rounded-full bg-white/90 px-4 py-2 text-neutral-900 shadow">6種前後テイスティング</li>
-              <li className="rounded-full bg-white/90 px-4 py-2 text-neutral-900 shadow">ミニレクチャー付</li>
-            </ul>
-            <div className="mt-8 flex flex-col items-start gap-3 md:flex-row md:items-center">
-              <a href={config.cta.link} className="inline-flex items-center justify-center rounded-xl bg-rose-600 px-6 py-3 text-base font-semibold text-white shadow-lg transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-rose-400" target="_blank" rel="noreferrer">
-                {config.cta.label}
-              </a>
-              <p className="text-sm text-white/90">{config.cta.sub}</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 基本情報 */}
-      <section className="mx-auto max-w-6xl px-6 py-12 md:py-16">
-        <div className="grid gap-6 md:grid-cols-3">
-          <InfoCard title="開催日" value={`${config.date} / ${config.time}`} />
-          <InfoCard title="会場" value={config.place} note={config.access} />
-          <InfoCard title="お問い合わせ" value={`TEL ${config.tel}`} note="LINEでもお気軽にどうぞ" />
-        </div>
-      </section>
-
-      {/* こんな方におすすめ */}
-      <section className="mx-auto max-w-6xl px-6 py-10 md:py-14">
-        <h2 className="text-2xl font-bold md:text-3xl">こんな方におすすめ</h2>
-        <ul className="mt-6 grid gap-4 md:grid-cols-2">
-          {[
-            "ワインに興味はあるけど難しそうで一歩目が踏み出せない",
-            "家でもお店でも“ハズさない”選び方を知りたい",
-            "赤と白の違い、品種の個性を体験してみたい",
-            "料理との合わせ方（ペアリング）のコツを学びたい"
-          ].map((t, i) => (
-            <li key={i} className="flex items-start gap-3 rounded-xl bg-white p-4 shadow-sm">
-              <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-rose-600" />
-              <span className="text-neutral-800">{t}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {/* 学べること */}
-      <section className="mx-auto max-w-6xl px-6 py-10 md:py-14">
-        <div className="rounded-2xl bg-neutral-900 p-6 text-neutral-50 md:p-10">
-          <h2 className="text-2xl font-bold md:text-3xl">ミニレクチャーで学べること</h2>
-          <ul className="mt-6 grid gap-3 md:grid-cols-2">
-            {config.learn.map((item, i) => (
-              <li key={i} className="flex items-start gap-3">
-                <span className="mt-2 inline-block h-2 w-2 rounded-full bg-white/80" />
-                <span className="opacity-95">{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* テイスティングラインナップ */}
-      <section className="mx-auto max-w-6xl px-6 py-10 md:py-14">
-        <h2 className="text-2xl font-bold md:text-3xl">テイスティング予定（例）</h2>
-        <p className="mt-2 text-sm text-neutral-600">※ 仕入れ状況により変更の可能性があります</p>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-          {config.lineup.map((w, i) => (
-            <div key={i} className="rounded-xl bg-white p-5 shadow-sm">
-              <div className="text-sm text-neutral-500">{w.country}</div>
-              <div className="mt-1 text-lg font-semibold">{w.name}</div>
-              <div className="mt-3 text-sm text-neutral-600">香り・酸・渋みのバランスを、他品種と飲み比べながら体験します。</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ペアリング */}
-      <section className="mx-auto max-w-6xl px-6 py-10 md:py-14">
-        <div className="rounded-2xl bg-white p-6 shadow-sm md:p-10">
-          <h2 className="text-2xl font-bold md:text-3xl">軽いペアリング（例）</h2>
-          <ul className="mt-4 grid list-disc gap-2 pl-5 text-neutral-700 md:grid-cols-2">
-            {config.pairings.map((p, i) => (
-              <li key={i}>{p}</li>
-            ))}
-          </ul>
-          <p className="mt-4 text-sm text-neutral-500">※ 内容は当日の仕入れにより変わる場合があります。</p>
-        </div>
-      </section>
-
-      {/* 当日の流れ */}
-      <section className="mx-auto max-w-6xl px-6 py-10 md:py-14">
-        <h2 className="text-2xl font-bold md:text-3xl">当日の流れ（目安）</h2>
-        <ol className="mt-6 grid gap-4 md:grid-cols-3">
-          {[
-            { t: "ウェルカム＆イントロ", d: "自己紹介と今日のテーマ共有。グラスの持ち方や香りの取り方もサクッと。" },
-            { t: "テイスティング① 白ワイン", d: "2〜3種を飲み比べ。香り・酸・余韻の違いを体感。" },
-            { t: "テイスティング② 赤ワイン", d: "3種前後を飲み比べ。渋み（タンニン）をやさしく理解。" },
-            { t: "ミニレクチャー", d: "ラベルの読み方や買い方、家での保管・温度のコツ。" },
-            { t: "ペアリング体験", d: "軽食をつまみながら、“合わせ方”の感覚をつかむ。" },
-            { t: "クロージング", d: "質問タイム＆おすすめボトルのご案内。" }
-          ].map((s, i) => (
-            <li key={i} className="rounded-xl bg-white p-5 shadow-sm">
-              <div className="text-sm text-neutral-500">STEP {i + 1}</div>
-              <div className="mt-1 text-lg font-semibold">{s.t}</div>
-              <p className="mt-2 text-neutral-700">{s.d}</p>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      {/* CTA */}
-      <section className="border-y border-neutral-200 bg-neutral-100">
-        <div className="mx-auto max-w-6xl px-6 py-10 md:py-14">
-          <div className="grid items-center gap-6 md:grid-cols-3">
-            <div className="md:col-span-2">
-              <h3 className="text-xl font-bold md:text-2xl">お席の確保はお早めに</h3>
-              <p className="mt-2 text-neutral-700">{config.eventName} / {config.date} {config.time} / 定員{config.capacity}名</p>
-              <p className="mt-1 text-neutral-700">特別価格 <span className="font-bold">¥{config.specialPrice.toLocaleString()}</span>（通常¥{config.normalPrice.toLocaleString()}）</p>
-            </div>
-            <div className="flex gap-3 md:justify-end">
-              <a href={config.cta.link} className="inline-flex items-center justify-center rounded-xl bg-rose-600 px-6 py-3 text-base font-semibold text-white shadow-lg transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-rose-400" target="_blank" rel="noreferrer">
-                {config.cta.label}
-              </a>
-            </div>
-          </div>
-          <p className="mt-2 text-sm text-neutral-500">{config.cta.sub}</p>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="mx-auto max-w-6xl px-6 py-10 md:py-14">
-        <h2 className="text-2xl font-bold md:text-3xl">よくあるご質問</h2>
-        <div className="mt-6 grid gap-4 md:grid-cols-2">
-          {config.faq.map((f, i) => (
-            <details key={i} className="group rounded-xl bg-white p-5 shadow-sm">
-              <summary className="cursor-pointer list-none text-lg font-semibold">
-                <span className="mr-2 inline-block h-2.5 w-2.5 rounded-full bg-rose-600 align-middle" />{f.q}
-              </summary>
-              <p className="mt-2 text-neutral-700">{f.a}</p>
-            </details>
-          ))}
-        </div>
-      </section>
-
-      {/* フッター */}
-      <footer className="bg-neutral-900 py-10 text-neutral-300">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-            <div>
-              <div className="text-xl font-bold text-white">{config.brand.name}</div>
-              <div className="mt-1 text-sm">{config.brand.tagline}</div>
-            </div>
-            <div className="text-sm">
-              <div>会場：{config.place}</div>
-              <div>アクセス：{config.access}</div>
-              <div className="mt-1">お問合せ：{config.tel}</div>
-            </div>
-          </div>
-          <div className="mt-6 border-t border-white/10 pt-4 text-xs text-white/60">© {new Date().getFullYear()} {config.brand.name}. All rights reserved.</div>
-        </div>
-      </footer>
-    </main>
-  );
-}
-
-function InfoCard({ title, value, note }) {
-  return (
-    <div className="rounded-2xl bg-white p-6 shadow-sm">
-      <div className="text-sm text-neutral-500">{title}</div>
-      <div className="mt-1 text-lg font-semibold text-neutral-900">{value}</div>
-      {note && <div className="mt-1 text-sm text-neutral-600">{note}</div>}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KU-DETA 初心者向けワイン会</title>
+  <meta name="description" content="いろんな品種や国のワインを楽しく飲み比べ。初心者歓迎のやさしいワイン会（特別価格5,000円／定員30名）。" />
+  <meta property="og:title" content="KU-DETA 初心者向けワイン会" />
+  <meta property="og:description" content="いろんな品種や国のワインを楽しく飲み比べ。初心者歓迎のやさしいワイン会（特別価格5,000円／定員30名）。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=1600&auto=format&fit=crop" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* フォールバック: 画像読み込み前の背景色 */
+    .hero-bg{background-color:#111827}
+  </style>
+</head>
+<body class="min-h-screen bg-neutral-50 text-neutral-900">
+  <!-- ================= HERO ================= -->
+  <section class="relative overflow-hidden hero-bg">
+    <div class="absolute inset-0">
+      <img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=1600&auto=format&fit=crop" alt="ワインのあるテーブル" class="h-full w-full object-cover opacity-70"/>
+      <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-neutral-50"></div>
     </div>
-  );
-}
+    <div class="relative mx-auto max-w-6xl px-6 pt-20 pb-16 md:pt-28 md:pb-24">
+      <div class="max-w-3xl text-white drop-shadow-sm">
+        <p class="text-sm tracking-widest uppercase">KU-DETA</p>
+        <h1 class="mt-3 text-3xl font-bold leading-tight md:text-5xl">初心者向けワイン会</h1>
+        <p class="mt-4 text-base md:text-lg opacity-90">
+          いろんな品種や国のワインを楽しんで、ちょっと知識がつく。<br class="hidden md:block"/>
+          「今度は自分でも買ってみようかな」につながる、やさしいワイン会。
+        </p>
+        <div class="mt-6 flex flex-wrap items-end gap-4">
+          <div class="rounded-2xl bg-white/90 px-5 py-3 text-neutral-900 shadow">
+            <div class="text-xs">通常</div>
+            <div class="text-lg line-through">¥8,000</div>
+          </div>
+          <div class="rounded-2xl bg-rose-600 px-6 py-4 shadow-lg">
+            <div class="text-xs text-white/90">特別価格（今回限定）</div>
+            <div class="text-3xl font-extrabold text-white">¥5,000 <span class="ml-2 text-sm font-medium">税込</span></div>
+          </div>
+          <div class="rounded-2xl bg-white/90 px-5 py-3 text-neutral-900 shadow">
+            <div class="text-xs">定員</div>
+            <div class="text-lg">30名</div>
+          </div>
+        </div>
+        <p class="mt-3 text-sm text-white/90">※通常8,000円 → 初回特別価格5,000円（うちワイン代目安3,000円）</p>
+        <ul class="mt-6 flex flex-wrap gap-3 text-sm">
+          <li class="rounded-full bg-white/90 px-4 py-2 text-neutral-900 shadow">初心者歓迎</li>
+          <li class="rounded-full bg-white/90 px-4 py-2 text-neutral-900 shadow">6種前後テイスティング</li>
+          <li class="rounded-full bg-white/90 px-4 py-2 text-neutral-900 shadow">ミニレクチャー付</li>
+        </ul>
+        <div class="mt-8 flex flex-col items-start gap-3 md:flex-row md:items-center">
+          <a href="#reserve" class="inline-flex items-center justify-center rounded-xl bg-rose-600 px-6 py-3 text-base font-semibold text-white shadow-lg transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-rose-400">
+            予約する
+          </a>
+          <p class="text-sm text-white/90">※ 定員に達し次第、受付終了</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== 基本情報 ============== -->
+  <section class="mx-auto max-w-6xl px-6 py-12 md:py-16">
+    <div class="grid gap-6 md:grid-cols-3">
+      <div class="rounded-2xl bg-white p-6 shadow-sm">
+        <div class="text-sm text-neutral-500">開催日</div>
+        <div class="mt-1 text-lg font-semibold text-neutral-900">2025年11月○日 (土) / 18:30〜20:30</div>
+      </div>
+      <div class="rounded-2xl bg-white p-6 shadow-sm">
+        <div class="text-sm text-neutral-500">会場</div>
+        <div class="mt-1 text-lg font-semibold text-neutral-900">KU-DETA（岐阜市○○○-○）</div>
+        <div class="mt-1 text-sm text-neutral-600">岐阜駅から徒歩○分 / 駐車場○台</div>
+      </div>
+      <div class="rounded-2xl bg-white p-6 shadow-sm">
+        <div class="text-sm text-neutral-500">お問い合わせ</div>
+        <div class="mt-1 text-lg font-semibold text-neutral-900">TEL 058-XXX-XXXX</div>
+        <div class="mt-1 text-sm text-neutral-600">LINEでもお気軽にどうぞ</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ おすすめ対象 ============ -->
+  <section class="mx-auto max-w-6xl px-6 py-10 md:py-14">
+    <h2 class="text-2xl font-bold md:text-3xl">こんな方におすすめ</h2>
+    <ul class="mt-6 grid gap-4 md:grid-cols-2">
+      <li class="flex items-start gap-3 rounded-xl bg-white p-4 shadow-sm">
+        <span class="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-rose-600"></span>
+        <span class="text-neutral-800">ワインに興味はあるけど難しそうで一歩目が踏み出せない</span>
+      </li>
+      <li class="flex items-start gap-3 rounded-xl bg-white p-4 shadow-sm">
+        <span class="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-rose-600"></span>
+        <span class="text-neutral-800">家でもお店でも“ハズさない”選び方を知りたい</span>
+      </li>
+      <li class="flex items-start gap-3 rounded-xl bg-white p-4 shadow-sm">
+        <span class="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-rose-600"></span>
+        <span class="text-neutral-800">赤と白の違い、品種の個性を体験してみたい</span>
+      </li>
+      <li class="flex items-start gap-3 rounded-xl bg-white p-4 shadow-sm">
+        <span class="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-rose-600"></span>
+        <span class="text-neutral-800">料理との合わせ方（ペアリング）のコツを学びたい</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ============ 学べること ============ -->
+  <section class="mx-auto max-w-6xl px-6 py-10 md:py-14">
+    <div class="rounded-2xl bg-neutral-900 p-6 text-neutral-50 md:p-10">
+      <h2 class="text-2xl font-bold md:text-3xl">ミニレクチャーで学べること</h2>
+      <ul class="mt-6 grid gap-3 md:grid-cols-2">
+        <li class="flex items-start gap-3"><span class="mt-2 inline-block h-2 w-2 rounded-full bg-white/80"></span><span class="opacity-95">ぶどう品種と味わいの違い（白・赤の基本）</span></li>
+        <li class="flex items-start gap-3"><span class="mt-2 inline-block h-2 w-2 rounded-full bg-white/80"></span><span class="opacity-95">ラベルの読み方・選び方のコツ</span></li>
+        <li class="flex items-start gap-3"><span class="mt-2 inline-block h-2 w-2 rounded-full bg-white/80"></span><span class="opacity-95">家でも失敗しない保管＆温度</span></li>
+        <li class="flex items-start gap-3"><span class="mt-2 inline-block h-2 w-2 rounded-full bg-white/80"></span><span class="opacity-95">料理に合わせるペアリングの考え方</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ====== テイスティング（例） ====== -->
+  <section class="mx-auto max-w-6xl px-6 py-10 md:py-14">
+    <h2 class="text-2xl font-bold md:text-3xl">テイスティング予定（例）</h2>
+    <p class="mt-2 text-sm text-neutral-600">※ 仕入れ状況により変更の可能性があります</p>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+      <div class="rounded-xl bg-white p-5 shadow-sm"><div class="text-sm text-neutral-500">フランス</div><div class="mt-1 text-lg font-semibold">シャルドネ</div><div class="mt-3 text-sm text-neutral-600">香り・酸・余韻のバランスを、他品種と飲み比べながら体験します。</div></div>
+      <div class="rounded-xl bg-white p-5 shadow-sm"><div class="text-sm text-neutral-500">ニュージーランド</div><div class="mt-1 text-lg font-semibold">ソーヴィニヨン・ブラン</div><div class="mt-3 text-sm text-neutral-600">ハーブ感やフレッシュさを白の中で比較。</div></div>
+      <div class="rounded-xl bg-white p-5 shadow-sm"><div class="text-sm text-neutral-500">ドイツ</div><div class="mt-1 text-lg font-semibold">リースリング</div><div class="mt-3 text-sm text-neutral-600">甘辛の幅と酸の美しさを体感。</div></div>
+      <div class="rounded-xl bg-white p-5 shadow-sm"><div class="text-sm text-neutral-500">イタリア</div><div class="mt-1 text-lg font-semibold">サンジョヴェーゼ</div><div class="mt-3 text-sm text-neutral-600">赤の果実味と酸のキレをやさしく理解。</div></div>
+      <div class="rounded-xl bg-white p-5 shadow-sm"><div class="text-sm text-neutral-500">スペイン</div><div class="mt-1 text-lg font-semibold">テンプラニーリョ</div><div class="mt-3 text-sm text-neutral-600">樽香のニュアンスと渋みの丸み。</div></div>
+      <div class="rounded-xl bg-white p-5 shadow-sm"><div class="text-sm text-neutral-500">チリ</div><div class="mt-1 text-lg font-semibold">カベルネ・ソーヴィニヨン</div><div class="mt-3 text-sm text-neutral-600">王道の骨格を、他の赤と比較。</div></div>
+    </div>
+  </section>
+
+  <!-- ====== ペアリング（例） ====== -->
+  <section class="mx-auto max-w-6xl px-6 py-10 md:py-14">
+    <div class="rounded-2xl bg-white p-6 shadow-sm md:p-10">
+      <h2 class="text-2xl font-bold md:text-3xl">軽いペアリング（例）</h2>
+      <ul class="mt-4 grid list-disc gap-2 pl-5 text-neutral-700 md:grid-cols-2">
+        <li>自家製シャルキュトリー / チーズ2種</li>
+        <li>スモークサーモンのカナッペ</li>
+        <li>ローストビーフの一口タパス</li>
+        <li>季節のフルーツとナッツ</li>
+      </ul>
+      <p class="mt-4 text-sm text-neutral-500">※ 内容は当日の仕入れにより変わる場合があります。</p>
+    </div>
+  </section>
+
+  <!-- ====== 当日の流れ ====== -->
+  <section class="mx-auto max-w-6xl px-6 py-10 md:py-14">
+    <h2 class="text-2xl font-bold md:text-3xl">当日の流れ（目安）</h2>
+    <ol class="mt-6 grid gap-4 md:grid-cols-3">
+      <li class="rounded-xl bg-white p-5 shadow-sm"><div class="text-sm text-neutral-500">STEP 1</div><div class="mt-1 text-lg font-semibold">ウェルカム＆イントロ</div><p class="mt-2 text-neutral-700">自己紹介と今日のテーマ共有。グラスの持ち方や香りの取り方もサクッと。</p></li>
+      <li class="rounded-xl bg-white p-5 shadow-sm"><div class="text-sm text-neutral-500">STEP 2</div><div class="mt-1 text-lg font-semibold">テイスティング① 白ワイン</div><p class="mt-2 text-neutral-700">2〜3種を飲み比べ。香り・酸・余韻の違いを体感。</p></li>
+      <li class="rounded-xl bg-white p-5 shadow-sm"><div class="text-sm text-neutral-500">STEP 3</div><div class="mt-1 text-lg font-semibold">テイスティング② 赤ワイン</div><p class="mt-2 text-neutral-700">3種前後を飲み比べ。渋み（タンニン）をやさしく理解。</p></li>
+      <li class="rounded-xl bg-white p-5 shadow-sm"><div class="text-sm text-neutral-500">STEP 4</div><div class="mt-1 text-lg font-semibold">ミニレクチャー</div><p class="mt-2 text-neutral-700">ラベルの読み方や買い方、家での保管・温度のコツ。</p></li>
+      <li class="rounded-xl bg-white p-5 shadow-sm"><div class="text-sm text-neutral-500">STEP 5</div><div class="mt-1 text-lg font-semibold">ペアリング体験</div><p class="mt-2 text-neutral-700">軽食をつまみながら、“合わせ方”の感覚をつかむ。</p></li>
+      <li class="rounded-xl bg-white p-5 shadow-sm"><div class="text-sm text-neutral-500">STEP 6</div><div class="mt-1 text-lg font-semibold">クロージング</div><p class="mt-2 text-neutral-700">質問タイム＆おすすめボトルのご案内。</p></li>
+    </ol>
+  </section>
+
+  <!-- ============== CTA ============== -->
+  <section id="reserve" class="border-y border-neutral-200 bg-neutral-100">
+    <div class="mx-auto max-w-6xl px-6 py-10 md:py-14">
+      <div class="grid items-center gap-6 md:grid-cols-3">
+        <div class="md:col-span-2">
+          <h3 class="text-xl font-bold md:text-2xl">お席の確保はお早めに</h3>
+          <p class="mt-2 text-neutral-700">KU-DETA 初心者向けワイン会 / 2025年11月○日 (土) 18:30〜20:30 / 定員30名</p>
+          <p class="mt-1 text-neutral-700">特別価格 <span class="font-bold">¥5,000</span>（通常¥8,000）</p>
+        </div>
+        <div class="flex gap-3 md:justify-end">
+          <a href="https://lin.ee/your-line-id" target="_blank" rel="noreferrer" class="inline-flex items-center justify-center rounded-xl bg-rose-600 px-6 py-3 text-base font-semibold text-white shadow-lg transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-rose-400">LINEで予約する</a>
+        </div>
+      </div>
+      <p class="mt-2 text-sm text-neutral-500">※ 定員に達し次第、受付終了</p>
+    </div>
+  </section>
+
+  <!-- ============== FAQ ============== -->
+  <section class="mx-auto max-w-6xl px-6 py-10 md:py-14">
+    <h2 class="text-2xl font-bold md:text-3xl">よくあるご質問</h2>
+    <div class="mt-6 grid gap-4 md:grid-cols-2">
+      <details class="group rounded-xl bg-white p-5 shadow-sm">
+        <summary class="cursor-pointer list-none text-lg font-semibold"><span class="mr-2 inline-block h-2.5 w-2.5 rounded-full bg-rose-600 align-middle"></span>ワイン初心者でも大丈夫ですか？</summary>
+        <p class="mt-2 text-neutral-700">もちろんです。最初の一歩にぴったりな内容で、丁寧にご説明します。</p>
+      </details>
+      <details class="group rounded-xl bg-white p-5 shadow-sm">
+        <summary class="cursor-pointer list-none text-lg font-semibold"><span class="mr-2 inline-block h-2.5 w-2.5 rounded-full bg-rose-600 align-middle"></span>どのくらいの量を試飲できますか？</summary>
+        <p class="mt-2 text-neutral-700">6種類前後を少量ずつ。香りや味わいの違いを楽しみながら進めます。</p>
+      </details>
+      <details class="group rounded-xl bg-white p-5 shadow-sm">
+        <summary class="cursor-pointer list-none text-lg font-semibold"><span class="mr-2 inline-block h-2.5 w-2.5 rounded-full bg-rose-600 align-middle"></span>食事はつきますか？</summary>
+        <p class="mt-2 text-neutral-700">軽いペアリングを数品ご用意します（内容は仕入れにより変更の場合あり）。</p>
+      </details>
+      <details class="group rounded-xl bg-white p-5 shadow-sm">
+        <summary class="cursor-pointer list-none text-lg font-semibold"><span class="mr-2 inline-block h-2.5 w-2.5 rounded-full bg-rose-600 align-middle"></span>キャンセルはできますか？</summary>
+        <p class="mt-2 text-neutral-700">キャンセルポリシーはご予約時にご案内します。お早めのご連絡にご協力ください。</p>
+      </details>
+      <details class="group rounded-xl bg-white p-5 shadow-sm">
+        <summary class="cursor-pointer list-none text-lg font-semibold"><span class="mr-2 inline-block h-2.5 w-2.5 rounded-full bg-rose-600 align-middle"></span>車で行ってもいいですか？</summary>
+        <p class="mt-2 text-neutral-700">飲酒を伴うイベントのため、公共交通機関のご利用を推奨しております。</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ============== Footer ============== -->
+  <footer class="bg-neutral-900 py-10 text-neutral-300">
+    <div class="mx-auto max-w-6xl px-6">
+      <div class="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+        <div>
+          <div class="text-xl font-bold text-white">KU-DETA</div>
+          <div class="mt-1 text-sm">お肉とワインで、心と体をリフレッシュ。</div>
+        </div>
+        <div class="text-sm">
+          <div>会場：KU-DETA（岐阜市○○○-○）</div>
+          <div>アクセス：岐阜駅から徒歩○分 / 駐車場○台</div>
+          <div class="mt-1">お問合せ：058-XXX-XXXX</div>
+        </div>
+      </div>
+      <div class="mt-6 border-top border-white/10 pt-4 text-xs text-white/60">© <span id="y"></span> KU-DETA. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    // 年の自動更新
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
