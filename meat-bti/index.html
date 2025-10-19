@@ -20,9 +20,6 @@
     --bg:#090b10; --panel:#0f1219; --ink:#f5f8ff; --muted:#b7c3d6;
     --acc:#ff715b; --acc2:#ffd166; --bd:#1b2030; --shadow:0 10px 30px rgba(0,0,0,.35);
     --good:#35d19d; --warn:#ffd166; --blue:#59b3ff;
-    --grad: radial-gradient(1200px 600px at 10% -10%, rgba(255,113,91,.25), transparent 40%),
-            radial-gradient(1200px 600px at 110% 110%, rgba(255,209,102,.2), transparent 40%),
-            linear-gradient(180deg,#0a0d14,#0b0e15 50%, #0d111a);
   }
   html,body{height:100%}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;letter-spacing:.02em}
@@ -34,9 +31,11 @@
   .title{font-weight:900}
   .wrap{padding:0}
 
-  /* HERO */
-  .hero{position:relative;background:var(--grad);padding:40px 28px 26px}
-  .hero-inner{display:grid;gap:18px}
+  /* HERO（LPと同じ構成：背景写真＋暗幕） */
+  .hero{position:relative;min-height:56vh;padding:40px 28px 26px;background:#000;overflow:hidden;border-bottom:1px solid var(--bd)}
+  .hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.78) contrast(1.05)}
+  .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.1) 0%, rgba(0,0,0,.55) 60%, rgba(0,0,0,.85) 100%)}
+  .hero-inner{position:relative;z-index:1;display:grid;gap:18px}
   .eyebrow{display:inline-flex;gap:8px;align-items:center;background:rgba(255,255,255,.08);border:1px solid #222a3a;color:#dfe7f5;padding:6px 10px;border-radius:999px;font-size:12px}
   .h1{font-size:clamp(26px,5.6vw,40px);line-height:1.2;font-weight:900;margin:0}
   .lead{color:var(--muted);margin:0}
@@ -96,9 +95,11 @@
 
     <!-- START -->
     <section id="screen-start" class="hero">
+      <!-- 追加：ヒーロー背景画像 -->
+      <img src="mbti.jpg" alt="" class="hero-img" />
       <div class="hero-inner">
         <span class="eyebrow">✨ KU-DETA 限定 ・ 11/15</span>
-        <h1 class="h1">肉好きのための性格診断。<br>あなたはどの <span style="color:var(--acc2)">“部位タイプ”</span>？</h1>
+        <h1 class="h1">肉好きのための性格診断。<br>あなたはどの <span style="color:#ffd166">“部位タイプ”</span>？</h1>
         <p class="lead">全20問。岐阜ローカルの<b>短い前提</b>付き／6段階スケール（中立なし）。味覚と食事シーンのクセから判定します。</p>
         <div class="badges">
           <span class="badge">6択 × 20問</span>
@@ -154,8 +155,6 @@
             </div>
           </div>
 
-          <!-- ※信頼度カード（削除）／詳細カード（削除） -->
-
           <div style="display:flex;justify-content:space-between;gap:10px">
             <button class="btn" id="btn-retry">最初から</button>
             <a class="btn primary" href="#" id="btn-export" download>結果をJSONで保存</a>
@@ -171,37 +170,26 @@
 <script>
 /* ==== Question Bank（岐阜ローカル & 簡潔前提）20問 ==== */
 const BANK = [
-  // ── RL（赤身R vs コクL）5問 ──
-  {id:1,  axis:"RL", ctx:"KU-DETAで最初の一皿。", a:"脂少なめで赤身を味わう", b:"サシのコクで満足したい"},
-  {id:2,  axis:"RL", ctx:"平日夜、岐阜駅近でサクッと。", a:"軽く終える", b:"しっかり満腹まで"},
-  {id:3,  axis:"RL", ctx:"同価格の赤身と霜降り。", a:"キレ重視（さっぱり）", b:"コク重視（濃厚）"},
-  {id:19, axis:"RL", ctx:"名物カルビ vs 赤身名物を1皿。", a:"赤身を選ぶ", b:"名物カルビを選ぶ"},
-  {id:4,  axis:"RL", ctx:"店長の推し：ヒレ/タン or サーロイン/カルビ。", a:"ヒレ・タンに惹かれる", b:"サーロイン・カルビに惹かれる"},
-
-  // ── TX（噛み応えQ vs とろけM）3問 ──
-  {id:5,  axis:"TX", ctx:"カット指定OKのお店。", a:"歯切れ良い噛み応え", b:"とろける柔らかさ"},
-  {id:6,  axis:"TX", ctx:"焼き加減の希望は？", a:"薄切り・レア寄り", b:"厚切り・ミディアム以上"},
-  {id:7,  axis:"TX", ctx:"あなたが焼き担当。", a:"サッと火入れ", b:"しっかり火入れ"},
-
-  // ── FL（塩 Salt vs ソース Sauce）2問 ──
-  {id:8,  axis:"FL", ctx:"卓上は塩と特製ダレ。", a:"シンプル派（塩・レモン）", b:"ソース派（甘辛・ガリバタ等）"},
-  {id:9,  axis:"FL", ctx:"香りの演出も選べる。", a:"肉の香りを活かす", b:"ソース香で盛り上げる"},
-
-  // ── FS（テンポ F vs じっくり S）3問 ──
-  {id:10, axis:"FS", ctx:"七輪1台の少人数。", a:"強火で回転良く", b:"弱〜中火でじっくり"},
-  {id:11, axis:"FS", ctx:"“コース or アラカルト”。", a:"テンポ良く次々", b:"ゆっくりコース"},
-  {id:12, axis:"FS", ctx:"玉宮が混む金曜。", a:"他店へ移動する", b:"気に入れば腰を据える"},
-
-  // ── KC（定番 K vs 変化 C）4問 ──
-  {id:13, axis:"KC", ctx:"最初の一皿。", a:"塩タン・王道から", b:"限定・変わり種から"},
-  {id:14, axis:"KC", ctx:"4人でシェア注文。", a:"最初にまとめて段取り", b:"様子見で都度追加"},
-  {id:20, axis:"KC", ctx:"今日はSNSにも上げる夜。", a:"味優先で選ぶ", b:"映え優先で選ぶ"},
-  {id:15, axis:"KC", ctx:"会社メンバーも参加。", a:"マナー重視で食べる", b:"型に縛られず楽しむ"},
-
-  // ── AF（余白 Light vs 完結 Hearty）3問 ──
-  {id:16, axis:"AF", ctx:"締めのタイミング。", a:"〆なし/軽めでOK", b:"ご飯・冷麺・デザートまで"},
-  {id:17, axis:"AF", ctx:"最初の一杯。", a:"ハイボール/すっきり系", b:"甘め/濃い系も欲しい"},
-  {id:18, axis:"AF", ctx:"21時、玉宮で二軒目あるかも。", a:"軽く続けたい", b:"ここで完結したい"},
+  {id:1,axis:"RL",ctx:"KU-DETAで最初の一皿。",a:"脂少なめで赤身を味わう",b:"サシのコクで満足したい"},
+  {id:2,axis:"RL",ctx:"平日夜、岐阜駅近でサクッと。",a:"軽く終える",b:"しっかり満腹まで"},
+  {id:3,axis:"RL",ctx:"同価格の赤身と霜降り。",a:"キレ重視（さっぱり）",b:"コク重視（濃厚）"},
+  {id:19,axis:"RL",ctx:"名物カルビ vs 赤身名物を1皿。",a:"赤身を選ぶ",b:"名物カルビを選ぶ"},
+  {id:4,axis:"RL",ctx:"店長の推し：ヒレ/タン or サーロイン/カルビ。",a:"ヒレ・タンに惹かれる",b:"サーロイン・カルビに惹かれる"},
+  {id:5,axis:"TX",ctx:"カット指定OKのお店。",a:"歯切れ良い噛み応え",b:"とろける柔らかさ"},
+  {id:6,axis:"TX",ctx:"焼き加減の希望は？",a:"薄切り・レア寄り",b:"厚切り・ミディアム以上"},
+  {id:7,axis:"TX",ctx:"あなたが焼き担当。",a:"サッと火入れ",b:"しっかり火入れ"},
+  {id:8,axis:"FL",ctx:"卓上は塩と特製ダレ。",a:"シンプル派（塩・レモン）",b:"ソース派（甘辛・ガリバタ等）"},
+  {id:9,axis:"FL",ctx:"香りの演出も選べる。",a:"肉の香りを活かす",b:"ソース香で盛り上げる"},
+  {id:10,axis:"FS",ctx:"七輪1台の少人数。",a:"強火で回転良く",b:"弱〜中火でじっくり"},
+  {id:11,axis:"FS",ctx:"“コース or アラカルト”。",a:"テンポ良く次々",b:"ゆっくりコース"},
+  {id:12,axis:"FS",ctx:"玉宮が混む金曜。",a:"他店へ移動する",b:"気に入れば腰を据える"},
+  {id:13,axis:"KC",ctx:"最初の一皿。",a:"塩タン・王道から",b:"限定・変わり種から"},
+  {id:14,axis:"KC",ctx:"4人でシェア注文。",a:"最初にまとめて段取り",b:"様子見で都度追加"},
+  {id:20,axis:"KC",ctx:"今日はSNSにも上げる夜。",a:"味優先で選ぶ",b:"映え優先で選ぶ"},
+  {id:15,axis:"KC",ctx:"会社メンバーも参加。",a:"マナー重視で食べる",b:"型に縛られず楽しむ"},
+  {id:16,axis:"AF",ctx:"締めのタイミング。",a:"〆なし/軽めでOK",b:"ご飯・冷麺・デザートまで"},
+  {id:17,axis:"AF",ctx:"最初の一杯。",a:"ハイボール/すっきり系",b:"甘め/濃い系も欲しい"},
+  {id:18,axis:"AF",ctx:"21時、玉宮で二軒目あるかも。",a:"軽く続けたい",b:"ここで完結したい"},
 ];
 
 function decorateBankRandomly(bank){return bank.map(q=>({...q,flip:Math.random()<0.5}))}
@@ -214,19 +202,19 @@ const CODE_REPR={
 };
 /* 説明文（12＋CB） */
 const DESCRIPTIONS={
-  "ヒレ":"無駄のない上品さと芯の強さが共存するタイプ。情報を整理し、結論をすっきり出すのが得意。味わいはストレートに、素材勝負の一皿を好みます。会話でも相手の話を丁寧に拾い、余白を活かして深めるのが上手。初対面では質問を一つずつ投げ、共通点が見つかると一気に距離が縮みます。",
-  "タン":"さっぱり塩でキレ良く。テンポの良さと明るさで周囲をほぐすムードメイクが得意。直感が利き、判断もスピーディ。短いキャッチボールで会話を回し、乾杯の号令役にも向いています。まずはやってみる精神で、新しい人ともすぐ距離を縮められます。",
-  "イチボ":"赤身の旨みを丁寧に味わう、調和型の通好み。控えめながら芯があり、空気を読みつつも要所で意見を言える人。派手さより余韻が残るタイプ。価値観の近い相手と長期的な関係を築きやすい。",
-  "ランプ":"探究心と柔軟さを兼ね備えた実験好き。低温や創作のように定番を一歩更新する工夫にワクワクします。物静かでも中身は熱い職人気質で、試食や小さな体験を共有すると会話が弾みます。",
-  "リブロース":"王道リッチ派。厚みのある旨みと安心感を重視し、段取りよく皆を導ける頼れる人。派手さより満足度で評価。会話は落ち着いたトーンで聞き役にも回れます。",
-  "サーロイン":"華やぎとサービス精神で場を盛り上げるムードメーカー。写真映えや“特製ソース”に心が躍り、人の良さを素早く拾って合わせられる器用さも。リアクション大きめで輪を広げます。",
-  "ザブトン":"しっとり濃厚、噛むほどに広がるコクを愛する審美眼の持ち主。こだわりは強いが押し付けず、丁寧に言葉を選びます。少人数でじっくり話すのが好き。",
-  "カルビ":"濃厚で甘辛の旨みを愛するリッチ派。サービス精神があり、人を巻き込むのが上手。ご褒美感のある体験に弱く、みんなでワイワイ盛り上がる夜が似合います。",
-  "ハラミ":"炭火と甘辛ダレが似合う、躍動感のある赤身派。歯ごたえを楽しみつつジューシーさも譲らない実利タイプ。難しい理屈より“うまい・たのしい”を共有したい人。",
-  "シンシン":"上品な赤身のコクとキレを両立。無駄のない味設計を好み、段取り良く場を整える堅実派。静かな頼もしさで、背伸びしない“ちょうどいい贅沢”にセンスが光ります。",
-  "カイノミ":"カルビ系の中でも軽やかで繊維感が心地よい部位。脂の旨みは好きだが重さは抑えたい人にフィット。塩やレモンでキレ良く仕上げる選択眼が魅力。",
-  "ミスジ":"繊細なサシが入りつつ軽やか。やさしい口どけと上品な香りを好む丁寧さの人。音や温度など細部に気づけ、少人数でじっくり話すと魅力が花開きます。",
-  "シャトーブリアン":"繊細さと集中力、そして質への強いこだわりを備えた“特選ヒレ”。量より質、派手さより完成度を重んじます。急がず深く、少人数でじっくり向き合うと相性が花開く希少タイプ。"
+  "ヒレ":"無駄のない上品さと芯の強さが共存するタイプ。情報を整理し、結論をすっきり出すのが得意。味わいはストレートに、素材勝負の一皿を好みます。",
+  "タン":"さっぱり塩でキレ良く。テンポの良さと明るさで周囲をほぐすムードメイクが得意。直感が利き、判断もスピーディ。",
+  "イチボ":"赤身の旨みを丁寧に味わう、調和型の通好み。控えめながら芯があり、空気を読みつつも要所で意見を言える人。",
+  "ランプ":"探究心と柔軟さを兼ね備えた実験好き。低温や創作のように定番を一歩更新する工夫にワクワクします。",
+  "リブロース":"王道リッチ派。厚みのある旨みと安心感を重視し、段取りよく皆を導ける頼れる人。",
+  "サーロイン":"華やぎとサービス精神で場を盛り上げるムードメーカー。写真映えや“特製ソース”に心が躍るタイプ。",
+  "ザブトン":"しっとり濃厚、噛むほどに広がるコク。こだわりは強いが押し付けず、丁寧に言葉を選びます。",
+  "カルビ":"濃厚で甘辛の旨みを愛するリッチ派。サービス精神があり、人を巻き込むのが上手。",
+  "ハラミ":"炭火と甘辛ダレが似合う、躍動感のある赤身派。歯ごたえとジューシーさのバランス派。",
+  "シンシン":"上品な赤身のコクとキレを両立。無駄のない味設計を好む堅実派。",
+  "カイノミ":"軽やかで繊維感が心地よい。脂の旨みは好きだが重さは抑えたいタイプ。",
+  "ミスジ":"繊細なサシが入りつつ軽やか。やさしい口どけと上品な香りを好む丁寧さの人。",
+  "シャトーブリアン":"質への強いこだわりを備えた“特選ヒレ”。量より質、完成度重視の希少タイプ。"
 };
 
 /* ==== State ==== */
@@ -396,7 +384,7 @@ function computeResult(){
   let baseName=pickSubtype(code,{Q,M,Salt,Sauce,Light,Hearty});
   let name=baseName;
 
-  // シークレット：シャトーブリアン（約2%狙い）
+  // シークレット：シャトーブリアン（2%前後）
   const dRL=Math.max(0,(RL==='R'?Rf-Lf:Lf-Rf));
   const dFS=Math.max(0,(FS==='F'?F-S:S-F));
   const dKC=Math.max(0,(KC==='K'?K-C:C-K));
@@ -410,25 +398,7 @@ function computeResult(){
   return {code,baseName,name,R_base:R,L_base:L,F,S,K,C,Q,M,Salt,Sauce,Light,Hearty,R_adj,L_adj,Rf,Lf,tagTexture,tagFlavor,tagAfter};
 }
 
-/* ==== 結果表示 ==== */
-function showResult(){
-  el('bar').style.width='100%';
-  const r=computeResult(); showScreen('result');
-  el('r-type-name').textContent=r.name;
-  el('r-type-code').textContent=r.code;
-  el('tag-texture').textContent=r.tagTexture;
-  el('tag-flavor').textContent=r.tagFlavor;
-  el('tag-after').textContent=r.tagAfter;
-  el('r-desc').textContent=DESCRIPTIONS[r.name]||'';
-  const bm=bestMatch(r.code); const repr=CODE_REPR[bm]||bm;
-  el('r-best').textContent=bm?`${repr}（${bm}）`:'—';
-
-  // JSONエクスポート（維持）
-  const payload={type:{baseCode:r.code,baseName:r.baseName,displayName:r.name},tags:{texture:r.tagTexture,flavor:r.tagFlavor,after:r.tagAfter},counts:{R:r.R_base,L:r.L_base,F:r.F,S:r.S,K:r.K,C:r.C,Q:r.Q,M:r.M,Salt:r.Salt,Sauce:r.Sauce,Light:r.Light,Hearty:r.Hearty},answers,generatedAt:new Date().toISOString()};
-  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob); const a=el('btn-export'); a.href=url; a.download=`MEAT-BTI_${r.code}.json`;
-}
-
+/* 相性候補生成 */
 function parseCode(code){const [a,b,c]=code.split('-');return {RL:a,FS:b,KC:c};}
 function allTypeCodes(){return Object.keys(CODE_REPR);}
 function bestMatch(code){
@@ -447,6 +417,25 @@ function bestMatch(code){
     if(score>bestScore){bestScore=score;best=t;}
   }
   return best;
+}
+
+/* ==== 結果表示 ==== */
+function showResult(){
+  el('bar').style.width='100%';
+  const r=computeResult(); showScreen('result');
+  el('r-type-name').textContent=r.name;
+  el('r-type-code').textContent=r.code;
+  el('tag-texture').textContent=r.tagTexture;
+  el('tag-flavor').textContent=r.tagFlavor;
+  el('tag-after').textContent=r.tagAfter;
+  el('r-desc').textContent=DESCRIPTIONS[r.name]||'';
+  const bm=bestMatch(r.code); const repr=CODE_REPR[bm]||bm;
+  el('r-best').textContent=bm?`${repr}（${bm}）`:'—';
+
+  // JSONエクスポート
+  const payload={type:{baseCode:r.code,baseName:r.baseName,displayName:r.name},tags:{texture:r.tagTexture,flavor:r.tagFlavor,after:r.tagAfter},counts:{R:r.R_base,L:r.L_base,F:r.F,S:r.S,K:r.K,C:r.C,Q:r.Q,M:r.M,Salt:r.Salt,Sauce:r.Sauce,Light:r.Light,Hearty:r.Hearty},answers,generatedAt:new Date().toISOString()};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob); const a=el('btn-export'); a.href=url; a.download=`MEAT-BTI_${r.code}.json`;
 }
 
 /* Start / Retry */
