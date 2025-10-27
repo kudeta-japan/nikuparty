@@ -8,18 +8,11 @@
 <meta name="theme-color" content="#0b0a0a">
 <style>
   :root{
-    /* ===== KU-DETA palette (Cheese / Tomato / Basil / Wine) ===== */
     --bg:#0b0a0a; --panel:#141111; --ink:#fff9ef; --muted:#ccbfae; --bd:#2a2421;
     --cheese:#ffd966; --tomato:#ff6b4a; --basil:#3fbf7b; --basil-deep:#1a9c63;
     --wine:#9b4a8f; --wine-deep:#c86b9e;
-    --card-shadow:0 14px 30px rgba(0,0,0,.35);
     --seal:#ffe889;
-    --grad-hero:
-      radial-gradient(1200px 600px at 10% -10%, rgba(255,217,102,.16), transparent 40%),
-      radial-gradient(1200px 600px at 110% 110%, rgba(255,107,74,.12), transparent 40%),
-      linear-gradient(180deg,#0c0a09,#0f0c0a 55%, #110e0c);
   }
-
   *{box-sizing:border-box}
   html,body{height:100%}
   body{margin:0;background:var(--bg);color:var(--ink);
@@ -29,86 +22,68 @@
   img{max-width:100%;display:block}
   .container{width:min(1040px,92vw);margin:0 auto}
 
-  /* Buttons & chips */
+  /* Buttons */
   .btn{appearance:none;border:1px solid var(--bd);background:#1a1513;color:var(--ink);
-    padding:12px 16px;border-radius:12px;font-weight:800;cursor:pointer;transition:transform .06s ease, box-shadow .15s ease}
+    padding:12px 16px;border-radius:12px;font-weight:800;cursor:pointer;transition:transform .06s ease}
   .btn:hover{transform:translateY(-1px)}
-  .btn.primary{background:linear-gradient(180deg,var(--tomato),#ff5231);color:#110e0c;border:none;box-shadow:0 12px 26px rgba(255,82,49,.35)}
-  .btn.cheese{background:linear-gradient(180deg,var(--cheese),#f7c84a);color:#2a1e0b;border:none;box-shadow:0 12px 26px rgba(247,200,74,.3)}
-  .badge{display:inline-flex;align-items:center;gap:8px;background:#1a1513;border:1px solid var(--bd);color:var(--ink);padding:6px 10px;border-radius:999px;font-size:12px}
+  .btn.primary{background:linear-gradient(180deg,var(--tomato),#ff5231);color:#110e0c;border:none}
+  .btn.cheese{background:linear-gradient(180deg,var(--cheese),#f7c84a);color:#2a1e0b;border:none}
 
-  /* Shell */
-  header.nav{position:sticky;top:0;z-index:20;background:rgba(12,10,9,.6);backdrop-filter:saturate(130%) blur(8px);border-bottom:1px solid var(--bd)}
-  .nav-inner{height:64px;display:flex;align-items:center;justify-content:space-between}
+  /* Shell（スマホは極力シンプルに） */
+  header.nav{position:sticky;top:0;z-index:20;background:rgba(12,10,9,.7);backdrop-filter:saturate(120%) blur(8px);border-bottom:1px solid var(--bd)}
+  .nav-inner{height:56px;display:flex;align-items:center;justify-content:space-between}
   .brand{display:flex;align-items:center;gap:10px;font-weight:900}
-  .logo{width:30px;height:30px;border-radius:10px;background:conic-gradient(from 140deg,var(--cheese),var(--tomato));display:grid;place-items:center;color:#111}
-  .card{background:var(--panel);border:1px solid var(--bd);border-radius:20px;box-shadow:var(--card-shadow);overflow:hidden}
-  .section{padding:28px}
-  .divider{height:1px;background:#201b18;margin:12px 0}
-  .list{margin:0;padding-left:18px}
-  .h2{font-weight:900;font-size:clamp(20px,4.8vw,26px);margin:0 0 6px}
+  .logo{width:28px;height:28px;border-radius:10px;background:conic-gradient(from 140deg,var(--cheese),var(--tomato));display:grid;place-items:center;color:#111}
+  .nav-cta{display:flex;gap:10px;align-items:center}
+  .chip{display:inline-flex;align-items:center;background:#1a1513;border:1px solid var(--bd);padding:6px 10px;border-radius:999px;font-size:12px}
 
-  /* ===== HERO（縦長化） ===== */
-  .hero{position:relative;min-height:72vh;display:grid;align-items:end;border-bottom:1px solid var(--bd);background:#000;overflow:hidden}
-  .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;filter:brightness(.78) contrast(1.05)}
-  .hero::before{content:"";position:absolute;inset:0;background:var(--grad-hero)}
-  .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 0%, rgba(0,0,0,.55) 60%, rgba(0,0,0,.85) 100%)}
-  .hero-inner{position:relative;z-index:1;padding:48px 0 36px;}
-  .eyebrow{display:inline-flex;gap:8px;align-items:center;background:rgba(255,232,137,.14);border:1px solid #3a2d0d;color:#ffe9b0;padding:6px 10px;border-radius:999px;font-size:12px}
-  .h1{font-size:clamp(26px,5.6vw,40px);line-height:1.2;font-weight:900;margin:10px 0 0}
-  .lead{color:var(--muted);margin:6px 0 0}
-  .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
-  @media (min-width: 900px){ .hero{min-height:84vh;} .hero-inner{padding:60px 0 44px;} }
+  /* ===== HERO（画像を大きく・CTA集約） ===== */
+  .hero{position:relative;border-bottom:1px solid var(--bd);background:#000}
+  .hero-inner{display:grid;grid-template-columns:1fr;gap:18px;align-items:end;width:min(1040px,92vw);margin:0 auto;padding:0}
+  .hero-media{width:100%}
+  .hero-img{width:100%;height:clamp(360px,64vh,560px);object-fit:cover;object-position:center 30%;filter:brightness(.8) contrast(1.05)}
+  .hero-overlay{position:relative;margin-top:-120px;padding:0 0 22px}
+  .hero-overlay::before{content:"";position:absolute;inset:-24px 0 -22px 0;background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.75) 60%,rgba(0,0,0,.9) 100%);z-index:-1}
+  .eyebrow{display:inline-flex;gap:8px;align-items:center;background:rgba(255,232,137,.14);border:1px solid #3a2d0d;color:#ffe9b0;padding:5px 10px;border-radius:999px;font-size:12px}
+  .h1{font-size:clamp(22px,6vw,40px);line-height:1.25;font-weight:900;margin:8px 0 0}
+  .lead{color:var(--muted);margin:4px 0 0}
+  .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .cta .btn{min-width:220px}
+  .cta .btn.full{width:100%}
 
-  /* Early bird */
-  .early{background:linear-gradient(180deg,rgba(255,217,102,.08),transparent);border-color:#3b2d14}
-
-  /* Split */
-  .split{display:grid;gap:18px;grid-template-columns:1fr}
-  @media(min-width:860px){.split{grid-template-columns:1.2fr .8fr}}
+  /* Sections */
+  .card{background:var(--panel);border:1px solid var(--bd);border-radius:16px;overflow:hidden}
+  .section{padding:22px}
+  .h2{font-weight:900;font-size:clamp(18px,4.6vw,26px);margin:0 0 8px}
+  .divider{height:1px;background:#201b18;margin:10px 0}
 
   /* Pricing */
-  .pricing{display:grid;gap:18px;grid-template-columns:1fr}
+  .pricing{display:grid;gap:14px;grid-template-columns:1fr}
   @media(min-width:860px){.pricing{grid-template-columns:1fr 1fr}}
-  .p-card{border:1px solid var(--bd);border-radius:20px;overflow:hidden;background:#171210}
-  .p-head{padding:16px 18px;color:#2a150f;font-weight:900;display:flex;align-items:center;gap:12px}
+  .p-card{border:1px solid var(--bd);border-radius:16px;overflow:hidden;background:#171210}
+  .p-head{padding:14px 16px;color:#2a150f;font-weight:900;display:flex;align-items:center;gap:12px}
   .p-head.male{background:linear-gradient(90deg,var(--basil),var(--basil-deep));color:#0b120d}
   .p-head.female{background:linear-gradient(90deg,var(--wine),var(--wine-deep));color:#220d1d}
-  .p-body{padding:14px 16px}
-  .p-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:14px 0;border-top:1px dashed #3a2e2a}
+  .p-body{padding:12px 14px}
+  .p-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px 0;border-top:1px dashed #3a2e2a}
   .p-row:first-child{border-top:none}
   .label{color:#e9ddcc}
-  .yen{font-variant-numeric:tabular-nums}
+  .new{font-size:clamp(20px,4.5vw,34px);font-weight:900}
   .old{color:#bfae98}
-  .new{font-size:clamp(22px,4.5vw,34px);font-weight:900;text-shadow:0 3px 0 rgba(0,0,0,.25)}
-  .seal{display:inline-grid;place-items:center;background:var(--seal);color:#1c120a;border-radius:999px;width:64px;height:64px;font-weight:900;border:2px solid #f1d770}
-  .seal small{display:block;font-size:11px;line-height:1}
-  .seal b{font-size:16px;line-height:1.1}
-  .no1{color:#ff9b95;font-weight:900;margin-right:6px;text-shadow:0 2px 0 rgba(0,0,0,.25)}
-  .dim{opacity:.58}
-  .note{color:#d5c7b7;font-size:12px;margin-top:10px}
+  .seal{display:inline-grid;place-items:center;background:var(--seal);color:#1c120a;border-radius:999px;width:56px;height:56px;font-weight:900;border:2px solid #f1d770}
+  .seal small{display:block;font-size:10px;line-height:1}
+  .seal b{font-size:15px;line-height:1.1}
+  .no1{color:#ff9b95;font-weight:900;margin-right:6px}
 
-  /* ===== Meat BTI Teaser ===== */
-  .teaser{margin:18px 0; border:1px solid #4a3a16; border-radius:18px; overflow:hidden;
-          background:linear-gradient(135deg, rgba(255,217,102,.1), rgba(255,107,74,.08));
-          box-shadow:0 12px 26px rgba(0,0,0,.25);}
-  .teaser-inner{display:grid;gap:14px;grid-template-columns:1fr;align-items:center;padding:18px}
-  .teaser h3{margin:0;font-size:clamp(20px,5vw,28px);font-weight:900}
+  /* Teaser */
+  .teaser{margin:16px 0;border:1px solid #4a3a16;border-radius:14px;background:linear-gradient(135deg, rgba(255,217,102,.08), rgba(255,107,74,.06))}
+  .teaser-inner{display:grid;gap:12px;grid-template-columns:1fr;align-items:center;padding:16px}
+  .teaser h3{margin:0;font-size:clamp(18px,5vw,24px);font-weight:900}
   .teaser p{margin:0;color:#f2e6d2}
-  .teaser .points{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .points{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
   .chip{background:#1a1513;border:1px solid #4a3a16;color:#ffe6a8;border-radius:999px;padding:6px 10px;font-size:12px}
   .teaser .cta{margin-top:8px}
-  @media(min-width:860px){
-    .teaser-inner{grid-template-columns:1.2fr .8fr}
-  }
 
-  /* Floating CTA */
-  .float-cta{position:fixed;right:18px;bottom:18px;z-index:30}
-  .float-cta a{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:999px;
-    background:linear-gradient(180deg,var(--cheese),#f7c84a);color:#2a1e0b;border:none;box-shadow:0 12px 26px rgba(247,200,74,.35);font-weight:900}
-  .pulse{position:absolute;inset:-6px;border-radius:999px;border:2px solid rgba(247,200,74,.6);animation:pulse 1.8s infinite}
-  @keyframes pulse{0%{transform:scale(.9);opacity:.8}70%{transform:scale(1.15);opacity:0}100%{opacity:0}}
-  
   /* Form */
   form{display:grid;gap:12px}
   .field{display:grid;gap:6px}
@@ -119,7 +94,15 @@
   .help{color:var(--muted);font-size:12px}
   .success{border:1px solid #2a5c3f;background:linear-gradient(180deg,rgba(63,191,123,.08),transparent);padding:12px;border-radius:12px;color:#c7f1db}
 
-  footer{border-top:1px solid var(--bd);color:var(--muted);padding:22px 0 40px;margin-top:28px;text-align:center}
+  footer{border-top:1px solid var(--bd);color:var(--muted);padding:20px 0 36px;margin-top:22px;text-align:center}
+
+  /* ===== Mobile specific clean-up ===== */
+  @media (max-width: 860px){
+    .nav-cta{display:none;}            /* ナビのボタン群は隠す（ヒーローに集約） */
+    .cta .btn{width:100%}              /* CTAは縦並び100%幅 */
+    .float-cta{display:none;}          /* スマホは浮遊CTA非表示でスッキリ */
+    .hero-overlay{margin-top:-110px}   /* 画像を大きめに見せる */
+  }
 </style>
 </head>
 <body>
@@ -127,177 +110,111 @@
 <header class="nav">
   <div class="container nav-inner">
     <div class="brand"><div class="logo">🧀</div><div>ニクパーティ</div></div>
-    <nav style="display:flex;gap:10px;align-items:center">
-      <a class="badge" href="#price">料金</a>
-      <a class="badge" href="#entry">参加申込み</a>
-      <!-- 目立つBTIボタン -->
-      <a class="btn cheese" href="meat-bti/" title="事前お楽しみ診断">事前コンテンツ：Meat BTI 診断　β版</a>
+    <!-- PCのみ表示（スマホは非表示） -->
+    <nav class="nav-cta">
+      <a class="chip" href="#price">料金</a>
+      <a class="chip" href="#entry">参加申込み</a>
+      <a class="btn cheese" href="meat-bti/">事前：Meat BTI 診断</a>
     </nav>
   </div>
 </header>
 
-<!-- HERO -->
+<!-- HERO（画像を最優先、CTAはここに集約） -->
 <section class="hero">
-  <img src="top.jpg" alt="">
-  <div class="container hero-inner">
-    <span class="eyebrow">Cheese Meat Mania KU-DETA presents</span>
-    <h1 class="h1">🥩肉も恋も、ジューシーな夜を──。</h1>
-    <p class="lead">【ニクパーティ-Meet Meat Night-】がついに開催決定‼️</p>
-    <p class="lead">11月15日(土) 19:00〜／岐阜で “大人の出会い” を楽しむ一夜を🍷</p>
-    <p class="lead">「美味しいお肉 × ドキドキの出会い」 笑顔が溢れる、非日常の夜をお届けします。</p>
-    <div class="cta">
-      <a class="btn primary" href="#entry">👇 参加申込みはこちら</a>
-      <!-- ヒーロー内も目立たせる -->
-      <a class="btn cheese" href="meat-bti/">事前コンテンツ：Meat BTI 診断</a>
+  <div class="hero-inner">
+    <div class="hero-media">
+      <img src="top.jpg" alt="" class="hero-img">
+    </div>
+    <div class="hero-overlay">
+      <span class="eyebrow">Cheese Meat Mania KU-DETA presents</span>
+      <h1 class="h1">🥩肉も恋も、ジューシーな夜を──。</h1>
+      <p class="lead">11/15(土) 19:00–21:00｜岐阜・KU-DETA｜お肉×出会いの一夜。</p>
+      <div class="cta">
+        <a class="btn primary" href="#entry">👇 参加申込みはこちら</a>
+        <a class="btn cheese" href="meat-bti/">事前：Meat BTI 診断</a>
+      </div>
     </div>
   </div>
 </section>
 
 <main class="container">
-  <!-- ===== Meat BTI teaser big card ===== -->
-  <section class="teaser card" aria-labelledby="bti-teaser">
+  <!-- Meat BTI teaser -->
+  <section class="teaser" aria-labelledby="bti-teaser">
     <div class="teaser-inner">
       <div>
         <h3 id="bti-teaser">事前コンテンツ：<span style="color:var(--cheese)">Meat BTI 診断</span></h3>
-        <p>会話の“最初の一皿”に。20問・6段階で、あなたの<strong>“部位タイプ”</strong>を判定します。</p>
+        <p>20問・6段階であなたの<strong>“部位タイプ”</strong>を判定。会話のきっかけに。</p>
         <div class="points">
           <span class="chip">⏱ 所要1〜2分</span>
           <span class="chip">🥩 12タイプ表示</span>
           <span class="chip">🎯 相性の良いタイプも</span>
         </div>
-        <div class="cta">
-          <a class="btn cheese" href="meat-bti/">今すぐ診断する</a>
-        </div>
-      </div>
-      <div style="display:grid;place-items:center">
-        <!-- 画像がなくてもOK。あればここに小さなサムネを置けます -->
-        <div style="width:min(420px,100%);aspect-ratio:16/9;border:1px dashed #4a3a16;border-radius:14px;display:grid;place-items:center;color:#ffe6a8;opacity:.9">
-          Meat BTI Teaser
-        </div>
+        <div class="cta"><a class="btn cheese" href="meat-bti/">今すぐ診断する</a></div>
       </div>
     </div>
   </section>
 
 
-
   <!-- 募集要項 -->
-  <section class="split">
-    <article class="card section">
-      <h2 class="h2">👩‍❤️‍👨 募集要項</h2>
-      <div class="divider"></div>
-      <ul class="list">
-        <li>📅 <b>11/15(土) 19:00〜21:00</b></li>
-        <li>👫 <b>20歳〜40歳ぐらい</b> の独身男女 各<b>25名限定</b></li>
-        <li>💰 <b>男性 6,500円／女性 3,500円</b>（<b>飲み放題＋肉ビュッフェ</b>）<br><span class="help">※割引あり</span></li>
-      </ul>
-      <div class="divider"></div>
-      <p>「気になるあの人」との距離が縮まる、クーデターだけの特別な夜。</p>
-    </article>
-
-    <aside class="card section" id="price">
-      <h2 class="h2">前売り料金表（グループ割）</h2>
-      <div class="divider"></div>
-      <p class="help">通常価格と、人数に応じた<strong>グループ割適応価格</strong>を並記しています。</p>
-    </aside>
+  <section class="card section">
+    <h2 class="h2">👩‍❤️‍👨 募集要項</h2>
+    <div class="divider"></div>
+    <ul style="margin:0 0 4px 18px;padding:0">
+      <li>📅 <b>11/15(土) 19:00–21:00</b></li>
+      <li>👫 <b>20〜35歳ぐらい</b> の独身各<b>25名</b>限定</li>
+      <li>💰 男性 <b>6,500円</b>／女性 <b>3,500円</b>（<b>飲み放題＋肉ビュッフェ</b>）</li>
+    </ul>
   </section>
 
-  <!-- 料金カード（男性・女性） -->
-  <section class="pricing">
+  <!-- 料金 -->
+  <section id="price" class="pricing">
     <!-- 男性 -->
     <article class="p-card">
       <div class="p-head male">
-        <div style="width:44px;height:44px;border-radius:999px;background:rgba(0,0,0,.15);display:grid;place-items:center">👨</div>
-        <div style="font-size:20px;letter-spacing:.4em">男　性</div>
+        <div style="width:40px;height:40px;border-radius:999px;background:rgba(0,0,0,.15);display:grid;place-items:center">👨</div>
+        <div style="font-size:18px;letter-spacing:.35em">男　性</div>
       </div>
       <div class="p-body">
-        <div class="p-row">
-          <div class="label">通常価格（1名様）</div>
-          <div class="new yen">6,500円</div>
-        </div>
-        <div class="p-row">
-          <div class="label">2名様 <span class="old yen dim">13,000円</span></div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div class="seal"><small>¥</small><b>500</b><small>OFF</small></div>
-            <div class="new yen"><span class="no1">人気No.1</span>12,500円</div>
-          </div>
-        </div>
-        <div class="p-row">
-          <div class="label">3名様 <span class="old yen dim">19,500円</span></div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div class="seal"><small>¥</small><b>1,000</b><small>OFF</small></div>
-            <div class="new yen">18,500円</div>
-          </div>
-        </div>
-        <div class="p-row">
-          <div class="label">4名様 <span class="old yen dim">26,000円</span></div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div class="seal"><small>¥</small><b>1,500</b><small>OFF</small></div>
-            <div class="new yen">24,500円</div>
-          </div>
-        </div>
-        <div class="p-row">
-          <div class="label">5名様 <span class="old yen dim">32,500円</span></div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div class="seal"><small>¥</small><b>2,000</b><small>OFF</small></div>
-            <div class="new yen">30,500円</div>
-          </div>
-        </div>
-        <p class="note">※価格は税込。割引は合計金額からの値引きです。</p>
+        <div class="p-row"><div class="label">通常価格（1名様）</div><div class="new">6,500円</div></div>
+        <div class="p-row"><div class="label">2名様 <span class="old">13,000円</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="seal"><small>¥</small><b>500</b><small>OFF</small></div><div class="new"><span class="no1">人気No.1</span>12,500円</div></div></div>
+        <div class="p-row"><div class="label">3名様 <span class="old">19,500円</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="seal"><small>¥</small><b>1,000</b><small>OFF</small></div><div class="new">18,500円</div></div></div>
+        <div class="p-row"><div class="label">4名様 <span class="old">26,000円</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="seal"><small>¥</small><b>1,500</b><small>OFF</small></div><div class="new">24,500円</div></div></div>
+        <div class="p-row"><div class="label">5名様 <span class="old">32,500円</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="seal"><small>¥</small><b>2,000</b><small>OFF</small></div><div class="new">30,500円</div></div></div>
       </div>
     </article>
 
     <!-- 女性 -->
     <article class="p-card">
       <div class="p-head female">
-        <div style="width:44px;height:44px;border-radius:999px;background:rgba(0,0,0,.15);display:grid;place-items:center">👩</div>
-        <div style="font-size:20px;letter-spacing:.4em">女　性</div>
+        <div style="width:40px;height:40px;border-radius:999px;background:rgba(0,0,0,.15);display:grid;place-items:center">👩</div>
+        <div style="font-size:18px;letter-spacing:.35em">女　性</div>
       </div>
       <div class="p-body">
-        <div class="p-row">
-          <div class="label">通常価格（1名様）</div>
-          <div class="new yen">3,500円</div>
-        </div>
-        <div class="p-row">
-          <div class="label">2名様 <span class="old yen dim">7,000円</span></div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div class="seal"><small>¥</small><b>500</b><small>OFF</small></div>
-            <div class="new yen"><span class="no1">人気No.1</span>6,500円</div>
-          </div>
-        </div>
-        <div class="p-row">
-          <div class="label">3名様 <span class="old yen dim">10,500円</span></div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div class="seal"><small>¥</small><b>1,000</b><small>OFF</small></div>
-            <div class="new yen">9,500円</div>
-          </div>
-        </div>
-        <div class="p-row">
-          <div class="label">4名様 <span class="old yen dim">14,000円</span></div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div class="seal"><small>¥</small><b>1,500</b><small>OFF</small></div>
-            <div class="new yen">12,500円</div>
-          </div>
-        </div>
-        <div class="p-row">
-          <div class="label">5名様 <span class="old yen dim">17,500円</span></div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div class="seal"><small>¥</small><b>2,000</b><small>OFF</small></div>
-            <div class="new yen">15,500円</div>
-          </div>
-        </div>
-        <p class="note">※価格は税込。割引は合計金額からの値引きです。</p>
+        <div class="p-row"><div class="label">通常価格（1名様）</div><div class="new">3,500円</div></div>
+        <div class="p-row"><div class="label">2名様 <span class="old">7,000円</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="seal"><small>¥</small><b>500</b><small>OFF</small></div><div class="new"><span class="no1">人気No.1</span>6,500円</div></div></div>
+        <div class="p-row"><div class="label">3名様 <span class="old">10,500円</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="seal"><small>¥</small><b>1,000</b><small>OFF</small></div><div class="new">9,500円</div></div></div>
+        <div class="p-row"><div class="label">4名様 <span class="old">14,000円</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="seal"><small>¥</small><b>1,500</b><small>OFF</small></div><div class="new">12,500円</div></div></div>
+        <div class="p-row"><div class="label">5名様 <span class="old">17,500円</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="seal"><small>¥</small><b>2,000</b><small>OFF</small></div><div class="new">15,500円</div></div></div>
       </div>
     </article>
   </section>
 
   <!-- 申込みフォーム -->
-  <section id="entry" class="card section" aria-labelledby="entry-title" style="margin-top:18px">
+  <section id="entry" class="card section" aria-labelledby="entry-title" style="margin-top:16px">
     <h2 id="entry-title" class="h2">👇 参加申込みフォーム</h2>
     <div class="divider"></div>
     <div id="msg" class="success" style="display:none">送信ありがとうございました！担当よりご連絡いたします。</div>
 
-    <!-- Formspree のIDに差し替えてください -->
-    <form id="form" action="https://formspree.io/f/xrbywbal" method="POST">
+    <!-- Formspree のIDに差し替え -->
+    <form id="form" action="https://formspree.io/f/XXXXXXXX" method="POST">
       <input type="hidden" name="_subject" value="【ニクパーティ】参加申込み">
       <input type="hidden" name="event" value="ニクパーティ - Meet Meat Night（11/15 19:00〜）">
 
@@ -323,9 +240,7 @@
           <option value="" disabled selected>選択してください</option>
           <option>20–24</option>
           <option>25–29</option>
-          <option>30–34</option>
-          <option>35–39</option>
-          <option>35–39</option>
+          <option>30–35</option>
           <option>その他（自由入力欄に記載）</option>
         </select>
       </div>
@@ -355,23 +270,17 @@
   </section>
 </main>
 
-<footer>
-  © <span id="y"></span> Cheese Meat Mania KU-DETA / ニクパーティ
-</footer>
+<footer>© <span id="y"></span> Cheese Meat Mania KU-DETA / ニクパーティ</footer>
 
-<!-- フローティングCTA -->
-<div class="float-cta" aria-hidden="false">
-  <span class="pulse" aria-hidden="true"></span>
-  <a href="meat-bti/" aria-label="事前コンテンツ：Meat BTI 診断へ">
-    🔥 事前コンテンツ：Meat BTI 診断
-  </a>
+<!-- PCのみ表示のフローティングCTA（スマホはCSSで非表示） -->
+<div class="float-cta" style="position:fixed;right:18px;bottom:18px;z-index:30">
+  <a class="btn cheese" href="meat-bti/">🔥 事前コンテンツ：Meat BTI 診断</a>
 </div>
 
 <script>
-  // 年号
   document.getElementById('y').textContent = new Date().getFullYear();
 
-  // Formspree Ajax送信（ID差し替え後に有効）
+  // Formspree Ajax（ID差し替え後に有効）
   const form = document.getElementById('form');
   const msg = document.getElementById('msg');
   form.addEventListener('submit', async (e)=>{
