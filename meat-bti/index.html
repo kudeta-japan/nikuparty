@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>MEAT-BTI </title>
+<title>MEAT-BTI sub｜相性重視テスト版</title>
 <meta name="description" content="20問・6段階。MBTI/LOVE TYPEの良さを取り入れた“部位タイプ×相性”診断。順番固定、6段階（中立なし）。">
 <style>
   :root{
@@ -24,10 +24,12 @@
   .btn.primary{background:linear-gradient(180deg,var(--acc),#ff4f37);color:#111;border:none;box-shadow:0 12px 26px rgba(255,113,91,.35)}
   footer{padding:10px 16px 18px;color:var(--muted);font-size:12px}
 
-  /* HERO-like header */
-  .hero{padding:28px;background:
-    radial-gradient(1200px 600px at 10% -10%, rgba(255,113,91,.2), transparent 40%),
-    radial-gradient(1200px 600px at 110% 110%, rgba(255,209,102,.18), transparent 40%);}
+  /* ===== Top visual (mbti.jpg) ===== */
+  .visual{border-bottom:1px solid var(--bd);background:#000}
+  .visual img{display:block;width:100%;height:auto}
+
+  /* Intro */
+  .intro{padding:16px}
   .h1{font-size:clamp(22px,5.6vw,36px);line-height:1.2;margin:0 0 6px;font-weight:900}
   .muted{color:var(--muted)}
   .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
@@ -72,18 +74,23 @@
 <main class="app">
   <div class="card">
     <header>
-      <div class="brand"><div class="logo">🥩</div><div class="title">MEAT-BTI（LoveType流・相性重視テスト版）</div></div>
+      <div class="brand"><div class="logo">🥩</div><div class="title">MEAT-BTI（相性重視テスト版）</div></div>
       <button id="btn-start" class="btn primary" data-action="start">診断をはじめる</button>
     </header>
 
+    <!-- Top visual (常に上部に表示・文字は重ねない) -->
+    <div class="visual" aria-hidden="false">
+      <img src="mbti.jpg" alt="MEAT-BTI">
+    </div>
+
     <!-- INTRO -->
-    <section class="hero" id="screen-start">
+    <section class="intro" id="screen-start">
       <h1 class="h1">20問・6段階で “部位タイプ × 相性” を判定</h1>
       <p class="muted">順番固定／中立なし（1〜6キーでも選択可）／<b>相性6割・おすすめ部位4割</b>。</p>
       <div class="chips">
         <span class="chip">部位12タイプ（シンシン→シャトーブリアン）</span>
         <span class="chip">ニックネーム＆一言キャッチ</span>
-        <span class="chip">相性TOP3と当日Tips</span>
+        <span class="chip">相性No.1 と当日Tips</span>
       </div>
       <div style="margin-top:12px">
         <button id="btn-start-2" class="btn primary" data-action="start">診断をはじめる</button>
@@ -123,8 +130,8 @@
           </div>
 
           <div class="r-card">
-            <div class="big">相性TOP3</div>
-            <ol id="r-compat" style="margin:8px 0 0;padding-left:22px"></ol>
+            <div class="big">相性No.1</div>
+            <div id="r-compat1" class="mono" style="margin-top:8px;font-size:16px"></div>
             <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
               <button class="btn" id="btn-copy">結果をコピー</button>
               <a class="btn primary" href="#" id="btn-export" download>JSONで保存</a>
@@ -137,7 +144,7 @@
       </div>
     </section>
 
-    <footer>© KU-DETA / ニクパーティ — MEAT-BTI sub</footer>
+    <footer>© ニクパーティ — MEAT-BTI sub</footer>
   </div>
 </main>
 
@@ -147,18 +154,19 @@
    軸: RL(赤身Lean↔リッチRich) / FS(テンポFast↔じっくりSlow) / KC(定番Keep↔変化Change)
    補助: TX(噛むchew↔とろけmelt) / FL(塩saltF↔ソースsauceF) / AF(軽いlight↔満腹hearty)
    facets は A側:+1, B側:-1（加点は回答強度×dir、内部は±で保持）
+   ※ 地域名は使わない（汎用化）
 =========================================================== */
 const BANK = [
-  // ---- スタート定番：入口で迷わない ----
+  // ---- スタート定番 ----
   {id:1, axis:"RL", text:"最初の一皿、どちらに惹かれる？",
-    A:"塩タンでキレ良くスタート", B:"霜降りカルビをタレでがっつり",
+    A:"塩タンでキレ良くスタート", B:"サシ入りカルビをタレでがっつり",
     facets:{ fatTol:+1, afterPref:+1, saltF:+1, sauceF:-1, hearty:-1, light:+1 }},
 
   {id:2, axis:"RL", text:"同価格の“赤身ステーキ”と“サシ入りステーキ”、今夜なら？",
     A:"赤身（歯切れよく軽やか）", B:"サシ入り（コク優先で満足）",
     facets:{ fatTol:+1, roastAroma:+1, chew:+1, melt:-1, light:+1, hearty:-1 }},
 
-  // ---- デート/会話シーン重視 ----
+  // ---- デート/会話シーン ----
   {id:3, axis:"KC", text:"初対面の相手と。注文の入り口は？",
     A:"まずは“名物”で共通体験を作る", B:"“限定/新作”で会話のネタを作る",
     facets:{ classic:+1, limited:-1, rule:+1, photo:-1, instinct:-1 }},
@@ -167,29 +175,29 @@ const BANK = [
     A:"少量ずつ早めに回す（小まめ追加）", B:"一皿をゆっくり味わい会話中心",
     facets:{ pace:+1, course:-1, roam:+1, stay:-1 }},
 
-  // ---- 量と満足ライン（“ほぼ赤身になりがち”の指摘を踏まえ分離）----
+  // ---- 量と満足ライン ----
   {id:5, axis:"AF", text:"“今日はどこまで食べたい？”",
     A:"軽めでOK（余白を残す）", B:"満腹までしっかり（締めまで）",
     facets:{ light:+1, hearty:-1 }},
 
-  // ---- 食感を具体化（噛むvsとろけの二軸を明確化）----
+  // ---- 食感を具体化 ----
   {id:6, axis:"TX", text:"ステーキなら、どちらの口当たりが好き？",
     A:"噛むほど旨み（歯切れの良さ）", B:"舌でほどける（とろけ感）",
     facets:{ chew:+1, melt:-1 }},
 
-  // ---- 焼き加減を明示（“何の焼き加減？”の指摘対応：ステーキ）----
+  // ---- 焼き加減を明示（ステーキ）----
   {id:7, axis:"FS", text:"“ステーキ”の焼き加減は？",
     A:"レア寄り（軽めの火入れ）", B:"ミディアム以上（しっかり火入れ）",
     facets:{ pace:+1, plan:+1, course:-1 }},
 
-  // ---- 味付けをシンプルに（塩orタレ 明確）----
+  // ---- 味付け（塩orタレ）----
   {id:8, axis:"FL", text:"味付けの第一選択は？",
     A:"塩・レモン・わさびなどシンプル", B:"甘辛ダレ/特製ソースで",
     facets:{ saltF:+1, sauceF:-1 }},
 
-  // ---- 香りの表現を具体料理に（“香り”単独は難）----
+  // ---- 演出は具体料理で ----
   {id:9, axis:"KC", text:"演出ありの一皿、どちらが嬉しい？",
-    A:"炭香やレアの香りを生かす（素材推し）", B:"フランベやガーリック香で盛り上げ",
+    A:"炭の香りやレアの香りを生かす（素材推し）", B:"フランベやガーリック香で盛り上げ",
     facets:{ classic:+1, limited:-1, roastAroma:+1, photo:-1, instinct:-1 }},
 
   // ---- 二回目デート ----
@@ -197,7 +205,7 @@ const BANK = [
     A:"アラカルトでテンポよく実験的に", B:"コースで流れを楽しむ",
     facets:{ pace:+1, course:-1, roam:+1, stay:-1 }},
 
-  // ---- 人数と注文役割 ----
+  // ---- 役割 ----
   {id:11, axis:"KC", text:"テーブルでの役割は？",
     A:"皆の好みを聞きつつ“定番中心”で調整", B:"“気になった物”を少量ずつ回す号令役",
     facets:{ classic:+1, limited:-1, rule:+1, instinct:-1 }},
@@ -207,8 +215,8 @@ const BANK = [
     A:"味優先の名物（渋くて強い）", B:"映えも楽しめる限定系",
     facets:{ classic:+1, limited:-1, photo:-1 }},
 
-  // ---- 移動/粘度 ----
-  {id:13, axis:"FS", text:"玉宮が混む金曜。気に入ったら？",
+  // ---- 移動/粘度（汎用化）----
+  {id:13, axis:"FS", text:"週末の繁華街。気に入ったら？",
     A:"回遊しつつ2軒目も検討", B:"腰を据えてゆっくり",
     facets:{ roam:+1, stay:-1, pace:+1 }},
 
@@ -222,27 +230,27 @@ const BANK = [
     A:"冷麺/スープでさっぱり", B:"クッパ/ビビンバで満腹まで",
     facets:{ light:+1, hearty:-1 }},
 
-  // ---- ソロ/グループ想定 ----
+  // ---- 攻め/守り ----
   {id:16, axis:"KC", text:"はじめましての場、攻める？守る？",
     A:"まずは“王道”で安心感を作る", B:"“限定/新作”をきっかけに話題づくり",
     facets:{ classic:+1, limited:-1, rule:+1, photo:-1 }},
 
-  // ---- タン対サーロイン（部位指名で明確化）----
+  // ---- タン vs サーロイン ----
   {id:17, axis:"RL", text:"一皿だけ選ぶなら？",
     A:"“タン塩”でキレ良く", B:"“サーロイン”でコクを堪能",
     facets:{ fatTol:+1, saltF:+1, sauceF:-1 }},
 
-  // ---- 量のさじ加減（再確認）----
+  // ---- 量のさじ加減 ----
   {id:18, axis:"RL", text:"量を食べるなら、どちらが幸せ？",
     A:"赤身中心で軽やかに続けたい", B:"サシの旨みを少量ずつ",
     facets:{ fatTol:+1, light:+1, hearty:-1 }},
 
-  // ---- 3回目デートの段取り ----
+  // ---- 3回目の段取り ----
   {id:19, axis:"FS", text:"3回目は？",
     A:"様子を見て小まめに追加（テンポ）", B:"事前に予約して段取り良く（じっくり）",
-    facets:{ pace:+1, plan:-1, course:-1 }},
+    facets:{ pace:+1, plan:+1, course:-1 }},
 
-  // ---- 総仕上げ：好奇心 ----
+  // ---- 新メニューへの態度 ----
   {id:20, axis:"KC", text:"新メニューが来たら？",
     A:"まずは“いつもの定番”で比較する", B:"創作/限定も積極的に試す",
     facets:{ classic:+1, limited:-1, instinct:-1 }}
@@ -252,12 +260,10 @@ const BANK = [
    2) タイプ & ニックネーム & Tips
 =========================================================== */
 const TYPE_PICKER = {
-  // 8基本コード→サブタイプを補助ファセットで12へ振り分け
-  // （シャトーブリアン採用／シンシン廃止）
   pick(code, C){ // C: {chew,melt,saltF,sauceF,light,hearty}
-    const s = (x)=>x||0;
+    const s=(x)=>x||0;
     switch(code){
-      case 'R-F-K': return (s(C.chew)-s(C.melt) >= 0 ? 'ヒレ' : 'ミスジ'); // 赤身×速×定番
+      case 'R-F-K': return (s(C.chew)-s(C.melt) >= 0 ? 'ヒレ' : 'ミスジ');
       case 'R-F-C': return (s(C.sauceF)-s(C.saltF) > 0 ? 'ハラミ' : 'タン');
       case 'R-S-K': return (s(C.melt)-s(C.chew) > 0 ? 'ミスジ' : 'イチボ');
       case 'R-S-C': return 'ランプ';
@@ -270,36 +276,35 @@ const TYPE_PICKER = {
   }
 };
 
-// ニックネームとキャッチ & 当日Tips
 const TYPE_META = {
   "ヒレ":{ nick:"静かな主役", catch:"無駄なく上品、芯が強い赤身派。",
     tips:["最初は“名物の塩”提案で会話を整える","相手の好みを1つ拾って次の一皿に反映","乾杯はハイボール/スパークリングで軽やかに"]},
   "タン":{ nick:"空気ほぐしの号令役", catch:"キレ重視。テンポよく明るく回す。",
-    tips:["“タン塩→赤身”の黄金ルートを提案","人数多い時は小皿シェアで会話を回す","写真より一言コメントで盛り上げる"]},
+    tips:["“タン塩→赤身”の黄金ルートを提案","小皿シェアで会話を回す","写真より一言コメントで盛り上げる"]},
   "イチボ":{ nick:"通好みの調和派", catch:"控えめでも芯あり。余韻を重んじる。",
-    tips:["似た好みを見つけて“比較食べ”を提案","相手のペースに合わせて火入れを調整","締めは軽めで、次の約束の余白を残す"]},
+    tips:["似た好みで“比較食べ”を提案","相手のペースに合わせて火入れを調整","締めは軽めで次の約束の余白を残す"]},
   "ランプ":{ nick:"実験好きの研究者", catch:"定番を更新する工夫にワクワク。",
-    tips:["“少量×多皿”でミニ実験を楽しむ","創作系を一皿混ぜて会話ネタに","焼き担当を引き受けて観察＆話題"]},
+    tips:["“少量×多皿”でミニ実験","創作系を一皿混ぜて会話ネタに","焼き担当を引き受けて観察＆話題"]},
   "リブロース":{ nick:"安心感のリーダー", catch:"王道リッチで満足度重視。",
-    tips:["“名物→名物”で段取り良く進行","会計/席替えなど段取りを引き受ける","写真は少なめ、体験を濃く"]},
+    tips:["“名物→名物”で段取り良く","会計/席替えなど段取りを担う","写真は少なめ、体験を濃く"]},
   "サーロイン":{ nick:"華やぎの演出家", catch:"濃厚と映えで場を盛り上げる。",
-    tips:["フランベ/ガリバタ系で拍手を起こす","乾杯の音頭を明るく","隣席とも軽く乾杯して輪を広げる"]},
+    tips:["フランベやガリバタ系で拍手を起こす","乾杯の音頭で明るく開始","隣席とも軽く乾杯して輪を広げる"]},
   "ザブトン":{ nick:"しっとり濃厚派", catch:"丁寧な言葉選び。少人数でじっくり。",
-    tips:["“少量高満足”の提案で共感を取りに行く","火入れと休ませ時間を大切に","会話は深めの質問を1つだけ"]},
+    tips:["“少量高満足”の提案で共感を取る","休ませ時間を大切に","会話は深めの質問を1つだけ"]},
   "カルビ":{ nick:"ご褒美エンタメ", catch:"甘辛と濃厚で巻き込むムードメーカー。",
-    tips:["序盤で“みんなの一口カルビ”を手配","写真/動画は自分が撮ってシェア","締めは満足派の希望を拾ってリード"]},
+    tips:["序盤で“みんなの一口カルビ”を手配","写真/動画は自分が撮ってシェア","満足派の希望を拾ってリード"]},
   "ハラミ":{ nick:"実利派スプリンター", catch:"躍動感ある赤身、テンポで勝負。",
     tips:["回転を上げて“会話の間”を作らない","焼き台の管理役で活躍","飲み過ぎ注意で笑顔キープ"]},
   "カイノミ":{ nick:"軽やか派の橋渡し", catch:"カルビ系でもキレ良く。塩も映える。",
-    tips:["“塩→タレ”の順序でメリハリ","軽い締めで余白を残す","相手の得意トークを振る役に回る"]},
+    tips:["“塩→タレ”の順序でメリハリ","軽い締めで余白を残す","相手の得意トークを振る"]},
   "ミスジ":{ nick:"繊細さの職人", catch:"口どけ上品。丁寧な所作が魅力。",
-    tips:["火入れは控えめ、温度と香りを共有","小声のツッコミで距離を縮める","甘めの一皿は量を絞って提案"]},
+    tips:["火入れは控えめ、温度と香りを共有","小声のツッコミで距離を縮める","甘めは量を絞って提案"]},
   "シャトーブリアン":{ nick:"特選の一点集中", catch:"質に強いこだわり。静かに深く。",
-    tips:["“量より質”の提案で軸を見せる","席配置は静かな側を選ぶ","デザート前に次回の約束を軽く投げる"]}
+    tips:["“量より質”の提案で軸を見せる","静かな側の席を選ぶ","デザート前に次回の約束を軽く"]},
 };
 
 /* ===========================================================
-   3) スコアリング（MBTI/StepII風：軸×ファセット）
+   3) スコアリング（軸×ファセット）
 =========================================================== */
 const PAGE_SIZE=5, TOTAL_PAGES=4;
 let page=0, answeredCount=0, pageStartAt=0;
@@ -312,13 +317,9 @@ function showScreen(which){
   screenQuiz.hidden  = which!=='quiz';
   screenResult.hidden= which!=='result';
 }
-function resetState(){
-  page=0; answeredCount=0; responses={}; answers=[];
-}
-function start(){
-  resetState();
-  showScreen('quiz'); renderPage();
-}
+function resetState(){ page=0; answeredCount=0; responses={}; answers=[]; }
+function start(){ resetState(); showScreen('quiz'); renderPage(); }
+
 function renderPage(){
   el('page-now').textContent=page+1;
   el('q-answered').textContent=answeredCount;
@@ -423,9 +424,9 @@ function computeProfile(){
     if(q.axis==='FS'){ if(w>0) AX.FS.F+=Math.abs(w); else AX.FS.S+=Math.abs(w); }
     if(q.axis==='KC'){ if(w>0) AX.KC.K+=Math.abs(w); else AX.KC.C+=Math.abs(w); }
 
-    // ファセット加点（dir:+1/-1 を回答強度で反映）
+    // ファセット加点
     for(const [k,dir] of Object.entries(q.facets||{})){
-      const add = Math.abs(w) * dir; // A側に属する要素=+1、B側=-1
+      const add = Math.abs(w) * dir;
       if(k in FAC.RL) FAC.RL[k]+=add;
       else if(k in FAC.FS) FAC.FS[k]+=add;
       else if(k in FAC.KC) FAC.KC[k]+=add;
@@ -435,7 +436,7 @@ function computeProfile(){
     }
   }
 
-  // 軸決定（補助ファセットでブースト／MBTIのclarity導入）
+  // 軸決定（補助ブースト）
   const pos=(x)=>Math.max(0,x), neg=(x)=>Math.max(0,-x);
   const decide=(A,B,boostA,boostB,labA,labB)=>{
     const diff=(A+boostA)-(B+boostB);
@@ -455,11 +456,11 @@ function computeProfile(){
 
   const code = `${RL.side}-${FS.side}-${KC.side}`;
 
-  // メイン部位の決定（12タイプ）
+  // メイン部位（12タイプ）
   const C = { ...FAC.TX, ...FAC.FL, ...FAC.AF };
   const typeName = TYPE_PICKER.pick(code, C);
 
-  // タグ（TX/FL/AF優位）
+  // タグ
   const tagTX = (pos(FAC.TX.chew) >= pos(FAC.TX.melt)) ? '噛み応え' : 'とろけ';
   const tagFL = (pos(FAC.FL.saltF) >= pos(FAC.FL.sauceF)) ? '塩派' : 'ソース派';
   const tagAF = (pos(FAC.AF.light) >= pos(FAC.AF.hearty)) ? '軽やか' : '満足';
@@ -471,19 +472,17 @@ function computeProfile(){
   };
 }
 
-/* 相性：補完×橋渡し（FL/AF/TX）×強すぎ差ペナルティ */
+/* 相性：No.1 のみ表示 */
 const OPP={R:'L',L:'R',F:'S',S:'F',K:'C',C:'K'};
 function parseCode(code){const [a,b,c]=code.split('-');return {RL:a,FS:b,KC:c};}
 const ALL_CODES = ['R-F-K','R-F-C','R-S-K','R-S-C','L-F-K','L-F-C','L-S-K','L-S-C'];
-
-// 各コード→代表部位名（近いもの）
 const CODE_REPR = {
   'R-F-K':'ヒレ','R-F-C':'タン','R-S-K':'イチボ','R-S-C':'ランプ',
   'L-F-K':'リブロース','L-F-C':'サーロイン','L-S-K':'ザブトン','L-S-C':'カルビ'
 };
 
 function compatScore(me, other, pref){
-  // 軸ベース
+  // 軸ベース：補完を高評価
   let base=0;
   base += (me.RL!==other.RL)? 10:3;
   base += (me.FS!==other.FS)? 8 :3;
@@ -492,7 +491,7 @@ function compatScore(me, other, pref){
   // 橋渡し（FL/AF/TX の一致）
   const bridge = 4*(pref.FL.same?1:0) + 3*(pref.AF.same?1:0) + 2*(pref.TX.same?1:0);
 
-  // 強すぎ差ペナルティ
+  // 強すぎ差ペナルティ（演出）
   const pen = Math.max(0, pref.clarity.RL + pref.oClarity.RL - 3)
             + Math.max(0, pref.clarity.FS + pref.oClarity.FS - 3)
             + Math.max(0, pref.clarity.KC + pref.oClarity.KC - 3);
@@ -500,16 +499,13 @@ function compatScore(me, other, pref){
   return Math.max(0, Math.min(100, 50 + base + bridge - 2*pen));
 }
 
-/* 結果表示 */
-function best3Compat(my){
+function bestCompat(my){
   const mine = parseCode(my.code);
   const myTX = my.tagTX, myFL = my.tagFL, myAF = my.tagAF;
   const myCl = my.clarity;
+  const avgCl = {RL:1.0,FS:1.0,KC:1.0}; // 平均的強さを仮定
 
-  // 仮想的に各コードが“平均的強さ”と仮定（演出上でOK）
-  const avgCl = {RL:1.0,FS:1.0,KC:1.0};
-
-  const items=[];
+  let best=null;
   for(const code of ALL_CODES){
     if(code===my.code) continue;
     const other=parseCode(code);
@@ -520,11 +516,10 @@ function best3Compat(my){
       clarity: myCl, oClarity: avgCl
     };
     const score = compatScore(mine, other, pref);
-    // 表示部位はサブタイプ選択前の代表名
-    items.push({ code, name: CODE_REPR[code]||code, score });
+    const item = { code, name: CODE_REPR[code]||code, score };
+    if(!best || score>best.score) best=item;
   }
-  items.sort((a,b)=>b.score-a.score);
-  return items.slice(0,3);
+  return best;
 }
 
 function showResult(){
@@ -545,20 +540,16 @@ function showResult(){
   const tipsUl = el('r-tips'); tipsUl.innerHTML='';
   tips.forEach(t=>{ const li=document.createElement('li'); li.textContent=t; tipsUl.appendChild(li); });
 
-  const compat = best3Compat(r);
-  const ol = el('r-compat'); ol.innerHTML='';
-  compat.forEach(c=>{
-    const li=document.createElement('li');
-    li.innerHTML = `<span class="mono">${c.name}（${c.code}）</span>：<b>${c.score}</b>/100`;
-    ol.appendChild(li);
-  });
+  const best = bestCompat(r);
+  const target = document.getElementById('r-compat1');
+  target.textContent = best ? `${best.name}（${best.code}）：${best.score}/100` : '—';
 
   // JSON出力
   const payload = {
     type:{ code:r.code, name:r.typeName, nickname:meta.nick },
     tags:{ tx:r.tagTX, fl:r.tagFL, af:r.tagAF },
     clarity:r.clarity, facets:r.facets,
-    compat: compat,
+    compat1: best,
     generatedAt: new Date().toISOString()
   };
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
@@ -567,10 +558,10 @@ function showResult(){
   // コピー
   el('btn-copy').onclick = async ()=>{
     const text = [
-      `MEAT-BTI（相性重視テスト版）`,
+      `MEAT-BTI（相性重視）`,
       `タイプ：${r.typeName}（${r.code}） “${meta.nick}”`,
       `タグ：${r.tagTX}・${r.tagFL}・${r.tagAF}`,
-      `相性TOP3：${compat.map(x=>`${x.name}(${x.code})`).join(' / ')}`,
+      `相性No.1：${best ? `${best.name}(${best.code})` : '—'}`,
       `#MeatBTI #ニクパーティ`
     ].join('\n');
     try{ await navigator.clipboard.writeText(text); el('btn-copy').textContent='コピーしました！'; setTimeout(()=>el('btn-copy').textContent='結果をコピー',1400); }catch{}
