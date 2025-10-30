@@ -3,256 +3,320 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>MEAT-BTI v7.5｜20問・6択（岐阜ローカル & 簡潔前提）</title>
-<meta name="description" content="5問×4ページ＝全20問。岐阜ローカルの簡潔な前提つき。6段階（中立なし）・無作為順/左右入替・一貫性チェック。基本12タイプ＋シークレット『シャトーブリアン』。"/>
-
-<!-- GA4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-V39MNGQD5H"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){ dataLayer.push(arguments); }
-  gtag('js', new Date());
-  gtag('config', 'G-V39MNGQD5H');
-</script>
-
+<title>MEAT-BTI </title>
+<meta name="description" content="20問・6段階。MBTI/LOVE TYPEの良さを取り入れた“部位タイプ×相性”診断。順番固定、6段階（中立なし）。">
 <style>
   :root{
-    --bg:#090b10; --panel:#0f1219; --ink:#f5f8ff; --muted:#b7c3d6;
-    --acc:#ff715b; --acc2:#ffd166; --bd:#1b2030; --shadow:0 10px 30px rgba(0,0,0,.35);
+    --bg:#0b0f14; --panel:#0f141c; --ink:#f5f8ff; --muted:#b8c4d8; --bd:#1a2332;
+    --acc:#ff705b; --acc2:#ffd166; --blue:#57a7ff; --shadow:0 10px 30px rgba(0,0,0,.35);
   }
+  *{box-sizing:border-box}
   html,body{height:100%}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;letter-spacing:.02em}
-  .app{width:min(960px,100%);margin:0 auto;padding:24px}
-  .card{background:var(--panel);border:1px solid var(--bd);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+  .app{width:min(980px,94vw);margin:0 auto;padding:20px}
+  .card{background:var(--panel);border:1px solid var(--bd);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
   header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--bd)}
   .brand{display:flex;align-items:center;gap:10px}
-  .logo{width:36px;height:36px;border-radius:10px;background:conic-gradient(from 140deg,var(--acc),var(--acc2));display:grid;place-items:center;color:#111;font-weight:900}
+  .logo{width:34px;height:34px;border-radius:10px;background:conic-gradient(from 140deg,var(--acc),var(--acc2));display:grid;place-items:center;color:#111;font-weight:900}
   .title{font-weight:900}
-  .wrap{padding:0}
-
-  /* ===== HERO：写真を大きく見せつつ、診断中も固定表示 ===== */
-  .hero{
-    position:relative;min-height:60vh;background:#000;overflow:hidden;
-    border-bottom:1px solid var(--bd);display:grid;align-items:end;
-  }
-  .hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.78) contrast(1.05)}
-  .hero::after{content:"";position:absolute;inset:0;
-    background:linear-gradient(180deg,rgba(0,0,0,.06) 0%, rgba(0,0,0,.48) 58%, rgba(0,0,0,.86) 100%)}
-  .hero-inner{
-    position:relative;z-index:1;display:grid;gap:18px;
-    /* ← テキストをぐっと下げる（画像がよく見える） */
-    padding: clamp(120px,26vh,220px) 28px 34px;
-  }
-  /* 診断開始後はコンパクトにしつつ、画面上部に固定して常時見える */
-  .hero.compact{
-    min-height:28vh;position:sticky;top:0;z-index:5;box-shadow:0 6px 16px rgba(0,0,0,.25);
-  }
-  .hero.compact .hero-inner{padding: clamp(40px,9vh,90px) 20px 18px}
-  .hero.compact .badges, .hero.compact .types, .hero.compact .cta-row{display:none}
-
-  .eyebrow{display:inline-flex;gap:8px;align-items:center;background:rgba(255,255,255,.08);border:1px solid #222a3a;color:#dfe7f5;padding:6px 10px;border-radius:999px;font-size:12px}
-  .h1{font-size:clamp(26px,5.6vw,40px);line-height:1.2;font-weight:900;margin:0}
-  .lead{color:var(--muted);margin:0}
-  .badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
-  .badge{background:#121829;border:1px solid #2a3245;color:#dfe7f5;border-radius:999px;padding:6px 10px;font-size:12px}
-  .cta-row{display:flex;align-items:center;gap:12px;margin-top:8px;flex-wrap:wrap}
-  .btn{appearance:none;border:1px solid var(--bd);background:#151a23;color:var(--ink);padding:12px 16px;border-radius:12px;font-weight:800;cursor:pointer;transition:transform .06s ease, box-shadow .15s ease}
+  .btn{appearance:none;border:1px solid var(--bd);background:#141a23;color:var(--ink);padding:12px 16px;border-radius:12px;font-weight:800;cursor:pointer;transition:transform .06s ease}
   .btn:hover{transform:translateY(-1px)}
-  .btn.primary{background:linear-gradient(180deg,var(--acc),#ff4e36);color:#111;border:none;box-shadow:0 12px 26px rgba(255,113,91,.35)}
-  .subnote{color:var(--muted);font-size:12px}
-  .types{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
-  @media(min-width:720px){.types{grid-template-columns:repeat(6,1fr)}}
-  .type-chip{background:#121726;border:1px solid #2a3140;border-radius:12px;padding:10px 10px;text-align:center;font-weight:700;white-space:nowrap}
+  .btn.primary{background:linear-gradient(180deg,var(--acc),#ff4f37);color:#111;border:none;box-shadow:0 12px 26px rgba(255,113,91,.35)}
+  footer{padding:10px 16px 18px;color:var(--muted);font-size:12px}
 
-  /* QUIZ */
+  /* HERO-like header */
+  .hero{padding:28px;background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(255,113,91,.2), transparent 40%),
+    radial-gradient(1200px 600px at 110% 110%, rgba(255,209,102,.18), transparent 40%);}
+  .h1{font-size:clamp(22px,5.6vw,36px);line-height:1.2;margin:0 0 6px;font-weight:900}
+  .muted{color:var(--muted)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .chip{background:#121827;border:1px solid #273248;border-radius:999px;padding:6px 10px;font-size:12px}
+
+  /* Quiz */
   .section{padding:16px}
   .q-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
   .q-index{font-weight:900}
-  .bar{height:6px;background:#141721;border:1px solid var(--bd);border-radius:999px;overflow:hidden;width:220px}
+  .bar{height:6px;background:#141721;border:1px solid var(--bd);border-radius:999px;overflow:hidden;width:240px}
   .bar>div{height:100%;width:0%;background:linear-gradient(90deg,var(--acc),var(--acc2))}
   .qgrid{display:grid;gap:12px}
-  .qitem{background:#111522;border:1px solid #2a3140;border-radius:14px;padding:14px}
-  .ctx{color:#e7ecf8;font-weight:700;font-size:clamp(14px,2.8vw,16px);margin:-2px 0 8px 0}
-  .lr{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:stretch;pointer-events:none}
-  .side{background:#0f1522;border:1px solid #272f41;border-radius:12px;padding:10px;min-height:66px;display:flex;align-items:center;justify-content:center;text-align:center}
+  .qitem{background:#101622;border:1px solid #2a3346;border-radius:14px;padding:14px}
+  .ctx{color:#e7ecf8;font-weight:700;font-size:clamp(14px,2.8vw,16px);margin:-2px 0 6px}
+  .lr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .side{background:#0f1522;border:1px solid #273045;border-radius:12px;padding:10px;min-height:60px;display:flex;align-items:center;justify-content:center;text-align:center}
   .side b{font-size:clamp(14px,2.6vw,17px)}
   .scale{display:flex;gap:10px;justify-content:center;align-items:center;margin-top:10px}
   .dot{width:28px;height:28px;border-radius:999px;border:2px solid #39435a;background:#161b27;cursor:pointer;display:grid;place-items:center}
   .dot.small{width:22px;height:22px}
   .dot.big{width:32px;height:32px}
-  .dot[data-side="L"].active{background:linear-gradient(180deg,#3aa1ff,#2677c8);border-color:#2b6fb6;box-shadow:0 0 0 4px rgba(63,155,255,.18)}
+  .dot[data-side="L"].active{background:linear-gradient(180deg,#3aa1ff,#2778c9);border-color:#2b6fb6;box-shadow:0 0 0 4px rgba(63,155,255,.18)}
   .dot[data-side="R"].active{background:linear-gradient(180deg,#ff7a63,#ff5039);border-color:#e6422e;box-shadow:0 0 0 4px rgba(255,104,84,.18)}
-  .dot:hover{transform:translateY(-1px)}
   .q-foot{display:flex;justify-content:space-between;align-items:center;margin-top:8px;color:var(--muted);font-size:12px}
-  .pill{display:inline-block;padding:6px 12px;border-radius:999px;background:#131726;border:1px solid var(--bd);margin-right:6px}
   .disabled{opacity:.55;pointer-events:none}
+  .progress-note{color:var(--muted);font-size:12px;text-align:center;margin-top:8px}
 
-  /* RESULT */
+  /* Result */
   .result{display:grid;gap:16px}
   .grid{display:grid;grid-template-columns:1fr;gap:12px}
-  @media(min-width:720px){.grid{grid-template-columns:1fr 1fr}}
+  @media(min-width:780px){.grid{grid-template-columns:1.1fr .9fr}}
   .r-card{background:#0f1219;border:1px solid var(--bd);border-radius:14px;padding:14px}
-  .big{font-size:clamp(26px,6vw,34px);font-weight:900}
-  .desc{margin-top:10px;line-height:1.9}
+  .big{font-size:clamp(24px,6vw,32px);font-weight:900}
+  .tagline{color:var(--muted);margin-top:6px}
+  .pill{display:inline-block;padding:6px 12px;border-radius:999px;background:#131726;border:1px solid var(--bd);margin-right:6px}
   .mono{font-family:ui-monospace,Menlo,Consolas,monospace}
-  footer{padding:10px 16px 16px;color:var(--muted);font-size:12px}
+  .tips{margin:8px 0 0;padding-left:18px}
+  .tips li{margin:6px 0}
 </style>
 </head>
 <body>
 <main class="app">
   <div class="card">
     <header>
-      <div class="brand"><div class="logo">🥩</div><div class="title">MEAT-BTI v7.5（20問・岐阜ローカル前提）</div></div>
+      <div class="brand"><div class="logo">🥩</div><div class="title">MEAT-BTI（LoveType流・相性重視テスト版）</div></div>
       <button id="btn-start" class="btn primary" data-action="start">診断をはじめる</button>
     </header>
 
-    <!-- HERO（常時表示。診断開始後は .compact が付く） -->
-    <section id="hero" class="hero">
-      <img src="mbti.jpg" alt="" class="hero-img" />
-      <div class="hero-inner">
-        <span class="eyebrow">✨ KU-DETA 限定 ・ 11/15</span>
-        <h1 class="h1">肉好きのための性格診断。<br>あなたはどの <span style="color:#ffd166">“部位タイプ”</span>？</h1>
-        <p class="lead">全20問。岐阜ローカルの<b>短い前提</b>付き／6段階スケール（中立なし）。味覚と食事シーンのクセから判定します。</p>
-        <div class="badges">
-          <span class="badge">6択 × 20問</span>
-          <span class="badge">無作為順・左右入替</span>
-          <span class="badge">一貫性チェック</span>
-        </div>
-        <div class="cta-row">
-          <button class="btn primary" id="btn-start-2" data-action="start">診断をはじめる</button>
-          <span class="subnote">※キーボード <b>1–6</b> でも選べます</span>
-        </div>
-        <div class="types" aria-label="12タイプ">
-          <div class="type-chip">ヒレ</div><div class="type-chip">タン</div><div class="type-chip">イチボ</div><div class="type-chip">ランプ</div>
-          <div class="type-chip">リブロース</div><div class="type-chip">サーロイン</div><div class="type-chip">ザブトン</div><div class="type-chip">カルビ</div>
-          <div class="type-chip">ハラミ</div><div class="type-chip">シンシン</div><div class="type-chip">カイノミ</div><div class="type-chip">ミスジ</div>
-        </div>
+    <!-- INTRO -->
+    <section class="hero" id="screen-start">
+      <h1 class="h1">20問・6段階で “部位タイプ × 相性” を判定</h1>
+      <p class="muted">順番固定／中立なし（1〜6キーでも選択可）／<b>相性6割・おすすめ部位4割</b>。</p>
+      <div class="chips">
+        <span class="chip">部位12タイプ（シンシン→シャトーブリアン）</span>
+        <span class="chip">ニックネーム＆一言キャッチ</span>
+        <span class="chip">相性TOP3と当日Tips</span>
+      </div>
+      <div style="margin-top:12px">
+        <button id="btn-start-2" class="btn primary" data-action="start">診断をはじめる</button>
       </div>
     </section>
 
     <!-- QUIZ -->
-    <div class="wrap">
-      <section id="screen-quiz" class="section" hidden>
-        <div class="q-head">
-          <div class="q-index"><span id="page-now">1</span>/4ページ（<span id="q-answered">0</span>/20）</div>
-          <div class="bar"><div id="bar"></div></div>
-        </div>
-        <div id="qgrid" class="qgrid"><!-- 5問がここに出る --></div>
-        <div class="q-foot">
-          <div>※左右カードは説明のみ（クリック不可）</div>
-          <div style="display:flex;gap:10px">
-            <button id="btn-next" class="btn primary disabled">次の5問へ</button>
-          </div>
-        </div>
-      </section>
+    <section id="screen-quiz" class="section" hidden>
+      <div class="q-head">
+        <div class="q-index"><span id="page-now">1</span>/4ページ（<span id="q-answered">0</span>/20）</div>
+        <div class="bar"><div id="bar"></div></div>
+      </div>
+      <div id="qgrid" class="qgrid"></div>
+      <div class="q-foot">
+        <div>左（青）⇔右（赤）ほど強い：1=左強〜6=右強</div>
+        <button id="btn-next" class="btn primary disabled">次の5問へ</button>
+      </div>
+      <div class="progress-note">※クリック or キーボード1–6で順次入力</div>
+    </section>
 
-      <!-- RESULT -->
-      <section id="screen-result" class="section" hidden>
-        <div class="result">
-          <div class="big">診断結果</div>
-          <div class="grid">
-            <div class="r-card">
-              <div><strong>あなたの部位タイプ</strong></div>
-              <div style="margin-top:6px;font-size:22px;font-weight:900" id="r-type-name">—</div>
-              <div class="mono" id="r-type-code" style="opacity:.8">R-F-K</div>
-              <div style="margin-top:10px"><span class="pill" id="tag-texture">噛み応え</span><span class="pill" id="tag-flavor">塩派</span><span class="pill" id="tag-after">軽やか</span></div>
-              <p class="desc" id="r-desc"></p>
+    <!-- RESULT -->
+    <section id="screen-result" class="section" hidden>
+      <div class="result">
+        <div class="grid">
+          <div class="r-card">
+            <div class="big">あなたの部位タイプ</div>
+            <div style="margin-top:6px;font-size:22px;font-weight:900" id="r-type-name">—</div>
+            <div class="mono" id="r-type-code" style="opacity:.8">R-F-K</div>
+            <div class="tagline" id="r-nickname">“—”</div>
+            <div style="margin-top:10px">
+              <span class="pill" id="tag-tx">—</span>
+              <span class="pill" id="tag-fl">—</span>
+              <span class="pill" id="tag-af">—</span>
             </div>
-            <div class="r-card">
-              <div><strong>相性No.1</strong></div>
-              <div id="r-best" class="mono" style="margin-top:6px"></div>
+            <p class="tagline" id="r-catch"></p>
+            <ul class="tips" id="r-tips"></ul>
+          </div>
+
+          <div class="r-card">
+            <div class="big">相性TOP3</div>
+            <ol id="r-compat" style="margin:8px 0 0;padding-left:22px"></ol>
+            <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn" id="btn-copy">結果をコピー</button>
+              <a class="btn primary" href="#" id="btn-export" download>JSONで保存</a>
             </div>
           </div>
-
-          <div style="display:flex;justify-content:space-between;gap:10px">
-            <button class="btn" id="btn-retry">最初から</button>
-            <a class="btn primary" href="#" id="btn-export" download>結果をJSONで保存</a>
-          </div>
         </div>
-      </section>
-    </div>
+        <div style="display:flex;justify-content:space-between;gap:10px;margin-top:8px">
+          <button class="btn" id="btn-retry">最初から</button>
+        </div>
+      </div>
+    </section>
 
-    <footer>© KU-DETA / ニクパーティ — MEAT-BTI v7.5</footer>
+    <footer>© KU-DETA / ニクパーティ — MEAT-BTI sub</footer>
   </div>
 </main>
 
 <script>
-/* ==== Question Bank（省略せず同一） ==== */
+/* ===========================================================
+   1) 質問（順番固定・シーン別で分かりやすく）
+   軸: RL(赤身Lean↔リッチRich) / FS(テンポFast↔じっくりSlow) / KC(定番Keep↔変化Change)
+   補助: TX(噛むchew↔とろけmelt) / FL(塩saltF↔ソースsauceF) / AF(軽いlight↔満腹hearty)
+   facets は A側:+1, B側:-1（加点は回答強度×dir、内部は±で保持）
+=========================================================== */
 const BANK = [
-  {id:1,axis:"RL",ctx:"KU-DETAで最初の一皿。",a:"脂少なめで赤身を味わう",b:"サシのコクで満足したい"},
-  {id:2,axis:"RL",ctx:"平日夜、岐阜駅近でサクッと。",a:"軽く終える",b:"しっかり満腹まで"},
-  {id:3,axis:"RL",ctx:"同価格の赤身と霜降り。",a:"キレ重視（さっぱり）",b:"コク重視（濃厚）"},
-  {id:19,axis:"RL",ctx:"名物カルビ vs 赤身名物を1皿。",a:"赤身を選ぶ",b:"名物カルビを選ぶ"},
-  {id:4,axis:"RL",ctx:"店長の推し：ヒレ/タン or サーロイン/カルビ。",a:"ヒレ・タンに惹かれる",b:"サーロイン・カルビに惹かれる"},
-  {id:5,axis:"TX",ctx:"カット指定OKのお店。",a:"歯切れ良い噛み応え",b:"とろける柔らかさ"},
-  {id:6,axis:"TX",ctx:"焼き加減の希望は？",a:"薄切り・レア寄り",b:"厚切り・ミディアム以上"},
-  {id:7,axis:"TX",ctx:"あなたが焼き担当。",a:"サッと火入れ",b:"しっかり火入れ"},
-  {id:8,axis:"FL",ctx:"卓上は塩と特製ダレ。",a:"シンプル派（塩・レモン）",b:"ソース派（甘辛・ガリバタ等）"},
-  {id:9,axis:"FL",ctx:"香りの演出も選べる。",a:"肉の香りを活かす",b:"ソース香で盛り上げる"},
-  {id:10,axis:"FS",ctx:"七輪1台の少人数。",a:"強火で回転良く",b:"弱〜中火でじっくり"},
-  {id:11,axis:"FS",ctx:"“コース or アラカルト”。",a:"テンポ良く次々",b:"ゆっくりコース"},
-  {id:12,axis:"FS",ctx:"玉宮が混む金曜。",a:"他店へ移動する",b:"気に入れば腰を据える"},
-  {id:13,axis:"KC",ctx:"最初の一皿。",a:"塩タン・王道から",b:"限定・変わり種から"},
-  {id:14,axis:"KC",ctx:"4人でシェア注文。",a:"最初にまとめて段取り",b:"様子見で都度追加"},
-  {id:20,axis:"KC",ctx:"今日はSNSにも上げる夜。",a:"味優先で選ぶ",b:"映え優先で選ぶ"},
-  {id:15,axis:"KC",ctx:"会社メンバーも参加。",a:"マナー重視で食べる",b:"型に縛られず楽しむ"},
-  {id:16,axis:"AF",ctx:"締めのタイミング。",a:"〆なし/軽めでOK",b:"ご飯・冷麺・デザートまで"},
-  {id:17,axis:"AF",ctx:"最初の一杯。",a:"ハイボール/すっきり系",b:"甘め/濃い系も欲しい"},
-  {id:18,axis:"AF",ctx:"21時、玉宮で二軒目あるかも。",a:"軽く続けたい",b:"ここで完結したい"},
+  // ---- スタート定番：入口で迷わない ----
+  {id:1, axis:"RL", text:"最初の一皿、どちらに惹かれる？",
+    A:"塩タンでキレ良くスタート", B:"霜降りカルビをタレでがっつり",
+    facets:{ fatTol:+1, afterPref:+1, saltF:+1, sauceF:-1, hearty:-1, light:+1 }},
+
+  {id:2, axis:"RL", text:"同価格の“赤身ステーキ”と“サシ入りステーキ”、今夜なら？",
+    A:"赤身（歯切れよく軽やか）", B:"サシ入り（コク優先で満足）",
+    facets:{ fatTol:+1, roastAroma:+1, chew:+1, melt:-1, light:+1, hearty:-1 }},
+
+  // ---- デート/会話シーン重視 ----
+  {id:3, axis:"KC", text:"初対面の相手と。注文の入り口は？",
+    A:"まずは“名物”で共通体験を作る", B:"“限定/新作”で会話のネタを作る",
+    facets:{ classic:+1, limited:-1, rule:+1, photo:-1, instinct:-1 }},
+
+  {id:4, axis:"FS", text:"会話のテンポに合わせて食事は？",
+    A:"少量ずつ早めに回す（小まめ追加）", B:"一皿をゆっくり味わい会話中心",
+    facets:{ pace:+1, course:-1, roam:+1, stay:-1 }},
+
+  // ---- 量と満足ライン（“ほぼ赤身になりがち”の指摘を踏まえ分離）----
+  {id:5, axis:"AF", text:"“今日はどこまで食べたい？”",
+    A:"軽めでOK（余白を残す）", B:"満腹までしっかり（締めまで）",
+    facets:{ light:+1, hearty:-1 }},
+
+  // ---- 食感を具体化（噛むvsとろけの二軸を明確化）----
+  {id:6, axis:"TX", text:"ステーキなら、どちらの口当たりが好き？",
+    A:"噛むほど旨み（歯切れの良さ）", B:"舌でほどける（とろけ感）",
+    facets:{ chew:+1, melt:-1 }},
+
+  // ---- 焼き加減を明示（“何の焼き加減？”の指摘対応：ステーキ）----
+  {id:7, axis:"FS", text:"“ステーキ”の焼き加減は？",
+    A:"レア寄り（軽めの火入れ）", B:"ミディアム以上（しっかり火入れ）",
+    facets:{ pace:+1, plan:+1, course:-1 }},
+
+  // ---- 味付けをシンプルに（塩orタレ 明確）----
+  {id:8, axis:"FL", text:"味付けの第一選択は？",
+    A:"塩・レモン・わさびなどシンプル", B:"甘辛ダレ/特製ソースで",
+    facets:{ saltF:+1, sauceF:-1 }},
+
+  // ---- 香りの表現を具体料理に（“香り”単独は難）----
+  {id:9, axis:"KC", text:"演出ありの一皿、どちらが嬉しい？",
+    A:"炭香やレアの香りを生かす（素材推し）", B:"フランベやガーリック香で盛り上げ",
+    facets:{ classic:+1, limited:-1, roastAroma:+1, photo:-1, instinct:-1 }},
+
+  // ---- 二回目デート ----
+  {id:10, axis:"FS", text:"2回目ならどっち？",
+    A:"アラカルトでテンポよく実験的に", B:"コースで流れを楽しむ",
+    facets:{ pace:+1, course:-1, roam:+1, stay:-1 }},
+
+  // ---- 人数と注文役割 ----
+  {id:11, axis:"KC", text:"テーブルでの役割は？",
+    A:"皆の好みを聞きつつ“定番中心”で調整", B:"“気になった物”を少量ずつ回す号令役",
+    facets:{ classic:+1, limited:-1, rule:+1, instinct:-1 }},
+
+  // ---- SNS映えと本質 ----
+  {id:12, axis:"KC", text:"“映える一皿”と“渋い名物”、今日は？",
+    A:"味優先の名物（渋くて強い）", B:"映えも楽しめる限定系",
+    facets:{ classic:+1, limited:-1, photo:-1 }},
+
+  // ---- 移動/粘度 ----
+  {id:13, axis:"FS", text:"玉宮が混む金曜。気に入ったら？",
+    A:"回遊しつつ2軒目も検討", B:"腰を据えてゆっくり",
+    facets:{ roam:+1, stay:-1, pace:+1 }},
+
+  // ---- ご飯問題 ----
+  {id:14, axis:"AF", text:"白ごはんは？",
+    A:"なくてもOK（お酒中心）", B:"必須（がっつり）",
+    facets:{ light:+1, hearty:-1, fatTol:+1 }},
+
+  // ---- 締め ----
+  {id:15, axis:"AF", text:"締めの一品は？",
+    A:"冷麺/スープでさっぱり", B:"クッパ/ビビンバで満腹まで",
+    facets:{ light:+1, hearty:-1 }},
+
+  // ---- ソロ/グループ想定 ----
+  {id:16, axis:"KC", text:"はじめましての場、攻める？守る？",
+    A:"まずは“王道”で安心感を作る", B:"“限定/新作”をきっかけに話題づくり",
+    facets:{ classic:+1, limited:-1, rule:+1, photo:-1 }},
+
+  // ---- タン対サーロイン（部位指名で明確化）----
+  {id:17, axis:"RL", text:"一皿だけ選ぶなら？",
+    A:"“タン塩”でキレ良く", B:"“サーロイン”でコクを堪能",
+    facets:{ fatTol:+1, saltF:+1, sauceF:-1 }},
+
+  // ---- 量のさじ加減（再確認）----
+  {id:18, axis:"RL", text:"量を食べるなら、どちらが幸せ？",
+    A:"赤身中心で軽やかに続けたい", B:"サシの旨みを少量ずつ",
+    facets:{ fatTol:+1, light:+1, hearty:-1 }},
+
+  // ---- 3回目デートの段取り ----
+  {id:19, axis:"FS", text:"3回目は？",
+    A:"様子を見て小まめに追加（テンポ）", B:"事前に予約して段取り良く（じっくり）",
+    facets:{ pace:+1, plan:-1, course:-1 }},
+
+  // ---- 総仕上げ：好奇心 ----
+  {id:20, axis:"KC", text:"新メニューが来たら？",
+    A:"まずは“いつもの定番”で比較する", B:"創作/限定も積極的に試す",
+    facets:{ classic:+1, limited:-1, instinct:-1 }}
 ];
 
-function decorateBankRandomly(bank){return bank.map(q=>({...q,flip:Math.random()<0.5}))}
-const OPP={R:"L",L:"R",F:"S",S:"F",K:"C",C:"K"};
-
-const CODE_REPR={
-  "R-F-K":"ヒレ","R-F-C":"タン","R-S-K":"イチボ","R-S-C":"ランプ",
-  "L-F-K":"リブロース","L-F-C":"サーロイン","L-S-K":"ザブトン","L-S-C":"カルビ"
-};
-const DESCRIPTIONS={
-  "ヒレ":"無駄のない上品さと芯の強さが共存するタイプ。情報を整理し、結論をすっきり出すのが得意。味わいはストレートに、素材勝負の一皿を好みます。",
-  "タン":"さっぱり塩でキレ良く。テンポの良さと明るさで周囲をほぐすムードメイクが得意。直感が利き、判断もスピーディ。",
-  "イチボ":"赤身の旨みを丁寧に味わう、調和型の通好み。控えめながら芯があり、空気を読みつつも要所で意見を言える人。",
-  "ランプ":"探究心と柔軟さを兼ね備えた実験好き。低温や創作のように定番を一歩更新する工夫にワクワクします。",
-  "リブロース":"王道リッチ派。厚みのある旨みと安心感を重視し、段取りよく皆を導ける頼れる人。",
-  "サーロイン":"華やぎとサービス精神で場を盛り上げるムードメーカー。写真映えや“特製ソース”に心が躍るタイプ。",
-  "ザブトン":"しっとり濃厚、噛むほどに広がるコク。こだわりは強いが押し付けず、丁寧に言葉を選びます。",
-  "カルビ":"濃厚で甘辛の旨みを愛するリッチ派。サービス精神があり、人を巻き込むのが上手。",
-  "ハラミ":"炭火と甘辛ダレが似合う、躍動感のある赤身派。歯ごたえとジューシーさのバランス派。",
-  "シンシン":"上品な赤身のコクとキレを両立。無駄のない味設計を好む堅実派。",
-  "カイノミ":"軽やかで繊維感が心地よい。脂の旨みは好きだが重さは抑えたいタイプ。",
-  "ミスジ":"繊細なサシが入りつつ軽やか。やさしい口どけと上品な香りを好む丁寧さの人。",
-  "シャトーブリアン":"質への強いこだわりを備えた“特選ヒレ”。量より質、完成度重視の希少タイプ。"
-};
-
-/* ==== State ==== */
-const PAGE_SIZE=5, TOTAL_PAGES=4;
-let QUESTIONS=[], page=0, responses={}, answeredCount=0, pageStartAt=0;
-const counts={R:0,L:0,F:0,S:0,K:0,C:0,Q:0,M:0,Salt:0,Sauce:0,Light:0,Hearty:0};
-const answers=[], rtimes=[], rl_items=[], fs_items=[], kc_items=[];
-const el=id=>document.getElementById(id);
-const hero=el('hero');
-const screenQuiz=el('screen-quiz'), screenResult=el('screen-result');
-
-/* 画面切替：ヒーローは常時表示。診断時は .compact を付与 */
-function showScreen(which){
-  if(which==='start'){
-    hero.classList.remove('compact');
-    screenQuiz.hidden=true; screenResult.hidden=true;
-  }else if(which==='quiz'){
-    hero.classList.add('compact');
-    screenQuiz.hidden=false; screenResult.hidden=true;
-  }else if(which==='result'){
-    hero.classList.add('compact');
-    screenQuiz.hidden=true; screenResult.hidden=false;
+/* ===========================================================
+   2) タイプ & ニックネーム & Tips
+=========================================================== */
+const TYPE_PICKER = {
+  // 8基本コード→サブタイプを補助ファセットで12へ振り分け
+  // （シャトーブリアン採用／シンシン廃止）
+  pick(code, C){ // C: {chew,melt,saltF,sauceF,light,hearty}
+    const s = (x)=>x||0;
+    switch(code){
+      case 'R-F-K': return (s(C.chew)-s(C.melt) >= 0 ? 'ヒレ' : 'ミスジ'); // 赤身×速×定番
+      case 'R-F-C': return (s(C.sauceF)-s(C.saltF) > 0 ? 'ハラミ' : 'タン');
+      case 'R-S-K': return (s(C.melt)-s(C.chew) > 0 ? 'ミスジ' : 'イチボ');
+      case 'R-S-C': return 'ランプ';
+      case 'L-F-K': return (s(C.melt)+s(C.saltF)+s(C.light) > s(C.chew)+s(C.sauceF) ? 'シャトーブリアン' : 'リブロース');
+      case 'L-F-C': return 'サーロイン';
+      case 'L-S-K': return 'ザブトン';
+      case 'L-S-C': return (s(C.chew)+s(C.saltF) > s(C.melt)+s(C.sauceF) ? 'カイノミ' : 'カルビ');
+      default: return 'ヒレ';
+    }
   }
-}
+};
 
-/* ==== Flow ==== */
+// ニックネームとキャッチ & 当日Tips
+const TYPE_META = {
+  "ヒレ":{ nick:"静かな主役", catch:"無駄なく上品、芯が強い赤身派。",
+    tips:["最初は“名物の塩”提案で会話を整える","相手の好みを1つ拾って次の一皿に反映","乾杯はハイボール/スパークリングで軽やかに"]},
+  "タン":{ nick:"空気ほぐしの号令役", catch:"キレ重視。テンポよく明るく回す。",
+    tips:["“タン塩→赤身”の黄金ルートを提案","人数多い時は小皿シェアで会話を回す","写真より一言コメントで盛り上げる"]},
+  "イチボ":{ nick:"通好みの調和派", catch:"控えめでも芯あり。余韻を重んじる。",
+    tips:["似た好みを見つけて“比較食べ”を提案","相手のペースに合わせて火入れを調整","締めは軽めで、次の約束の余白を残す"]},
+  "ランプ":{ nick:"実験好きの研究者", catch:"定番を更新する工夫にワクワク。",
+    tips:["“少量×多皿”でミニ実験を楽しむ","創作系を一皿混ぜて会話ネタに","焼き担当を引き受けて観察＆話題"]},
+  "リブロース":{ nick:"安心感のリーダー", catch:"王道リッチで満足度重視。",
+    tips:["“名物→名物”で段取り良く進行","会計/席替えなど段取りを引き受ける","写真は少なめ、体験を濃く"]},
+  "サーロイン":{ nick:"華やぎの演出家", catch:"濃厚と映えで場を盛り上げる。",
+    tips:["フランベ/ガリバタ系で拍手を起こす","乾杯の音頭を明るく","隣席とも軽く乾杯して輪を広げる"]},
+  "ザブトン":{ nick:"しっとり濃厚派", catch:"丁寧な言葉選び。少人数でじっくり。",
+    tips:["“少量高満足”の提案で共感を取りに行く","火入れと休ませ時間を大切に","会話は深めの質問を1つだけ"]},
+  "カルビ":{ nick:"ご褒美エンタメ", catch:"甘辛と濃厚で巻き込むムードメーカー。",
+    tips:["序盤で“みんなの一口カルビ”を手配","写真/動画は自分が撮ってシェア","締めは満足派の希望を拾ってリード"]},
+  "ハラミ":{ nick:"実利派スプリンター", catch:"躍動感ある赤身、テンポで勝負。",
+    tips:["回転を上げて“会話の間”を作らない","焼き台の管理役で活躍","飲み過ぎ注意で笑顔キープ"]},
+  "カイノミ":{ nick:"軽やか派の橋渡し", catch:"カルビ系でもキレ良く。塩も映える。",
+    tips:["“塩→タレ”の順序でメリハリ","軽い締めで余白を残す","相手の得意トークを振る役に回る"]},
+  "ミスジ":{ nick:"繊細さの職人", catch:"口どけ上品。丁寧な所作が魅力。",
+    tips:["火入れは控えめ、温度と香りを共有","小声のツッコミで距離を縮める","甘めの一皿は量を絞って提案"]},
+  "シャトーブリアン":{ nick:"特選の一点集中", catch:"質に強いこだわり。静かに深く。",
+    tips:["“量より質”の提案で軸を見せる","席配置は静かな側を選ぶ","デザート前に次回の約束を軽く投げる"]}
+};
+
+/* ===========================================================
+   3) スコアリング（MBTI/StepII風：軸×ファセット）
+=========================================================== */
+const PAGE_SIZE=5, TOTAL_PAGES=4;
+let page=0, answeredCount=0, pageStartAt=0;
+let responses={}, answers=[];
+const el=(id)=>document.getElementById(id);
+const screenStart=el('screen-start'), screenQuiz=el('screen-quiz'), screenResult=el('screen-result');
+
+function showScreen(which){
+  screenStart.hidden = which!=='start';
+  screenQuiz.hidden  = which!=='quiz';
+  screenResult.hidden= which!=='result';
+}
+function resetState(){
+  page=0; answeredCount=0; responses={}; answers=[];
+}
 function start(){
-  Object.keys(counts).forEach(k=>counts[k]=0);
-  responses={}; answeredCount=0; page=0;
-  answers.length=0; rtimes.length=0; rl_items.length=0; fs_items.length=0; kc_items.length=0;
-  QUESTIONS=decorateBankRandomly([...BANK]).sort(()=>Math.random()-0.5);
+  resetState();
   showScreen('quiz'); renderPage();
 }
 function renderPage(){
@@ -261,17 +325,16 @@ function renderPage(){
   el('bar').style.width=((page)/TOTAL_PAGES*100)+'%';
 
   const startIdx=page*PAGE_SIZE;
-  const slice=QUESTIONS.slice(startIdx, startIdx+PAGE_SIZE);
+  const slice=BANK.slice(startIdx, startIdx+PAGE_SIZE);
 
   const grid=el('qgrid'); grid.innerHTML='';
-  slice.forEach((q)=>{
-    const left=q.flip?q.b:q.a; const right=q.flip?q.a:q.b;
+  slice.forEach(q=>{
     const wrap=document.createElement('div'); wrap.className='qitem'; wrap.dataset.qid=q.id;
     wrap.innerHTML=`
-      <div class="ctx">${q.ctx}</div>
-      <div class="lr" aria-label="左右の比較文">
-        <div class="side"><b>${left}</b></div>
-        <div class="side"><b>${right}</b></div>
+      <div class="ctx">${q.text}</div>
+      <div class="lr">
+        <div class="side"><b>${q.A}</b></div>
+        <div class="side"><b>${q.B}</b></div>
       </div>
       <div class="scale" role="radiogroup" aria-label="6段階選択">
         ${renderDots(q.id).join('')}
@@ -285,13 +348,13 @@ function renderPage(){
   grid.querySelectorAll('.dot').forEach(dot=>{
     dot.addEventListener('click', e=>{
       const qid = Number(e.currentTarget.closest('.qitem').dataset.qid);
-      const uiVal = Number(e.currentTarget.dataset.val);
+      const uiVal = Number(e.currentTarget.dataset.val); // +3..-3（A側=＋）
       selectDot(qid, uiVal, e.currentTarget);
-    })
+    });
   });
 
-  // 1..6 のキー割当（このページの未回答に順次入力）
-  window.onkeydown=(e)=>{
+  // キー入力 1..6 をこのページの未回答に順次
+  window.onkeydown = (e)=>{
     const map={'1':3,'2':2,'3':1,'4':-1,'5':-2,'6':-3};
     if(!(e.key in map)) return;
     for(const q of slice){
@@ -312,151 +375,214 @@ function renderDots(qid){
   const cur=responses[qid]?.uiVal;
 
   const left=valsL.map((v,i)=>`
-    <button class="dot ${i===0?'big':i===1?'':'small'} ${cur===v?'active':''}" data-side="L" data-val="${v}" title="${tipsL[i]}" aria-label="${tipsL[i]}"></button>
+    <button class="dot ${i===0?'big':i===1?'':'small'} ${cur===v?'active':''}" data-side="L" data-val="${v}" title="${tipsL[i]}"></button>
   `);
   const right=valsR.map((v,i)=>`
-    <button class="dot ${i===2?'big':i===1?'':'small'} ${cur===v?'active':''}" data-side="R" data-val="${v}" title="${tipsR[i]}" aria-label="${tipsR[i]}"></button>
+    <button class="dot ${i===2?'big':i===1?'':'small'} ${cur===v?'active':''}" data-side="R" data-val="${v}" title="${tipsR[i]}"></button>
   `);
   return [...left, ...right];
 }
 function selectDot(qid, uiVal, btn){
-  responses[qid] = responses[qid] || {};
-  const firstTime = (responses[qid].uiVal === undefined);
-  responses[qid].uiVal = uiVal;
-  if(firstTime){
-    responses[qid].ts = performance.now() - pageStartAt;
-    answeredCount++; el('q-answered').textContent = answeredCount;
-  }
+  const firstTime = !responses[qid];
+  responses[qid] = { uiVal, ms: performance.now()-pageStartAt };
+  if(firstTime){ answeredCount++; el('q-answered').textContent = answeredCount; }
   const wrap=btn.closest('.qitem');
   wrap.querySelectorAll('.dot').forEach(d=>d.classList.remove('active'));
   wrap.querySelector(`.dot[data-val="${uiVal}"]`).classList.add('active');
-
-  const startIdx=page*PAGE_SIZE; const slice=QUESTIONS.slice(startIdx, startIdx+PAGE_SIZE);
+  const startIdx=page*PAGE_SIZE; const slice=BANK.slice(startIdx, startIdx+PAGE_SIZE);
   setNextEnabled(slice.every(q=>responses[q.id]));
 }
-function setNextEnabled(ok){document.getElementById('btn-next').classList.toggle('disabled', !ok);}
+function setNextEnabled(ok){ el('btn-next').classList.toggle('disabled', !ok); }
 
-/* ==== 集計（ページ確定）==== */
-function applyPage(){
-  const startIdx=page*PAGE_SIZE; const slice=QUESTIONS.slice(startIdx, startIdx+PAGE_SIZE);
-  for(const q of slice){
-    const r=responses[q.id]; if(!r) continue;
-    const valForA=(q.flip?-r.uiVal:r.uiVal);
-    const towardA=Math.sign(valForA);
-    const abs=Math.abs(valForA);
-    const w=abs>=3?1.0:abs===2?0.7:0.4;
-
-    answers.push({id:q.id,axis:q.axis,uiVal:r.uiVal,valForA,flipped:q.flip,ms:r.ts,ctx:q.ctx});
-    rtimes.push(r.ts);
-
-    const add=k=>counts[k]=(counts[k]||0)+w;
-    if(q.axis==='RL'){ towardA>0 ? (add('R'), rl_items.push(1)) : (add('L'), rl_items.push(0)); }
-    if(q.axis==='FS'){ towardA>0 ? (add('F'), fs_items.push(1)) : (add('S'), fs_items.push(0)); }
-    if(q.axis==='KC'){ towardA>0 ? (add('K'), kc_items.push(1)) : (add('C'), kc_items.push(0)); }
-    if(q.axis==='TX'){ towardA>0 ? add('Q') : add('M'); }
-    if(q.axis==='FL'){ towardA>0 ? add('Salt') : add('Sauce'); }
-    if(q.axis==='AF'){ towardA>0 ? add('Light') : add('Hearty'); }
-  }
-}
-
-/* ==== ページ遷移 ==== */
 document.getElementById('btn-next').addEventListener('click', ()=>{
   const btn = document.getElementById('btn-next');
   if(btn.classList.contains('disabled')) return;
-  applyPage();
   if(page < TOTAL_PAGES-1){ page++; renderPage(); }
   else{ showResult(); }
 });
 
-/* ==== 判定ロジック（省略なし） ==== */
-function strongEdge(axis){let e=0;for(const a of answers){if(a.axis!==axis)continue;if(a.valForA>=3)e++; else if(a.valForA<=-3)e--;}return e;}
-function axisSeed(axis){let s=0;for(const a of answers){if(axis!=='ALL'&&a.axis!==axis)continue;s+=(a.id*31)+((a.uiVal+3)*13);}return s & 1;}
-function decideAxis(A,B,AL,BL,relA,relB,strongAxis,seed){if(A>B)return AL;if(B>A)return BL;const wA=A+relA,wB=B+relB;if(wA>wB)return AL;if(wB>wA)return BL;const edge=strongEdge(strongAxis);if(edge>0)return AL;if(edge<0)return BL;return seed?BL:AL;}
+/* 集計：軸×ファセット */
+function computeProfile(){
+  const AX = { RL:{R:0,L:0}, FS:{F:0,S:0}, KC:{K:0,C:0} };
+  const FAC = {
+    RL:{ fatTol:0, afterPref:0, roastAroma:0 },
+    FS:{ pace:0, course:0, stay:0, roam:0, plan:0 },
+    KC:{ classic:0, limited:0, photo:0, rule:0, instinct:0 },
+    TX:{ chew:0, melt:0 }, FL:{ saltF:0, sauceF:0 }, AF:{ light:0, hearty:0 }
+  };
 
-function scoreHarami(c){ return 0.60*c.Sauce - 0.60*c.Salt + 0.30*c.Hearty - 0.30*c.Light + 0.20*c.M - 0.20*c.Q; }
-function scoreMisuji(c){ return 0.70*c.M - 0.70*c.Q + 0.20*c.Salt - 0.20*c.Sauce + 0.10*c.Light - 0.10*c.Hearty; }
-function scoreShinshin(c){ return 0.55*c.Q - 0.55*c.M + 0.25*c.Light - 0.25*c.Hearty + 0.20*c.Salt - 0.20*c.Sauce; }
-function scoreKainomi(c){ return 0.60*c.Q - 0.60*c.M + 0.30*c.Salt - 0.30*c.Sauce + 0.10*c.Light - 0.10*c.Hearty; }
-function pickSubtype(code,c){
-  switch(code){
-    case 'R-F-K': return 'ヒレ';
-    case 'R-F-C': return (scoreHarami(c)>0 ? 'ハラミ':'タン');
-    case 'R-S-K': return (scoreMisuji(c)>0 ? 'ミスジ':'イチボ');
-    case 'R-S-C': return 'ランプ';
-    case 'L-F-K': return (scoreShinshin(c)>0 ? 'シンシン':'リブロース');
-    case 'L-F-C': return 'サーロイン';
-    case 'L-S-K': return 'ザブトン';
-    case 'L-S-C': return (scoreKainomi(c)>0 ? 'カイノミ':'カルビ');
-    default: return 'ヒレ';
+  // ウェイト：±1=0.4, ±2=0.7, ±3=1.0
+  const wOf=(ui)=>{ const a=Math.abs(ui); return (a===3?1:a===2?0.7:0.4)*Math.sign(ui); };
+
+  for(const q of BANK){
+    const r = responses[q.id]; if(!r) continue;
+    const w = wOf(r.uiVal); // A側=＋ / B側=−
+
+    // 主軸加点
+    if(q.axis==='RL'){ if(w>0) AX.RL.R+=Math.abs(w); else AX.RL.L+=Math.abs(w); }
+    if(q.axis==='FS'){ if(w>0) AX.FS.F+=Math.abs(w); else AX.FS.S+=Math.abs(w); }
+    if(q.axis==='KC'){ if(w>0) AX.KC.K+=Math.abs(w); else AX.KC.C+=Math.abs(w); }
+
+    // ファセット加点（dir:+1/-1 を回答強度で反映）
+    for(const [k,dir] of Object.entries(q.facets||{})){
+      const add = Math.abs(w) * dir; // A側に属する要素=+1、B側=-1
+      if(k in FAC.RL) FAC.RL[k]+=add;
+      else if(k in FAC.FS) FAC.FS[k]+=add;
+      else if(k in FAC.KC) FAC.KC[k]+=add;
+      else if(k in FAC.TX) FAC.TX[k]+=add;
+      else if(k in FAC.FL) FAC.FL[k]+=add;
+      else if(k in FAC.AF) FAC.AF[k]+=add;
+    }
   }
+
+  // 軸決定（補助ファセットでブースト／MBTIのclarity導入）
+  const pos=(x)=>Math.max(0,x), neg=(x)=>Math.max(0,-x);
+  const decide=(A,B,boostA,boostB,labA,labB)=>{
+    const diff=(A+boostA)-(B+boostB);
+    return { side: diff>=0?labA:labB, clarity: Math.abs(diff) };
+  };
+
+  const rlBoostR = 0.6*pos(FAC.TX.chew) + 0.4*pos(FAC.FL.saltF) + 0.3*pos(FAC.AF.light);
+  const rlBoostL = 0.6*pos(FAC.TX.melt) + 0.4*pos(FAC.FL.sauceF) + 0.3*pos(FAC.AF.hearty);
+  const fsBoostF = 0.5*pos(FAC.FS.pace) + 0.3*pos(FAC.FL.saltF) + 0.2*pos(FAC.AF.light);
+  const fsBoostS = 0.5*pos(FAC.FS.stay) + 0.3*pos(FAC.FS.course) + 0.2*pos(FAC.AF.hearty);
+  const kcBoostK = 0.45*pos(FAC.KC.classic) + 0.25*pos(FAC.AF.light);
+  const kcBoostC = 0.45*pos(FAC.KC.limited) + 0.25*pos(FAC.KC.photo) + 0.15*pos(FAC.KC.instinct);
+
+  const RL = decide(AX.RL.R, AX.RL.L, rlBoostR, rlBoostL, 'R','L');
+  const FS = decide(AX.FS.F, AX.FS.S, fsBoostF, fsBoostS, 'F','S');
+  const KC = decide(AX.KC.K, AX.KC.C, kcBoostK, kcBoostC, 'K','C');
+
+  const code = `${RL.side}-${FS.side}-${KC.side}`;
+
+  // メイン部位の決定（12タイプ）
+  const C = { ...FAC.TX, ...FAC.FL, ...FAC.AF };
+  const typeName = TYPE_PICKER.pick(code, C);
+
+  // タグ（TX/FL/AF優位）
+  const tagTX = (pos(FAC.TX.chew) >= pos(FAC.TX.melt)) ? '噛み応え' : 'とろけ';
+  const tagFL = (pos(FAC.FL.saltF) >= pos(FAC.FL.sauceF)) ? '塩派' : 'ソース派';
+  const tagAF = (pos(FAC.AF.light) >= pos(FAC.AF.hearty)) ? '軽やか' : '満足';
+
+  return {
+    code, typeName, tagTX, tagFL, tagAF,
+    clarity: { RL:RL.clarity, FS:FS.clarity, KC:KC.clarity },
+    facets: FAC
+  };
 }
-function computeResult(){
-  const R=counts.R,L=counts.L,F=counts.F,S=counts.S,K=counts.K,C=counts.C,Q=counts.Q,M=counts.M,Salt=counts.Salt,Sauce=counts.Sauce,Light=counts.Light,Hearty=counts.Hearty;
-  const R_adj=(Q>=2?1:0)+(Salt>=2?1:0)+(Light>=2?1:0);
-  const L_adj=(M>=2?1:0)+(Sauce>=2?1:0)+(Hearty>=2?1:0);
-  const Rf=R+R_adj, Lf=L+L_adj;
 
-  const RL=decideAxis(Rf,Lf,'R','L',0.60*Q+0.25*Salt+0.15*Light,0.60*M+0.25*Sauce+0.15*Hearty,'RL',axisSeed('RL'));
-  const FS=decideAxis(F,S,'F','S',0.50*Light+0.30*Salt+0.20*Q,0.50*Hearty+0.30*Sauce+0.20*M,'FS',axisSeed('FS'));
-  const KC=decideAxis(K,C,'K','C',0.45*Salt+0.25*Light+0.15*Q,0.45*Sauce+0.25*Hearty+0.15*M,'KC',axisSeed('KC'));
-
-  const code=`${RL}-${FS}-${KC}`;
-  let baseName=pickSubtype(code,{Q,M,Salt,Sauce,Light,Hearty});
-  let name=baseName;
-
-  const dRL=Math.max(0,(RL==='R'?Rf-Lf:Lf-Rf));
-  const dFS=Math.max(0,(FS==='F'?F-S:S-F));
-  const dKC=Math.max(0,(KC==='K'?K-C:C-K));
-  const isCB=(code==='R-F-K')&&(baseName==='ヒレ')&&(M>=2 && Salt>=2 && Light>=2)&&(dRL>=1.3 && dFS>=1.1 && dKC>=1.0)&&(strongEdge('RL')>0)&&(axisSeed('ALL')===1);
-  if(isCB) name='シャトーブリアン';
-
-  const tagTexture=(Q>=M)?'噛み応え':'とろけ';
-  const tagFlavor =(Salt>=Sauce)?'塩派':'ソース派';
-  const tagAfter  =(Light>=Hearty)?'軽やか':'満足';
-
-  return {code,baseName,name,R_base:R,L_base:L,F,S,K,C,Q,M,Salt,Sauce,Light,Hearty,R_adj,L_adj,Rf,Lf,tagTexture,tagFlavor,tagAfter};
-}
+/* 相性：補完×橋渡し（FL/AF/TX）×強すぎ差ペナルティ */
+const OPP={R:'L',L:'R',F:'S',S:'F',K:'C',C:'K'};
 function parseCode(code){const [a,b,c]=code.split('-');return {RL:a,FS:b,KC:c};}
-function allTypeCodes(){return Object.keys(CODE_REPR);}
-function bestMatch(code){
-  const mine=parseCode(code);let best=null,bestScore=-1;
-  for(const t of allTypeCodes()){
-    if(t===code) continue;
-    const other=parseCode(t);
-    let opp=0,same=0;
-    if(other.RL===OPP[mine.RL])opp++;
-    if(other.FS===OPP[mine.FS])opp++;
-    if(other.KC===OPP[mine.KC])opp++;
-    if(other.RL===mine.RL)same++;
-    if(other.FS===mine.FS)same++;
-    if(other.KC===mine.KC)same++;
-    const score=(opp>=2)?opp*10:(opp*10+same);
-    if(score>bestScore){bestScore=score;best=t;}
+const ALL_CODES = ['R-F-K','R-F-C','R-S-K','R-S-C','L-F-K','L-F-C','L-S-K','L-S-C'];
+
+// 各コード→代表部位名（近いもの）
+const CODE_REPR = {
+  'R-F-K':'ヒレ','R-F-C':'タン','R-S-K':'イチボ','R-S-C':'ランプ',
+  'L-F-K':'リブロース','L-F-C':'サーロイン','L-S-K':'ザブトン','L-S-C':'カルビ'
+};
+
+function compatScore(me, other, pref){
+  // 軸ベース
+  let base=0;
+  base += (me.RL!==other.RL)? 10:3;
+  base += (me.FS!==other.FS)? 8 :3;
+  base += (me.KC!==other.KC)? 10:2;
+
+  // 橋渡し（FL/AF/TX の一致）
+  const bridge = 4*(pref.FL.same?1:0) + 3*(pref.AF.same?1:0) + 2*(pref.TX.same?1:0);
+
+  // 強すぎ差ペナルティ
+  const pen = Math.max(0, pref.clarity.RL + pref.oClarity.RL - 3)
+            + Math.max(0, pref.clarity.FS + pref.oClarity.FS - 3)
+            + Math.max(0, pref.clarity.KC + pref.oClarity.KC - 3);
+
+  return Math.max(0, Math.min(100, 50 + base + bridge - 2*pen));
+}
+
+/* 結果表示 */
+function best3Compat(my){
+  const mine = parseCode(my.code);
+  const myTX = my.tagTX, myFL = my.tagFL, myAF = my.tagAF;
+  const myCl = my.clarity;
+
+  // 仮想的に各コードが“平均的強さ”と仮定（演出上でOK）
+  const avgCl = {RL:1.0,FS:1.0,KC:1.0};
+
+  const items=[];
+  for(const code of ALL_CODES){
+    if(code===my.code) continue;
+    const other=parseCode(code);
+    const pref={
+      FL:{same: myFL === (['R-F-K','R-S-K','L-F-K','L-S-K'].includes(code)? '塩派':'ソース派') },
+      AF:{same: myAF === (['R-F-K','R-F-C','R-S-K'].includes(code)? '軽やか':'満足') },
+      TX:{same: myTX === (['R-F-K','R-S-K','L-S-C','L-S-K'].includes(code)? '噛み応え':'とろけ') },
+      clarity: myCl, oClarity: avgCl
+    };
+    const score = compatScore(mine, other, pref);
+    // 表示部位はサブタイプ選択前の代表名
+    items.push({ code, name: CODE_REPR[code]||code, score });
   }
-  return best;
+  items.sort((a,b)=>b.score-a.score);
+  return items.slice(0,3);
 }
 
-/* ==== 結果表示 ==== */
 function showResult(){
-  document.getElementById('bar').style.width='100%';
-  const r=computeResult(); showScreen('result');
-  document.getElementById('r-type-name').textContent=r.name;
-  document.getElementById('r-type-code').textContent=r.code;
-  document.getElementById('tag-texture').textContent=r.tagTexture;
-  document.getElementById('tag-flavor').textContent=r.tagFlavor;
-  document.getElementById('tag-after').textContent=r.tagAfter;
-  document.getElementById('r-desc').textContent=DESCRIPTIONS[r.name]||'';
-  const bm=bestMatch(r.code); const repr=CODE_REPR[bm]||bm;
-  document.getElementById('r-best').textContent=bm?`${repr}（${bm}）`:'—';
+  el('bar').style.width='100%';
+  const r = computeProfile();
+  showScreen('result');
 
-  const payload={type:{baseCode:r.code,baseName:r.baseName,displayName:r.name},tags:{texture:r.tagTexture,flavor:r.tagFlavor,after:r.tagAfter},counts:{R:r.R_base,L:r.L_base,F:r.F,S:r.S,K:r.K,C:r.C,Q:r.Q,M:r.M,Salt:r.Salt,Sauce:r.Sauce,Light:r.Light,Hearty:r.Hearty},answers,generatedAt:new Date().toISOString()};
+  const meta = TYPE_META[r.typeName] || {nick:'—', catch:''};
+  el('r-type-name').textContent = r.typeName;
+  el('r-type-code').textContent = r.code;
+  el('r-nickname').textContent = `“${meta.nick}”`;
+  el('tag-tx').textContent = r.tagTX;
+  el('tag-fl').textContent = r.tagFL;
+  el('tag-af').textContent = r.tagAF;
+  el('r-catch').textContent = meta.catch;
+
+  const tips = meta.tips || [];
+  const tipsUl = el('r-tips'); tipsUl.innerHTML='';
+  tips.forEach(t=>{ const li=document.createElement('li'); li.textContent=t; tipsUl.appendChild(li); });
+
+  const compat = best3Compat(r);
+  const ol = el('r-compat'); ol.innerHTML='';
+  compat.forEach(c=>{
+    const li=document.createElement('li');
+    li.innerHTML = `<span class="mono">${c.name}（${c.code}）</span>：<b>${c.score}</b>/100`;
+    ol.appendChild(li);
+  });
+
+  // JSON出力
+  const payload = {
+    type:{ code:r.code, name:r.typeName, nickname:meta.nick },
+    tags:{ tx:r.tagTX, fl:r.tagFL, af:r.tagAF },
+    clarity:r.clarity, facets:r.facets,
+    compat: compat,
+    generatedAt: new Date().toISOString()
+  };
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob); const a=document.getElementById('btn-export'); a.href=url; a.download=`MEAT-BTI_${r.code}.json`;
+  const url=URL.createObjectURL(blob); const a=el('btn-export'); a.href=url; a.download=`MEAT-BTI_${r.code}.json`;
+
+  // コピー
+  el('btn-copy').onclick = async ()=>{
+    const text = [
+      `MEAT-BTI（相性重視テスト版）`,
+      `タイプ：${r.typeName}（${r.code}） “${meta.nick}”`,
+      `タグ：${r.tagTX}・${r.tagFL}・${r.tagAF}`,
+      `相性TOP3：${compat.map(x=>`${x.name}(${x.code})`).join(' / ')}`,
+      `#MeatBTI #ニクパーティ`
+    ].join('\n');
+    try{ await navigator.clipboard.writeText(text); el('btn-copy').textContent='コピーしました！'; setTimeout(()=>el('btn-copy').textContent='結果をコピー',1400); }catch{}
+  };
+
+  // リトライ
+  const retry = document.getElementById('btn-retry');
+  retry.onclick = ()=>{ showScreen('start'); };
 }
 
-/* Start / Retry */
+/* イベント */
 addEventListener('click',(ev)=>{ const t=ev.target.closest('#btn-start,#btn-start-2'); if(!t) return; ev.preventDefault(); start(); });
-const retry=document.getElementById('btn-retry'); if(retry) retry.addEventListener('click',()=>{showScreen('start')});
 </script>
 </body>
 </html>
