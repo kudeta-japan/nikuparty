@@ -126,10 +126,23 @@
 
   footer{border-top:1px solid var(--bd);color:var(--muted);padding:20px 0 36px;margin-top:22px;text-align:center}
 
-  /* Mobile clean-up */
-  @media (max-width: 860px){
+  /* ===== Mobile fixes: show hero image fully without cutting ===== */
+  @media (max-width: 640px){
     .nav-cta{display:none;}
-    .hero-overlay{margin-top:-110px}
+    /* 画像は“contain”で全体を表示し、上下に余白が出る場合はそのまま */
+    .hero-img{
+      height:auto;
+      max-height:none;
+      aspect-ratio:16/9;
+      object-fit:contain;
+      object-position:center center;
+      filter:brightness(1) contrast(1);
+    }
+    /* テキストは画像の下に配置（かぶせない） */
+    .hero-overlay{
+      margin-top:0;
+      padding:12px 0 18px;
+    }
     .cta .btn{width:100%}
   }
 </style>
@@ -272,7 +285,6 @@
       当日は会場受付で<strong>代表者名</strong>をお伝えください。
     </div>
 
-    <!-- Formspree: 返信なし運用 -->
     <form id="form" action="https://formspree.io/f/xrbywbal" method="POST">
       <input type="hidden" name="_subject" value="【ニクパーティ】参加申込み">
       <input type="hidden" name="event" value="ニクパーティ - Meet Meat Night（11/15 19:00〜）">
@@ -365,7 +377,7 @@
     }
   });
 
-  // シンプル：#campaignに近づいたらフローティングを隠す
+  // #campaignに近づいたらフローティングを隠す
   const sticky = document.getElementById('promoSticky');
   const campaign = document.getElementById('campaign');
   const io = new IntersectionObserver(entries=>{
