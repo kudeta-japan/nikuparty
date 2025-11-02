@@ -11,6 +11,7 @@
     --bg:#0b0a0a; --panel:#141111; --ink:#fff9ef; --muted:#ccbfae; --bd:#2a2421;
     --cheese:#ffd966; --tomato:#ff6b4a; --basil:#3fbf7b; --basil-deep:#1a9c63;
     --wine:#9b4a8f; --wine-deep:#c86b9e; --seal:#ffe889;
+    --promo1:#ffed9a; --promo2:#ff8a6a;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
@@ -36,7 +37,7 @@
   .nav-cta{display:flex;gap:10px;align-items:center}
   .chip{display:inline-flex;align-items:center;background:#1a1513;border:1px solid var(--bd);padding:6px 10px;border-radius:999px;font-size:12px}
 
-  /* HERO（画像を大きく・CTA集約） */
+  /* HERO */
   .hero{position:relative;border-bottom:1px solid var(--bd);background:#000}
   .hero-inner{display:grid;grid-template-columns:1fr;gap:18px;align-items:end;width:min(1040px,92vw);margin:0 auto;padding:0}
   .hero-media{width:100%}
@@ -48,6 +49,18 @@
   .lead{color:var(--muted);margin:4px 0 0}
   .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
   .cta .btn{min-width:220px}
+
+  /* === PROMO (BIG) === */
+  .promo-banner{
+    margin:10px 0 12px;
+    display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+    background:linear-gradient(90deg, rgba(255,237,154,.25), rgba(255,138,106,.20));
+    border:1px solid #5a3d1b; border-radius:14px; padding:10px 12px;
+    box-shadow:0 8px 24px rgba(0,0,0,.25)
+  }
+  .promo-badge{display:inline-grid;place-items:center;background:linear-gradient(180deg,var(--promo1),#ffdb66);color:#2b1e0a;border-radius:999px;width:42px;height:42px;font-weight:900;border:2px solid #f1d770}
+  .promo-text{font-weight:900}
+  .promo-text b{background:linear-gradient(180deg,#fff6c2,#ffd966);-webkit-background-clip:text;background-clip:text;color:transparent}
 
   /* Sections */
   .card{background:var(--panel);border:1px solid var(--bd);border-radius:16px;overflow:hidden}
@@ -81,6 +94,25 @@
   .points{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
   .chip{background:#1a1513;border:1px solid #4a3a16;color:#ffe6a8;border-radius:999px;padding:6px 10px;font-size:12px}
   .teaser .cta{margin-top:8px}
+
+  /* PROMO DETAIL SECTION */
+  .promo-card{
+    border:1px solid #5a3d1b;border-radius:16px;
+    background:
+      radial-gradient(800px 300px at 0% 0%, rgba(255,217,102,.15), transparent 40%),
+      radial-gradient(800px 300px at 100% 100%, rgba(255,138,106,.12), transparent 40%),
+      #15100e;
+  }
+  .promo-big{font-size:clamp(22px,5.8vw,36px);font-weight:900;margin:0}
+  .promo-lead{color:#ffe9b0;margin:.4em 0 0}
+  .promo-notes{color:#ccbfae;font-size:12px;margin-top:10px}
+
+  /* Floating promo CTA */
+  .promo-sticky{position:fixed;right:16px;bottom:16px;z-index:25}
+  .promo-sticky a{display:inline-flex;align-items:center;gap:8px;padding:12px 16px;border-radius:999px;
+    background:linear-gradient(180deg,var(--promo1),#ffcf5e);color:#2a1e0b;border:none;font-weight:900;box-shadow:0 12px 26px rgba(0,0,0,.35)}
+  .promo-sticky .pulse{position:absolute;inset:-6px;border-radius:999px;border:2px solid rgba(255,237,154,.7);animation:pulse 1.8s infinite}
+  @keyframes pulse{0%{transform:scale(.9);opacity:.8}70%{transform:scale(1.15);opacity:0}100%{opacity:0}}
 
   /* Form */
   form{display:grid;gap:12px}
@@ -121,6 +153,16 @@
       <img src="top.jpg" alt="" class="hero-img">
     </div>
     <div class="hero-overlay">
+      <!-- ★ BIG PROMO banner inside hero -->
+      <div class="promo-banner">
+        <div class="promo-badge">🎁</div>
+        <div class="promo-text">
+          <span>参加者限定｜<b>12/15</b>まで</span><br>
+          <span><b>カップル（男女）でKU-DETAのランチ来店</b>で <b>どれでも無料！</b></span>
+        </div>
+        <a class="btn cheese" href="#campaign" style="margin-left:auto">詳しく見る</a>
+      </div>
+
       <span class="eyebrow">Cheese Meat Mania KU-DETA presents</span>
       <h1 class="h1">🥩肉も恋も、ジューシーな夜を──。</h1>
       <p class="lead">11/15(土) 19:00–21:00｜岐阜・KU-DETA｜お肉×出会いの一夜。</p>
@@ -133,6 +175,23 @@
 </section>
 
 <main class="container">
+  <!-- PROMO DETAIL -->
+  <section id="campaign" class="card section promo-card" aria-labelledby="promo-title" style="margin-top:16px">
+    <h2 id="promo-title" class="promo-big">🎁 参加者限定キャンペーン：12/15までの来店で<br>「カップルでランチどれでも無料！」</h2>
+    <p class="promo-lead">ニクパーティ参加者の男女ペアで、期間内にKU-DETAの<strong>ランチ</strong>へご来店いただくと、<strong>お好きなメニューが無料</strong>に。</p>
+    <div class="divider"></div>
+    <ul style="margin:0 0 6px 18px;padding:0">
+      <li>対象：<b>ニクパーティ参加者 ＋ 男女ペア</b></li>
+      <li>期間：<b>イベント翌日〜12/15</b> のランチタイム</li>
+      <li>提示：受付で伝えた<b>代表者名</b> または 申込み時の<b>メール</b>をご提示ください</li>
+      <li>回数：<b>1組1回</b>（ご予約推奨）</li>
+      <li>他割引との併用：<b>不可</b></li>
+    </ul>
+    <p class="promo-notes">※詳細は当日配布のご案内をご確認ください。内容は予告なく変更となる場合があります。</p>
+    <div class="cta"><a class="btn primary" href="#entry">キャンペーンを使って申込み</a></div>
+  </section>
+
+  <!-- BTI teaser -->
   <section class="teaser" aria-labelledby="bti-teaser">
     <div class="teaser-inner">
       <div>
@@ -148,7 +207,7 @@
     </div>
   </section>
 
-
+  <!-- 募集要項 -->
   <section class="card section">
     <h2 class="h2">👩‍❤️‍👨 募集要項</h2>
     <div class="divider"></div>
@@ -159,6 +218,7 @@
     </ul>
   </section>
 
+  <!-- 料金 -->
   <section id="price" class="pricing">
     <!-- 男性 -->
     <article class="p-card">
@@ -272,6 +332,12 @@
 
 <footer>© <span id="y"></span> Cheese Meat Mania KU-DETA / ニクパーティ</footer>
 
+<!-- Floating Promo CTA -->
+<div class="promo-sticky" id="promoSticky">
+  <span class="pulse" aria-hidden="true"></span>
+  <a href="#campaign" aria-label="参加者限定ランチ無料キャンペーンの詳細へ">🎁 参加者限定：ランチ無料を見る</a>
+</div>
+
 <script>
   document.getElementById('y').textContent = new Date().getFullYear();
 
@@ -289,7 +355,6 @@
       if(res.ok){
         msg.style.display = 'block';
         form.reset();
-        // 成功メッセージ位置へスクロール
         const top = msg.getBoundingClientRect().top + window.scrollY - 80;
         window.scrollTo({ top, behavior:'smooth' });
       }else{
@@ -299,6 +364,14 @@
       alert('通信エラーが発生しました。回線状況をご確認ください。');
     }
   });
+
+  // シンプル：#campaignに近づいたらフローティングを隠す
+  const sticky = document.getElementById('promoSticky');
+  const campaign = document.getElementById('campaign');
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ sticky.style.display = e.isIntersecting ? 'none' : 'block'; });
+  }, {threshold:.2});
+  io.observe(campaign);
 </script>
 </body>
 </html>
