@@ -39,111 +39,106 @@
 
   /* HERO */
   .hero{position:relative;border-bottom:1px solid var(--bd);background:#000}
-  .hero-inner{display:grid;grid-template-columns:1fr;gap:18px;align-items:end;width:min(1040px,92vw);margin:0 auto;padding:0}
+  .hero-inner{display:grid;grid-template-columns:1fr;gap:16px;align-items:end;width:min(1040px,92vw);margin:0 auto;padding:0}
   .hero-media{width:100%}
-  .hero-img{width:100%;height:clamp(360px,64vh,560px);object-fit:cover;object-position:center 30%;filter:brightness(.8) contrast(1.05)}
-  .hero-overlay{position:relative;margin-top:-120px;padding:0 0 22px}
-  .hero-overlay::before{content:"";position:absolute;inset:-24px 0 -22px 0;background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.75) 60%,rgba(0,0,0,.9) 100%);z-index:-1}
-  .eyebrow{display:inline-flex;gap:8px;align-items:center;background:rgba(255,232,137,.14);border:1px solid #3a2d0d;color:#ffe9b0;padding:5px 10px;border-radius:999px;font-size:12px}
-  .h1{font-size:clamp(22px,6vw,40px);line-height:1.25;font-weight:900;margin:8px 0 0}
-  .lead{color:var(--muted);margin:4px 0 0}
+  .hero-img{width:100%;height:clamp(360px,64vh,560px);object-fit:cover;object-position:center 30%;filter:brightness(.86) contrast(1.05)}
+  .hero-overlay{position:relative;margin-top:-110px;padding:0 0 18px}
+  .hero-overlay::before{content:"";position:absolute;inset:-20px 0 -18px 0;background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.72) 55%,rgba(0,0,0,.9) 100%);z-index:-1}
+  .eyebrow{display:inline-flex;gap:8px;align-items:center;background:rgba(255,232,137,.14);border:1px solid #3a2d0d;color:#ffe9b0;padding:4px 10px;border-radius:999px;font-size:12px}
+  .h1{font-size:clamp(22px,6vw,38px);line-height:1.2;font-weight:900;margin:6px 0 0}
+  .lead{color:var(--muted);margin:2px 0 0}
   .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
   .cta .btn{min-width:220px}
 
-  /* === PROMO (BIG) === */
+  /* PROMO banner */
   .promo-banner{
-    margin:10px 0 12px;
-    display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+    margin:8px 0 10px; display:flex;gap:10px;align-items:center;flex-wrap:wrap;
     background:linear-gradient(90deg, rgba(255,237,154,.25), rgba(255,138,106,.20));
-    border:1px solid #5a3d1b; border-radius:14px; padding:10px 12px;
+    border:1px solid #5a3d1b; border-radius:14px; padding:8px 10px;
     box-shadow:0 8px 24px rgba(0,0,0,.25)
   }
-  .promo-badge{display:inline-grid;place-items:center;background:linear-gradient(180deg,var(--promo1),#ffdb66);color:#2b1e0a;border-radius:999px;width:42px;height:42px;font-weight:900;border:2px solid #f1d770}
-  .promo-text{font-weight:900}
+  .promo-badge{display:inline-grid;place-items:center;background:linear-gradient(180deg,#ffefad,#ffdb66);color:#2b1e0a;border-radius:999px;width:40px;height:40px;font-weight:900;border:2px solid #f1d770}
+  .promo-text{font-weight:900;line-height:1.25}
   .promo-text b{background:linear-gradient(180deg,#fff6c2,#ffd966);-webkit-background-clip:text;background-clip:text;color:transparent}
 
   /* Sections */
   .card{background:var(--panel);border:1px solid var(--bd);border-radius:16px;overflow:hidden}
-  .section{padding:22px}
-  .h2{font-weight:900;font-size:clamp(18px,4.6vw,26px);margin:0 0 8px}
-  .divider{height:1px;background:#201b18;margin:10px 0}
+  .section{padding:18px}
+  .h2{font-weight:900;font-size:clamp(18px,4.6vw,24px);margin:0 0 6px}
+  .divider{height:1px;background:#201b18;margin:8px 0}
 
   /* Pricing */
-  .pricing{display:grid;gap:14px;grid-template-columns:1fr}
+  .pricing{display:grid;gap:12px;grid-template-columns:1fr}
   @media(min-width:860px){.pricing{grid-template-columns:1fr 1fr}}
   .p-card{border:1px solid var(--bd);border-radius:16px;overflow:hidden;background:#171210}
-  .p-head{padding:14px 16px;color:#2a150f;font-weight:900;display:flex;align-items:center;gap:12px}
+  .p-head{padding:12px 14px;color:#2a150f;font-weight:900;display:flex;align-items:center;gap:12px}
   .p-head.male{background:linear-gradient(90deg,var(--basil),var(--basil-deep));color:#0b120d}
   .p-head.female{background:linear-gradient(90deg,var(--wine),var(--wine-deep));color:#220d1d}
-  .p-body{padding:12px 14px}
-  .p-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px 0;border-top:1px dashed #3a2e2a}
+  .p-body{padding:10px 12px}
+  .p-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:10px 0;border-top:1px dashed #3a2e2a}
   .p-row:first-child{border-top:none}
   .label{color:#e9ddcc}
-  .new{font-size:clamp(20px,4.5vw,34px);font-weight:900}
+  .new{font-size:clamp(20px,4.5vw,32px);font-weight:900}
   .old{color:#bfae98}
-  .seal{display:inline-grid;place-items:center;background:var(--seal);color:#1c120a;border-radius:999px;width:56px;height:56px;font-weight:900;border:2px solid #f1d770}
+  .seal{display:inline-grid;place-items:center;background:var(--seal);color:#1c120a;border-radius:999px;width:52px;height:52px;font-weight:900;border:2px solid #f1d770}
   .seal small{display:block;font-size:10px;line-height:1}
-  .seal b{font-size:15px;line-height:1.1}
+  .seal b{font-size:14px;line-height:1.1}
   .no1{color:#ff9b95;font-weight:900;margin-right:6px}
 
   /* Teaser */
-  .teaser{margin:16px 0;border:1px solid #4a3a16;border-radius:14px;background:linear-gradient(135deg, rgba(255,217,102,.08), rgba(255,107,74,.06))}
-  .teaser-inner{display:grid;gap:12px;grid-template-columns:1fr;align-items:center;padding:16px}
-  .teaser h3{margin:0;font-size:clamp(18px,5vw,24px);font-weight:900}
+  .teaser{margin:12px 0;border:1px solid #4a3a16;border-radius:14px;background:linear-gradient(135deg, rgba(255,217,102,.08), rgba(255,107,74,.06))}
+  .teaser-inner{display:grid;gap:10px;grid-template-columns:1fr;align-items:center;padding:12px}
+  .teaser h3{margin:0;font-size:clamp(18px,5vw,22px);font-weight:900}
   .teaser p{margin:0;color:#f2e6d2}
-  .points{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+  .points{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
   .chip{background:#1a1513;border:1px solid #4a3a16;color:#ffe6a8;border-radius:999px;padding:6px 10px;font-size:12px}
-  .teaser .cta{margin-top:8px}
+  .teaser .cta{margin-top:6px}
 
-  /* PROMO DETAIL SECTION */
-  .promo-card{
-    border:1px solid #5a3d1b;border-radius:16px;
-    background:
-      radial-gradient(800px 300px at 0% 0%, rgba(255,217,102,.15), transparent 40%),
-      radial-gradient(800px 300px at 100% 100%, rgba(255,138,106,.12), transparent 40%),
-      #15100e;
-  }
-  .promo-big{font-size:clamp(22px,5.8vw,36px);font-weight:900;margin:0}
+  /* Promo detail */
+  .promo-card{border:1px solid #5a3d1b;border-radius:16px;
+    background:radial-gradient(800px 300px at 0% 0%, rgba(255,217,102,.15), transparent 40%),
+               radial-gradient(800px 300px at 100% 100%, rgba(255,138,106,.12), transparent 40%),
+               #15100e;}
+  .promo-big{font-size:clamp(20px,5.6vw,32px);font-weight:900;margin:0}
   .promo-lead{color:#ffe9b0;margin:.4em 0 0}
-  .promo-notes{color:#ccbfae;font-size:12px;margin-top:10px}
+  .promo-notes{color:#ccbfae;font-size:12px;margin-top:8px}
 
-  /* Floating promo CTA */
-  .promo-sticky{position:fixed;right:16px;bottom:16px;z-index:25}
+  /* Floating Promo CTA */
+  .promo-sticky{position:fixed;right:14px;bottom:14px;z-index:25}
   .promo-sticky a{display:inline-flex;align-items:center;gap:8px;padding:12px 16px;border-radius:999px;
-    background:linear-gradient(180deg,var(--promo1),#ffcf5e);color:#2a1e0b;border:none;font-weight:900;box-shadow:0 12px 26px rgba(0,0,0,.35)}
+    background:linear-gradient(180deg,#ffefad,#ffcf5e);color:#2a1e0b;border:none;font-weight:900;box-shadow:0 12px 26px rgba(0,0,0,.35)}
   .promo-sticky .pulse{position:absolute;inset:-6px;border-radius:999px;border:2px solid rgba(255,237,154,.7);animation:pulse 1.8s infinite}
   @keyframes pulse{0%{transform:scale(.9);opacity:.8}70%{transform:scale(1.15);opacity:0}100%{opacity:0}}
 
-  /* Form */
-  form{display:grid;gap:12px}
-  .field{display:grid;gap:6px}
-  .row-2{display:grid;gap:12px;grid-template-columns:1fr}
-  @media(min-width:720px){.row-2{grid-template-columns:1fr 1fr}}
-  input,select,textarea{width:100%;background:#120e0c;color:#fff9ef;border:1px solid #3a2e2a;border-radius:12px;padding:12px 12px;font-size:15px}
-  input::placeholder,textarea::placeholder{color:#a99686}
-  .help{color:#a99686;font-size:12px}
-  .success{border:1px solid #2a5c3f;background:linear-gradient(180deg,rgba(63,191,123,.08),transparent);padding:12px;border-radius:12px;color:#c7f1db;display:none}
-
-  footer{border-top:1px solid var(--bd);color:var(--muted);padding:20px 0 36px;margin-top:22px;text-align:center}
-
-  /* ===== Mobile fixes: show hero image fully without cutting ===== */
+  /* ===== Mobile tighten & full-bleed image ===== */
   @media (max-width: 640px){
     .nav-cta{display:none;}
-    /* 画像は“contain”で全体を表示し、上下に余白が出る場合はそのまま */
+    /* full-bleed */
+    .hero-inner{width:100vw;margin:0}
+    .hero-media{width:100vw;margin-left:calc(50% - 50vw)} /* はみ出しOKで左右いっぱい */
     .hero-img{
+      width:100vw;
       height:auto;
       max-height:none;
       aspect-ratio:16/9;
-      object-fit:contain;
-      object-position:center center;
-      filter:brightness(1) contrast(1);
+      object-fit:cover;         /* 端の黒帯を無くしてフル表示 */
+      object-position:center 35%;
+      filter:brightness(.9) contrast(1.06);
     }
-    /* テキストは画像の下に配置（かぶせない） */
-    .hero-overlay{
-      margin-top:0;
-      padding:12px 0 18px;
-    }
+    /* text below image, minimal gaps */
+    .hero-overlay{margin-top:0;padding:10px 12px 14px}
+    .eyebrow{padding:3px 10px}
+    .h1{margin:4px 0 0}
+    .lead{margin:2px 0 0}
     .cta .btn{width:100%}
+
+    /* sections compact */
+    .section{padding:14px}
+    .teaser-inner{padding:10px}
+    .promo-banner{margin:6px 0 8px;padding:8px 10px}
+    .pricing{gap:10px}
+    .p-body{padding:8px 12px}
+    .p-row{padding:8px 0}
   }
 </style>
 </head>
@@ -166,7 +161,7 @@
       <img src="top.jpg" alt="" class="hero-img">
     </div>
     <div class="hero-overlay">
-      <!-- ★ BIG PROMO banner inside hero -->
+      <!-- PROMO banner -->
       <div class="promo-banner">
         <div class="promo-badge">🎁</div>
         <div class="promo-text">
@@ -189,18 +184,16 @@
 
 <main class="container">
   <!-- PROMO DETAIL -->
-  <section id="campaign" class="card section promo-card" aria-labelledby="promo-title" style="margin-top:16px">
+  <section id="campaign" class="card section promo-card" aria-labelledby="promo-title" style="margin-top:12px">
     <h2 id="promo-title" class="promo-big">🎁 参加者限定キャンペーン：12/15までの来店で<br>「カップルでランチどれでも無料！」</h2>
     <p class="promo-lead">ニクパーティ参加者の男女ペアで、期間内にKU-DETAの<strong>ランチ</strong>へご来店いただくと、<strong>お好きなメニューが無料</strong>に。</p>
     <div class="divider"></div>
     <ul style="margin:0 0 6px 18px;padding:0">
       <li>対象：<b>ニクパーティ参加者 ＋ 男女ペア</b></li>
       <li>期間：<b>イベント翌日〜12/15</b> のランチタイム</li>
-      <li>提示：受付で伝えた<b>代表者名</b> または 申込み時の<b>メール</b>をご提示ください</li>
-      <li>回数：<b>1組1回</b>（ご予約推奨）</li>
-      <li>他割引との併用：<b>不可</b></li>
+      <li>提示：受付で伝えた<b>代表者名</b> または 申込み時の<b>メール</b>をご提示</li>
+      <li>回数：<b>1組1回</b>（ご予約推奨）／他割引<b>併用不可</b></li>
     </ul>
-    <p class="promo-notes">※詳細は当日配布のご案内をご確認ください。内容は予告なく変更となる場合があります。</p>
     <div class="cta"><a class="btn primary" href="#entry">キャンペーンを使って申込み</a></div>
   </section>
 
@@ -273,11 +266,10 @@
   </section>
 
   <!-- 申込みフォーム -->
-  <section id="entry" class="card section" aria-labelledby="entry-title" style="margin-top:16px">
+  <section id="entry" class="card section" aria-labelledby="entry-title" style="margin-top:12px">
     <h2 id="entry-title" class="h2">👇 参加申込みフォーム</h2>
     <div class="divider"></div>
 
-    <!-- 成功メッセージ（初期は非表示） -->
     <div id="msg" class="success">
       送信ありがとうございました。<br>
       この送信をもって<strong>お申込みは完了</strong>です。<br>
@@ -353,11 +345,10 @@
 <script>
   document.getElementById('y').textContent = new Date().getFullYear();
 
-  // Formspree Ajax送信（返信なし運用）
+  // Ajax送信（返信なし）
   const form = document.getElementById('form');
   const msg  = document.getElementById('msg');
   msg.style.display = 'none';
-
   form.addEventListener('submit', async (e)=>{
     e.preventDefault();
     const url = form.getAttribute('action');
@@ -377,7 +368,7 @@
     }
   });
 
-  // #campaignに近づいたらフローティングを隠す
+  // #campaignが見えたらフローティングを隠す
   const sticky = document.getElementById('promoSticky');
   const campaign = document.getElementById('campaign');
   const io = new IntersectionObserver(entries=>{
