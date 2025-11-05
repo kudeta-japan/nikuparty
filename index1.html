@@ -114,8 +114,8 @@
       <a class="chip" href="#menu">料理</a>
       <a class="chip" href="#price">料金</a>
       <a class="chip" href="#entry">申込み</a>
-      <!-- 「事前」を削除 -->
-      <a class="btn cheese" href="meat-bti/">Meat BTI 診断</a>
+      <!-- 文言変更：あなたのタイプは？肉診断『Meat BTI』 -->
+      <a class="btn cheese" href="meat-bti/">あなたのタイプは？肉診断『Meat BTI』</a>
     </nav>
   </div>
 </header>
@@ -304,10 +304,20 @@
 
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
         <button class="btn primary" type="submit">上記内容で申し込む</button>
-        <a class="btn cheese" href="meat-bti/">Meat BTI 診断</a>
+        <!-- 文言変更：あなたのタイプは？肉診断『Meat BTI』 -->
+        <a class="btn cheese" href="meat-bti/">あなたのタイプは？肉診断『Meat BTI』</a>
       </div>
       <p class="help">※確認の連絡や自動返信はありません。内容変更のみお電話または各SNSのDMにてご連絡ください。</p>
     </form>
+  </section>
+
+  <!-- Meat BTI teaser -->
+  <section class="card section" aria-labelledby="bti-teaser" style="margin-top:14px">
+    <h2 id="bti-teaser" class="h2">会話のきっかけに：Meat BTI</h2>
+    <div class="divider"></div>
+    <p style="margin:0 0 10px">20問・6段階であなたの<strong>“部位タイプ”</strong>を判定。相性No.1も表示されます。</p>
+    <!-- 文言変更：あなたのタイプは？肉診断『Meat BTI』 -->
+    <a class="btn cheese" href="meat-bti/">あなたのタイプは？肉診断『Meat BTI』</a>
   </section>
 </main>
 
@@ -331,8 +341,9 @@
     const params = new URLSearchParams(location.search);
     const m = (location.pathname.match(/index(\d)\.html$/) || []);
     const variant = m[1] ? `reel${m[1]}` : 'unknown';
+    const urlNoHash = location.href.split('#')[0];
     set('lp_variant', variant);
-    set('landing_url', location.href.split('#')[0]);
+    set('landing_url', urlNoHash);
     set('referrer', document.referrer || '');
     ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','utm_id','fbclid','gclid','igshid']
       .forEach(k => set(k, params.get(k)));
