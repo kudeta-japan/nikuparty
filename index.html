@@ -4,22 +4,20 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ニクパーティ - Meet Meat Night｜Cheese Meat Mania KU-DETA</title>
-<meta name="description" content="Cheese Meat Mania KU-DETAが贈る『ニクパーティ - Meet Meat Night -』。11/15(土) 19:00〜 岐阜。お肉×出会いの一夜。早期予約特典＆グループ割あり。">
+<meta name="description" content="肉好き同士が“ちゃんと出会える”街コン。スタッフ進行×席替え×Meat BTIで会話が続く2時間。11/15(土) 19:00〜。グループ割あり。参加者限定：12/15までにカップル来店でランチ無料。">
 <meta name="theme-color" content="#0b0a0a">
 <style>
   :root{
     --bg:#0b0a0a; --panel:#141111; --ink:#fff9ef; --muted:#ccbfae; --bd:#2a2421;
     --cheese:#ffd966; --tomato:#ff6b4a; --basil:#3fbf7b; --basil-deep:#1a9c63;
     --wine:#9b4a8f; --wine-deep:#c86b9e; --seal:#ffe889;
-    --promo1:#ffed9a; --promo2:#ff8a6a;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
   body{margin:0;background:var(--bg);color:var(--ink);
-    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;
-    letter-spacing:.02em;line-height:1.65}
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;letter-spacing:.02em;line-height:1.65}
   a{color:inherit;text-decoration:none}
-  img{max-width:100%;display:block}
+
   .container{width:min(1040px,92vw);margin:0 auto}
 
   /* Buttons */
@@ -28,117 +26,101 @@
   .btn:hover{transform:translateY(-1px)}
   .btn.primary{background:linear-gradient(180deg,var(--tomato),#ff5231);color:#110e0c;border:none}
   .btn.cheese{background:linear-gradient(180deg,var(--cheese),#f7c84a);color:#2a1e0b;border:none}
+  .chip{display:inline-flex;align-items:center;background:#1a1513;border:1px solid var(--bd);padding:6px 10px;border-radius:999px;font-size:12px}
 
-  /* Shell */
-  header.nav{position:sticky;top:0;z-index:20;background:rgba(12,10,9,.7);backdrop-filter:saturate(120%) blur(8px);border-bottom:1px solid var(--bd)}
+  /* Header */
+  header.nav{position:sticky;top:0;z-index:30;background:rgba(12,10,9,.75);backdrop-filter:saturate(120%) blur(8px);border-bottom:1px solid var(--bd)}
   .nav-inner{height:56px;display:flex;align-items:center;justify-content:space-between}
   .brand{display:flex;align-items:center;gap:10px;font-weight:900}
   .logo{width:28px;height:28px;border-radius:10px;background:conic-gradient(from 140deg,var(--cheese),var(--tomato));display:grid;place-items:center;color:#111}
   .nav-cta{display:flex;gap:10px;align-items:center}
-  .chip{display:inline-flex;align-items:center;background:#1a1513;border:1px solid var(--bd);padding:6px 10px;border-radius:999px;font-size:12px}
 
-  /* HERO */
-  .hero{position:relative;border-bottom:1px solid var(--bd);background:#000}
-  .hero-inner{display:grid;grid-template-columns:1fr;gap:16px;align-items:end;width:min(1040px,92vw);margin:0 auto;padding:0}
+  /* --- AIDMA: A (Attention) --- */
+  .hero{border-bottom:1px solid var(--bd);background:#000}
+  .hero-wrap{width:min(1040px,92vw);margin:0 auto;padding:0}
   .hero-media{width:100%}
-  .hero-img{width:100%;height:clamp(360px,64vh,560px);object-fit:cover;object-position:center 30%;filter:brightness(.86) contrast(1.05)}
-  .hero-overlay{position:relative;margin-top:-110px;padding:0 0 18px}
-  .hero-overlay::before{content:"";position:absolute;inset:-20px 0 -18px 0;background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.72) 55%,rgba(0,0,0,.9) 100%);z-index:-1}
-  .eyebrow{display:inline-flex;gap:8px;align-items:center;background:rgba(255,232,137,.14);border:1px solid #3a2d0d;color:#ffe9b0;padding:4px 10px;border-radius:999px;font-size:12px}
-  .h1{font-size:clamp(22px,6vw,38px);line-height:1.2;font-weight:900;margin:6px 0 0}
-  .lead{color:var(--muted);margin:2px 0 0}
-  .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-  .cta .btn{min-width:220px}
-
-  /* PROMO banner */
-  .promo-banner{
-    margin:8px 0 10px; display:flex;gap:10px;align-items:center;flex-wrap:wrap;
-    background:linear-gradient(90deg, rgba(255,237,154,.25), rgba(255,138,106,.20));
-    border:1px solid #5a3d1b; border-radius:14px; padding:8px 10px;
-    box-shadow:0 8px 24px rgba(0,0,0,.25)
+  .hero-img{width:100%;height:auto;display:block;object-fit:contain;background:#000}
+  /* Desktopでは迫力（cover） */
+  @media(min-width:900px){
+    .hero-img{height:62vh;object-fit:cover;object-position:center 30%}
   }
-  .promo-badge{display:inline-grid;place-items:center;background:linear-gradient(180deg,#ffefad,#ffdb66);color:#2b1e0a;border-radius:999px;width:40px;height:40px;font-weight:900;border:2px solid #f1d770}
-  .promo-text{font-weight:900;line-height:1.25}
-  .promo-text b{background:linear-gradient(180deg,#fff6c2,#ffd966);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero-text{padding:16px 0 18px}
+  .tag{display:inline-flex;gap:8px;align-items:center;background:rgba(255,232,137,.14);border:1px solid #3a2d0d;color:#ffe9b0;padding:5px 10px;border-radius:999px;font-size:12px}
+  .h1{font-size:clamp(22px,6vw,40px);line-height:1.25;font-weight:900;margin:10px 0 4px}
+  .lead{color:var(--muted);margin:0}
+  .cta-hero{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+  .cta-hero .btn{min-width:220px}
 
-  /* Sections */
+  /* --- 特典リボン --- */
+  .ribbon{position:relative;margin:10px auto 0;width:min(1040px,92vw)}
+  .ribbon-inner{display:flex;align-items:center;justify-content:space-between;gap:14px;background:linear-gradient(90deg, rgba(255,217,102,.18), rgba(255,217,102,.04));border:1px solid #4a3a16;border-radius:16px;padding:12px 14px}
+  .ribbon .icon{font-size:22px}
+  .ribbon b{color:#ffe089}
+  .ribbon .btn{white-space:nowrap}
+
+  /* Cards / sections */
   .card{background:var(--panel);border:1px solid var(--bd);border-radius:16px;overflow:hidden}
-  .section{padding:18px}
-  .h2{font-weight:900;font-size:clamp(18px,4.6vw,24px);margin:0 0 6px}
-  .divider{height:1px;background:#201b18;margin:8px 0}
+  .section{padding:20px}
+  .h2{font-weight:900;font-size:clamp(18px,4.6vw,26px);margin:0 0 8px}
+  .divider{height:1px;background:#201b18;margin:10px 0}
+  .help{color:#a99686;font-size:12px}
 
-  /* Pricing */
-  .pricing{display:grid;gap:12px;grid-template-columns:1fr}
+  /* --- AIDMA: I (Interest) --- */
+  .grid-3{display:grid;gap:12px;grid-template-columns:1fr}
+  @media(min-width:860px){.grid-3{grid-template-columns:1fr 1fr 1fr}}
+  .i-item{background:#171210;border:1px solid #3a2e2a;border-radius:14px;padding:14px}
+  .i-item h3{margin:0 0 6px;font-size:16px}
+
+  /* --- Menu preview (3品) --- */
+  .menu-grid{display:grid;gap:12px;grid-template-columns:1fr}
+  @media(min-width:860px){.menu-grid{grid-template-columns:1fr 1fr 1fr}}
+  .menu-card{background:#171210;border:1px solid #3a2e2a;border-radius:14px;overflow:hidden}
+  .menu-img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+  .menu-card h3{margin:10px 12px 4px;font-size:16px;font-weight:900}
+  .menu-card p{margin:0 12px 12px;color:#ccbfae;font-size:14px}
+
+  /* --- AIDMA: D (Desire) 料金 --- */
+  .pricing{display:grid;gap:14px;grid-template-columns:1fr}
   @media(min-width:860px){.pricing{grid-template-columns:1fr 1fr}}
   .p-card{border:1px solid var(--bd);border-radius:16px;overflow:hidden;background:#171210}
-  .p-head{padding:12px 14px;color:#2a150f;font-weight:900;display:flex;align-items:center;gap:12px}
+  .p-head{padding:14px 16px;color:#2a150f;font-weight:900;display:flex;align-items:center;gap:12px}
   .p-head.male{background:linear-gradient(90deg,var(--basil),var(--basil-deep));color:#0b120d}
   .p-head.female{background:linear-gradient(90deg,var(--wine),var(--wine-deep));color:#220d1d}
-  .p-body{padding:10px 12px}
-  .p-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:10px 0;border-top:1px dashed #3a2e2a}
+  .p-body{padding:12px 14px}
+  .p-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px 0;border-top:1px dashed #3a2e2a}
   .p-row:first-child{border-top:none}
   .label{color:#e9ddcc}
-  .new{font-size:clamp(20px,4.5vw,32px);font-weight:900}
+  .new{font-size:clamp(20px,4.5vw,34px);font-weight:900}
   .old{color:#bfae98}
-  .seal{display:inline-grid;place-items:center;background:var(--seal);color:#1c120a;border-radius:999px;width:52px;height:52px;font-weight:900;border:2px solid #f1d770}
+  .seal{display:inline-grid;place-items:center;background:var(--seal);color:#1c120a;border-radius:999px;width:56px;height:56px;font-weight:900;border:2px solid #f1d770}
   .seal small{display:block;font-size:10px;line-height:1}
-  .seal b{font-size:14px;line-height:1.1}
+  .seal b{font-size:15px;line-height:1.1}
   .no1{color:#ff9b95;font-weight:900;margin-right:6px}
 
-  /* Teaser */
-  .teaser{margin:12px 0;border:1px solid #4a3a16;border-radius:14px;background:linear-gradient(135deg, rgba(255,217,102,.08), rgba(255,107,74,.06))}
-  .teaser-inner{display:grid;gap:10px;grid-template-columns:1fr;align-items:center;padding:12px}
-  .teaser h3{margin:0;font-size:clamp(18px,5vw,22px);font-weight:900}
-  .teaser p{margin:0;color:#f2e6d2}
-  .points{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-  .chip{background:#1a1513;border:1px solid #4a3a16;color:#ffe6a8;border-radius:999px;padding:6px 10px;font-size:12px}
-  .teaser .cta{margin-top:6px}
+  /* --- AIDMA: M (Memory) FAQ & Flow --- */
+  details{background:#171210;border:1px solid #3a2e2a;border-radius:12px;padding:12px}
+  details+details{margin-top:10px}
+  summary{cursor:pointer;font-weight:700}
 
-  /* Promo detail */
-  .promo-card{border:1px solid #5a3d1b;border-radius:16px;
-    background:radial-gradient(800px 300px at 0% 0%, rgba(255,217,102,.15), transparent 40%),
-               radial-gradient(800px 300px at 100% 100%, rgba(255,138,106,.12), transparent 40%),
-               #15100e;}
-  .promo-big{font-size:clamp(20px,5.6vw,32px);font-weight:900;margin:0}
-  .promo-lead{color:#ffe9b0;margin:.4em 0 0}
-  .promo-notes{color:#ccbfae;font-size:12px;margin-top:8px}
+  /* --- AIDMA: A (Action) フォーム --- */
+  form{display:grid;gap:12px}
+  .field{display:grid;gap:6px}
+  .row-2{display:grid;gap:12px;grid-template-columns:1fr}
+  @media(min-width:720px){.row-2{grid-template-columns:1fr 1fr}}
+  input,select,textarea{width:100%;background:#120e0c;color:#fff9ef;border:1px solid #3a2e2a;border-radius:12px;padding:12px 12px;font-size:15px}
+  input::placeholder,textarea::placeholder{color:#a99686}
+  .success{border:1px solid #2a5c3f;background:linear-gradient(180deg,rgba(63,191,123,.08),transparent);padding:12px;border-radius:12px;color:#c7f1db;display:none}
 
-  /* Floating Promo CTA */
-  .promo-sticky{position:fixed;right:14px;bottom:14px;z-index:25}
-  .promo-sticky a{display:inline-flex;align-items:center;gap:8px;padding:12px 16px;border-radius:999px;
-    background:linear-gradient(180deg,#ffefad,#ffcf5e);color:#2a1e0b;border:none;font-weight:900;box-shadow:0 12px 26px rgba(0,0,0,.35)}
-  .promo-sticky .pulse{position:absolute;inset:-6px;border-radius:999px;border:2px solid rgba(255,237,154,.7);animation:pulse 1.8s infinite}
-  @keyframes pulse{0%{transform:scale(.9);opacity:.8}70%{transform:scale(1.15);opacity:0}100%{opacity:0}}
+  footer{border-top:1px solid var(--bd);color:var(--muted);padding:20px 0 36px;margin-top:22px;text-align:center}
 
-  /* ===== Mobile tighten & full-bleed image ===== */
-  @media (max-width: 640px){
-    .nav-cta{display:none;}
-    /* full-bleed */
-    .hero-inner{width:100vw;margin:0}
-    .hero-media{width:100vw;margin-left:calc(50% - 50vw)} /* はみ出しOKで左右いっぱい */
-    .hero-img{
-      width:100vw;
-      height:auto;
-      max-height:none;
-      aspect-ratio:16/9;
-      object-fit:cover;         /* 端の黒帯を無くしてフル表示 */
-      object-position:center 35%;
-      filter:brightness(.9) contrast(1.06);
-    }
-    /* text below image, minimal gaps */
-    .hero-overlay{margin-top:0;padding:10px 12px 14px}
-    .eyebrow{padding:3px 10px}
-    .h1{margin:4px 0 0}
-    .lead{margin:2px 0 0}
-    .cta .btn{width:100%}
+  /* Sticky CTA */
+  .sticky-cta{position:fixed;left:0;right:0;bottom:0;z-index:25;background:rgba(11,10,10,.92);border-top:1px solid #241f1c;padding:10px}
+  .sticky-cta .container{display:flex;gap:10px;align-items:center;justify-content:space-between}
+  .sticky-cta .btn{width:100%}
 
-    /* sections compact */
-    .section{padding:14px}
-    .teaser-inner{padding:10px}
-    .promo-banner{margin:6px 0 8px;padding:8px 10px}
-    .pricing{gap:10px}
-    .p-body{padding:8px 12px}
-    .p-row{padding:8px 0}
+  /* Mobile tidy */
+  @media (max-width: 860px){
+    .nav-cta{display:none}
   }
 </style>
 </head>
@@ -148,86 +130,109 @@
   <div class="container nav-inner">
     <div class="brand"><div class="logo">🧀</div><div>ニクパーティ</div></div>
     <nav class="nav-cta">
+      <a class="chip" href="#interest">内容</a>
+      <a class="chip" href="#menu">料理</a>
       <a class="chip" href="#price">料金</a>
-      <a class="chip" href="#entry">参加申込み</a>
+      <a class="chip" href="#entry">申込み</a>
       <a class="btn cheese" href="meat-bti/">事前：Meat BTI 診断</a>
     </nav>
   </div>
 </header>
 
-<section class="hero">
-  <div class="hero-inner">
+<!-- A: Attention -->
+<section class="hero" aria-label="ヒーロー">
+  <div class="hero-wrap">
     <div class="hero-media">
-      <img src="top.jpg" alt="" class="hero-img">
+      <!-- スマホは切れない（contain）／PCは迫力（cover） -->
+      <img src="top.jpg" alt="お肉のテーブルと乾杯のシーン" class="hero-img">
     </div>
-    <div class="hero-overlay">
-      <!-- PROMO banner -->
-      <div class="promo-banner">
-        <div class="promo-badge">🎁</div>
-        <div class="promo-text">
-          <span>参加者限定｜<b>12/15</b>まで</span><br>
-          <span><b>カップル（男女）でKU-DETAのランチ来店</b>で <b>どれでも無料！</b></span>
-        </div>
-        <a class="btn cheese" href="#campaign" style="margin-left:auto">詳しく見る</a>
-      </div>
-
-      <span class="eyebrow">Cheese Meat Mania KU-DETA presents</span>
-      <h1 class="h1">🥩肉も恋も、ジューシーな夜を──。</h1>
-      <p class="lead">11/15(土) 19:00–21:00｜岐阜・KU-DETA｜お肉×出会いの一夜。</p>
-      <div class="cta">
-        <a class="btn primary" href="#entry">👇 参加申込みはこちら</a>
-        <a class="btn cheese" href="meat-bti/">事前：Meat BTI 診断</a>
+    <div class="hero-text">
+      <span class="tag">出会いの街コン</span>
+      <h1 class="h1">肉も恋も、ジューシーな夜を──。</h1>
+      <p class="lead">肉好き同士が<strong>“ちゃんと出会える”</strong>街コン。<br>スタッフ進行 × 席替え × Meat BTI で、会話が続く2時間。</p>
+      <div class="cta-hero">
+        <a class="btn primary" href="#entry">今の席数で申し込む</a>
       </div>
     </div>
   </div>
 </section>
 
-<main class="container">
-  <!-- PROMO DETAIL -->
-  <section id="campaign" class="card section promo-card" aria-labelledby="promo-title" style="margin-top:12px">
-    <h2 id="promo-title" class="promo-big">🎁 参加者限定キャンペーン：12/15までの来店で<br>「カップルでランチどれでも無料！」</h2>
-    <p class="promo-lead">ニクパーティ参加者の男女ペアで、期間内にKU-DETAの<strong>ランチ</strong>へご来店いただくと、<strong>お好きなメニューが無料</strong>に。</p>
-    <div class="divider"></div>
-    <ul style="margin:0 0 6px 18px;padding:0">
-      <li>対象：<b>ニクパーティ参加者 ＋ 男女ペア</b></li>
-      <li>期間：<b>イベント翌日〜12/15</b> のランチタイム</li>
-      <li>提示：受付で伝えた<b>代表者名</b> または 申込み時の<b>メール</b>をご提示</li>
-      <li>回数：<b>1組1回</b>（ご予約推奨）／他割引<b>併用不可</b></li>
-    </ul>
-    <div class="cta"><a class="btn primary" href="#entry">キャンペーンを使って申込み</a></div>
-  </section>
-
-  <!-- BTI teaser -->
-  <section class="teaser" aria-labelledby="bti-teaser">
-    <div class="teaser-inner">
+<!-- 参加者限定特典リボン -->
+<div class="ribbon" role="note" aria-label="参加者特典">
+  <div class="ribbon-inner">
+    <div style="display:flex;gap:10px;align-items:center">
+      <span class="icon">🎁</span>
       <div>
-        <h3 id="bti-teaser">事前コンテンツ：<span style="color:var(--cheese)">Meat BTI 診断</span></h3>
-        <p>20問・6段階であなたの<strong>“部位タイプ”</strong>を判定。会話のきっかけに。</p>
-        <div class="points">
-          <span class="chip">⏱ 所要1〜2分</span>
-          <span class="chip">🥩 12タイプ表示</span>
-          <span class="chip">🎯 相性の良いタイプも</span>
-        </div>
-        <div class="cta"><a class="btn cheese" href="meat-bti/">今すぐ診断する</a></div>
+        <div><b>参加者限定｜12/15まで</b></div>
+        <div>カップル（男女）で <b>KU-DETA のランチ</b> 来店で <b>どれでも無料！</b></div>
       </div>
     </div>
-  </section>
+    <a href="#entry" class="btn cheese">詳しく／申し込む</a>
+  </div>
+</div>
 
-  <!-- 募集要項 -->
-  <section class="card section">
-    <h2 class="h2">👩‍❤️‍👨 募集要項</h2>
+<main class="container">
+
+  <!-- I: Interest（内容・約束） -->
+  <section id="interest" class="card section" aria-labelledby="i-title">
+    <h2 id="i-title" class="h2">この夜で“ちゃんと出会える”理由</h2>
+    <div class="grid-3" style="margin-top:8px">
+      <div class="i-item">
+        <h3>スタッフが進行・会話サポート</h3>
+        <p>アイスブレイク→自己紹介→話題カードで、初対面でも会話が止まりません。</p>
+      </div>
+      <div class="i-item">
+        <h3>席替え×ミニゲームで接点UP</h3>
+        <p>20〜30分ごとに席替え＆ライトなゲーム。自然に複数人と話せます。</p>
+      </div>
+      <div class="i-item">
+        <h3>Meat BTIで話題が続く</h3>
+        <p>事前の“肉タイプ診断”で共通点を可視化。相性No.1もわかります。</p>
+      </div>
+    </div>
     <div class="divider"></div>
-    <ul style="margin:0 0 4px 18px;padding:0">
-      <li>📅 <b>11/15(土) 19:00–21:00</b></li>
-      <li>👫 <b>20〜40歳ぐらい</b> の独身各<b>25名</b>限定</li>
-      <li>💰 男性 <b>6,500円</b>／女性 <b>3,500円</b>（<b>飲み放題＋肉ビュッフェ</b>）</li>
-    </ul>
+    <p class="help">日時：11/15(土) 19:00–21:00／定員：各25名／場所：KU-DETA／飲み放題＋肉ビュッフェ</p>
   </section>
 
-  <!-- 料金 -->
-  <section id="price" class="pricing">
+  <!-- Menu（3品プレビュー） -->
+  <section id="menu" class="card section" aria-labelledby="menu-title">
+    <h2 id="menu-title" class="h2">どんな料理が出るの？（一例）</h2>
+    <div class="divider"></div>
+
+    <div class="menu-grid">
+      <article class="menu-card">
+        <img class="menu-img" src="menu_roastbeef.jpg"
+             alt="重量5kg!! 和牛サーロインのローストビーフ" loading="lazy">
+        <h3>重量5kg!! 和牛サーロインのローストビーフ</h3>
+        <p>ド迫力の塊をその場でスライス。思わずシャッターが止まらない名物です。</p>
+      </article>
+
+      <article class="menu-card">
+        <img class="menu-img" src="menu_yabaton.jpg"
+             alt="骨付きロースのヤバトン!!" loading="lazy">
+        <h3>骨付きロースのヤバトン!!</h3>
+        <p>骨付きの旨みを豪快に。みんなでワイワイ盛り上がる主役プレート。</p>
+      </article>
+
+      <article class="menu-card">
+        <img class="menu-img" src="menu_fries.jpg"
+             alt="みんな大好きフライドポテト！" loading="lazy">
+        <h3>みんな大好きフライドポテト！</h3>
+        <p>会話のお供に欠かせない定番。熱々をどんどんどうぞ。</p>
+      </article>
+    </div>
+
+    <p class="help" style="margin-top:10px">
+      ※メニューは仕入れ状況や当日の進行により一部変更になる場合があります。
+    </p>
+  </section>
+
+  <!-- D: Desire（料金・価値） -->
+  <section id="price" class="pricing" aria-labelledby="price-title">
+    <h2 id="price-title" class="h2" style="grid-column:1/-1">前売り料金（グループ割）</h2>
+
     <!-- 男性 -->
-    <article class="p-card">
+    <article class="p-card" aria-label="男性料金">
       <div class="p-head male">
         <div style="width:40px;height:40px;border-radius:999px;background:rgba(0,0,0,.15);display:grid;place-items:center">👨</div>
         <div style="font-size:18px;letter-spacing:.35em">男　性</div>
@@ -246,7 +251,7 @@
     </article>
 
     <!-- 女性 -->
-    <article class="p-card">
+    <article class="p-card" aria-label="女性料金">
       <div class="p-head female">
         <div style="width:40px;height:40px;border-radius:999px;background:rgba(0,0,0,.15);display:grid;place-items:center">👩</div>
         <div style="font-size:18px;letter-spacing:.35em">女　性</div>
@@ -265,11 +270,38 @@
     </article>
   </section>
 
-  <!-- 申込みフォーム -->
-  <section id="entry" class="card section" aria-labelledby="entry-title" style="margin-top:12px">
-    <h2 id="entry-title" class="h2">👇 参加申込みフォーム</h2>
+  <!-- M: Memory（流れ & FAQ） -->
+  <section class="card section" aria-labelledby="flow-title">
+    <h2 id="flow-title" class="h2">当日の流れ（例）</h2>
+    <div class="divider"></div>
+    <ol style="margin:0 0 0 18px;padding:0">
+      <li>受付（18:40〜）／名札・Meat BTIタイプ確認</li>
+      <li>乾杯＆自己紹介（運営がファシリテート）</li>
+      <li>席替え①（20〜30分）ミニゲーム</li>
+      <li>席替え②（20〜30分）フリートーク</li>
+      <li>マッチング投票・クロージング</li>
+    </ol>
+    <div class="divider"></div>
+    <details>
+      <summary>参加条件は？</summary>
+      <p>独身の方。20〜40歳ぐらいの方を想定しています。</p>
+    </details>
+    <details>
+      <summary>一人参加でも大丈夫？</summary>
+      <p>もちろんOK。スタッフが席配置や会話のきっかけをサポートします。</p>
+    </details>
+    <details>
+      <summary>ドレスコードは？</summary>
+      <p>スマートカジュアルを推奨。清潔感があればOKです。</p>
+    </details>
+  </section>
+
+  <!-- A: Action（申込み） -->
+  <section id="entry" class="card section" aria-labelledby="entry-title" style="margin-top:16px">
+    <h2 id="entry-title" class="h2">2分で完了：参加申込み</h2>
     <div class="divider"></div>
 
+    <!-- 成功メッセージ（初期は非表示） -->
     <div id="msg" class="success">
       送信ありがとうございました。<br>
       この送信をもって<strong>お申込みは完了</strong>です。<br>
@@ -277,6 +309,7 @@
       当日は会場受付で<strong>代表者名</strong>をお伝えください。
     </div>
 
+    <!-- Formspree（返信なし運用） -->
     <form id="form" action="https://formspree.io/f/xrbywbal" method="POST">
       <input type="hidden" name="_subject" value="【ニクパーティ】参加申込み">
       <input type="hidden" name="event" value="ニクパーティ - Meet Meat Night（11/15 19:00〜）">
@@ -305,7 +338,7 @@
           <option>25–29</option>
           <option>30–35</option>
           <option>35–42</option>
-          <option>その他（自由入力欄に記載</option>
+          <option>その他（備考に記載）</option>
         </select>
       </div>
 
@@ -326,29 +359,32 @@
       </div>
 
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
-        <button class="btn primary" type="submit">上記内容で申込み</button>
+        <button class="btn primary" type="submit">上記内容で申し込む</button>
         <a class="btn cheese" href="meat-bti/">事前：Meat BTI で話題づくり</a>
       </div>
-      <p class="help">※確認の連絡や自動返信はありません。内容に変更がある場合のみ、お電話または各SNSのDMにてご連絡ください。</p>
+      <p class="help">※確認の連絡や自動返信はありません。内容変更のみお電話または各SNSのDMにてご連絡ください。</p>
     </form>
   </section>
 </main>
 
-<footer>© <span id="y"></span> Cheese Meat Mania KU-DETA / ニクパーティ</footer>
+<footer>
+  © <span id="y"></span> Cheese Meat Mania KU-DETA / ニクパーティ
+</footer>
 
-<!-- Floating Promo CTA -->
-<div class="promo-sticky" id="promoSticky">
-  <span class="pulse" aria-hidden="true"></span>
-  <a href="#campaign" aria-label="参加者限定ランチ無料キャンペーンの詳細へ">🎁 参加者限定：ランチ無料を見る</a>
+<!-- 画面下 固定CTA（モバイル中心） -->
+<div class="sticky-cta" role="region" aria-label="申込みCTA">
+  <div class="container">
+    <span class="help" style="margin:0">11/15(土) 19:00–21:00｜各25名</span>
+    <a class="btn primary" href="#entry">今の席数で申し込む</a>
+  </div>
 </div>
 
 <script>
   document.getElementById('y').textContent = new Date().getFullYear();
 
-  // Ajax送信（返信なし）
+  // Formspree Ajax送信（返信なし運用）
   const form = document.getElementById('form');
   const msg  = document.getElementById('msg');
-  msg.style.display = 'none';
   form.addEventListener('submit', async (e)=>{
     e.preventDefault();
     const url = form.getAttribute('action');
@@ -367,14 +403,6 @@
       alert('通信エラーが発生しました。回線状況をご確認ください。');
     }
   });
-
-  // #campaignが見えたらフローティングを隠す
-  const sticky = document.getElementById('promoSticky');
-  const campaign = document.getElementById('campaign');
-  const io = new IntersectionObserver(entries=>{
-    entries.forEach(e=>{ sticky.style.display = e.isIntersecting ? 'none' : 'block'; });
-  }, {threshold:.2});
-  io.observe(campaign);
 </script>
 </body>
 </html>
