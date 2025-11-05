@@ -59,7 +59,7 @@
   .section{padding:20px}
   .h2{font-weight:900;font-size:clamp(18px,4.6vw,26px);margin:0 0 8px}
   .divider{height:1px;background:#201b18;margin:10px 0}
-  .help{color:#a99686;font-size:12px}
+  .help{color:var(--muted);font-size:12px}
 
   /* Menu（3品） */
   .menu-grid{display:grid;gap:12px;grid-template-columns:1fr}
@@ -96,7 +96,7 @@
   input::placeholder,textarea::placeholder{color:#a99686}
   .success{border:1px solid #2a5c3f;background:linear-gradient(180deg,rgba(63,191,123,.08),transparent);padding:12px;border-radius:12px;color:#c7f1db;display:none}
 
-  footer{border-top:1px solid var(--bd);color:#muted;padding:20px 0 36px;margin-top:22px;text-align:center}
+  footer{border-top:1px solid var(--bd);color:var(--muted);padding:20px 0 36px;margin-top:22px;text-align:center}
 
   /* Sticky CTA（文言短縮＆幅短め） */
   .sticky-cta{position:fixed;left:0;right:0;bottom:0;z-index:25;background:rgba(11,10,10,.92);border-top:1px solid #241f1c;padding:10px}
@@ -114,7 +114,6 @@
       <a class="chip" href="#menu">料理</a>
       <a class="chip" href="#price">料金</a>
       <a class="chip" href="#entry">申込み</a>
-      <!-- 文言変更：あなたのタイプは？肉診断『Meat BTI』 -->
       <a class="btn cheese" href="meat-bti/">あなたのタイプは？肉診断『Meat BTI』</a>
     </nav>
   </div>
@@ -129,7 +128,7 @@
       <h1 class="h1">肉も恋も、ジューシーな夜を──。</h1>
       <p class="lead">肉好き同士が<strong>“ちゃんと出会える”</strong>街コン。<br>スタッフ進行 × 席替え × Meat BTI で、会話が続く2時間。</p>
       <div class="cta-hero">
-        <a class="btn primary" href="#entry">今の席数で申し込む</a>
+        <a class="btn primary" href="#entry">参加申込みへ</a>
       </div>
     </div>
   </div>
@@ -239,7 +238,7 @@
     </div>
 
     <!-- Formspree（返信なし運用） -->
-    <form id="form" action="https://formspree.io/f/xrbywbal" method="POST">
+    <form id="form" action="https://formspree.io/f/mblzajvd" method="POST">
       <input type="hidden" name="_subject" value="【ニクパーティ】参加申込み">
       <input type="hidden" name="event" value="ニクパーティ - Meet Meat Night（11/15 19:00〜）">
 
@@ -265,14 +264,15 @@
 
       <div class="row-2">
         <div class="field">
-          <label for="men">男性の人数<span aria-hidden="true">＊</span></label>
-          <input id="men" name="men_count" type="number" min="0" step="1" required placeholder="0">
+          <label for="men">男性の人数 <span class="help">（任意／入力するなら1以上）</span></label>
+          <input id="men" name="men_count" type="number" min="1" step="1" placeholder="未入力でもOK">
         </div>
         <div class="field">
-          <label for="women">女性の人数<span aria-hidden="true">＊</span></label>
-          <input id="women" name="women_count" type="number" min="0" step="1" required placeholder="0">
+          <label for="women">女性の人数 <span class="help">（任意／入力するなら1以上）</span></label>
+          <input id="women" name="women_count" type="number" min="1" step="1" placeholder="未入力でもOK">
         </div>
       </div>
+      <p class="help" style="margin-top:-6px">※男性または女性のどちらか一方は <b>1以上</b> を入力してください（両方でもOK）。未入力側は0を入れなくてOKです。</p>
 
       <div class="field">
         <label for="age">年齢層（代表者）<span aria-hidden="true">＊</span></label>
@@ -304,7 +304,6 @@
 
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
         <button class="btn primary" type="submit">上記内容で申し込む</button>
-        <!-- 文言変更：あなたのタイプは？肉診断『Meat BTI』 -->
         <a class="btn cheese" href="meat-bti/">あなたのタイプは？肉診断『Meat BTI』</a>
       </div>
       <p class="help">※確認の連絡や自動返信はありません。内容変更のみお電話または各SNSのDMにてご連絡ください。</p>
@@ -316,7 +315,6 @@
     <h2 id="bti-teaser" class="h2">会話のきっかけに：Meat BTI</h2>
     <div class="divider"></div>
     <p style="margin:0 0 10px">20問・6段階であなたの<strong>“部位タイプ”</strong>を判定。相性No.1も表示されます。</p>
-    <!-- 文言変更：あなたのタイプは？肉診断『Meat BTI』 -->
     <a class="btn cheese" href="meat-bti/">あなたのタイプは？肉診断『Meat BTI』</a>
   </section>
 </main>
@@ -349,13 +347,33 @@
       .forEach(k => set(k, params.get(k)));
   })();
 
-  // Formspree Ajax送信（返信なし運用）
+  // 片方入力OK・0不要ロジック＋Formspree Ajax送信（返信なし運用）
   const form = document.getElementById('form');
   const msg  = document.getElementById('msg');
+
   form.addEventListener('submit', async (e)=>{
     e.preventDefault();
-    const url = form.getAttribute('action');
+
+    // 他の必須項目のチェック
+    if(!form.checkValidity()){ form.reportValidity(); return; }
+
+    const menRaw   = (form.men_count?.value || '').trim();
+    const womenRaw = (form.women_count?.value || '').trim();
+    const men   = menRaw === ''   ? 0 : parseInt(menRaw, 10);
+    const women = womenRaw === '' ? 0 : parseInt(womenRaw, 10);
+
+    if ((men <= 0 || Number.isNaN(men)) && (women <= 0 || Number.isNaN(women))) {
+      alert('男性または女性のいずれかの人数を1以上で入力してください。');
+      return;
+    }
+
+    const url  = form.getAttribute('action');
     const data = new FormData(form);
+
+    // 未入力側は送信しない（0を入れなくてOK）
+    if (men <= 0 || Number.isNaN(men))     data.delete('men_count');
+    if (women <= 0 || Number.isNaN(women)) data.delete('women_count');
+
     try{
       const res = await fetch(url, { method:'POST', body:data, headers:{ 'Accept':'application/json' }});
       if(res.ok){
