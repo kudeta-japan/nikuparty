@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ニクパーティ - Meet Meat Night｜Cheese Meat Mania KU-DETA</title>
+<meta name="description" content="11/15(土) 19:00〜 岐阜。お肉×出会いの一夜。男女各25名限定。グループ割あり。">
+<meta name="theme-color" content="#0b0a0a">
+<style>
+  :root{
+    --bg:#0b0a0a; --panel:#141111; --ink:#fff9ef; --muted:#ccbfae; --bd:#2a2421;
+    --cheese:#ffd966; --tomato:#ff6b4a; --basil:#3fbf7b; --basil-deep:#1a9c63;
+    --wine:#9b4a8f; --wine-deep:#c86b9e; --seal:#ffe889;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;
+    letter-spacing:.02em;line-height:1.65}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  .container{width:min(1040px,92vw);margin:0 auto}
+
+  /* Buttons */
+  .btn{appearance:none;border:1px solid var(--bd);background:#1a1513;color:var(--ink);
+    padding:12px 16px;border-radius:12px;font-weight:800;cursor:pointer;transition:transform .06s ease}
+  .btn:hover{transform:translateY(-1px)}
+  .btn.primary{background:linear-gradient(180deg,var(--tomato),#ff5231);color:#110e0c;border:none}
+  .btn.cheese{background:linear-gradient(180deg,var(--cheese),#f7c84a);color:#2a1e0b;border:none}
+
+  /* Shell */
+  header.nav{position:sticky;top:0;z-index:20;background:rgba(12,10,9,.7);
+    backdrop-filter:saturate(120%) blur(8px);border-bottom:1px solid var(--bd)}
+  .nav-inner{height:56px;display:flex;align-items:center;justify-content:space-between}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:900}
+  .logo{width:28px;height:28px;border-radius:10px;background:conic-gradient(from 140deg,var(--cheese),var(--tomato));display:grid;place-items:center;color:#111}
+  .nav-cta{display:flex;gap:10px;align-items:center}
+  .chip{display:inline-flex;align-items:center;background:#1a1513;border:1px solid var(--bd);padding:6px 10px;border-radius:999px;font-size:12px}
+
+  /* HERO（画像はテキストと同幅。スマホで端切れを抑える） */
+  .hero{position:relative;border-bottom:1px solid var(--bd);background:#000}
+  .hero-inner{display:grid;grid-template-columns:1fr;gap:18px;align-items:end;width:min(1040px,92vw);margin:0 auto;padding:0}
+  .hero-media{width:100%}
+  .hero-img{width:100%;height:clamp(380px,68vh,600px);object-fit:cover;object-position:center 40%;filter:brightness(.82) contrast(1.05)}
+  .hero-overlay{position:relative;margin-top:-110px;padding:0 0 22px}
+  .hero-overlay::before{content:"";position:absolute;inset:-24px 0 -22px 0;
+    background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.75) 60%,rgba(0,0,0,.9) 100%);
+    z-index:-1}
+  .eyebrow{display:inline-flex;gap:8px;align-items:center;background:rgba(255,232,137,.14);border:1px solid #3a2d0d;color:#ffe9b0;padding:5px 10px;border-radius:999px;font-size:12px}
+  .h1{font-size:clamp(22px,6vw,40px);line-height:1.25;font-weight:900;margin:10px 0 0}
+  .lead{color:var(--muted);margin:6px 0 0}
+  .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .cta .btn{min-width:220px}
+
+  /* Big offer ribbon */
+  .offer{border-top:1px solid #3a2e2a;border-bottom:1px solid #3a2e2a;background:#1a1513}
+  .offer .inner{width:min(1040px,92vw);margin:0 auto;padding:12px 0;display:grid;gap:8px}
+  .offer h2{margin:0;font-size:clamp(18px,5.2vw,22px);font-weight:900;color:#ffe08a}
+  .offer p{margin:0;color:#f2e6d2}
+
+  /* Cards / Sections */
+  .card{background:var(--panel);border:1px solid var(--bd);border-radius:16px;overflow:hidden}
+  .section{padding:22px}
+  .h2{font-weight:900;font-size:clamp(18px,4.6vw,26px);margin:0 0 8px}
+  .divider{height:1px;background:#201b18;margin:10px 0}
+
+  /* Pricing */
+  .pricing{display:grid;gap:14px;grid-template-columns:1fr}
+  @media(min-width:860px){.pricing{grid-template-columns:1fr 1fr}}
+  .p-card{border:1px solid var(--bd);border-radius:16px;overflow:hidden;background:#171210}
+  .p-head{padding:14px 16px;color:#2a150f;font-weight:900;display:flex;align-items:center;gap:12px}
+  .p-head.male{background:linear-gradient(90deg,var(--basil),var(--basil-deep));color:#0b120d}
+  .p-head.female{background:linear-gradient(90deg,var(--wine),var(--wine-deep));color:#220d1d}
+  .p-body{padding:12px 14px}
+  .p-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px 0;border-top:1px dashed #3a2e2a}
+  .p-row:first-child{border-top:none}
+  .label{color:#e9ddcc}
+  .new{font-size:clamp(20px,4.5vw,34px);font-weight:900}
+  .old{color:#bfae98}
+  .seal{display:inline-grid;place-items:center;background:var(--seal);color:#1c120a;border-radius:999px;width:56px;height:56px;font-weight:900;border:2px solid #f1d770}
+  .seal small{display:block;font-size:10px;line-height:1}
+  .seal b{font-size:15px;line-height:1.1}
+  .no1{color:#ff9b95;font-weight:900;margin-right:6px}
+
+  /* Teaser */
+  .teaser{margin:16px 0;border:1px solid #4a3a16;border-radius:14px;background:linear-gradient(135deg, rgba(255,217,102,.08), rgba(255,107,74,.06))}
+  .teaser-inner{display:grid;gap:12px;grid-template-columns:1fr;align-items:center;padding:16px}
+  .teaser h3{margin:0;font-size:clamp(18px,5vw,24px);font-weight:900}
+  .teaser p{margin:0;color:#f2e6d2}
+  .points{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+  .chip{background:#1a1513;border:1px solid #4a3a16;color:#ffe6a8;border-radius:999px;padding:6px 10px;font-size:12px}
+  .teaser .cta{margin-top:8px}
+
+  /* Sticky bottom CTA（常時表示・幅短め） */
+  .sticky-cta{position:fixed;left:50%;transform:translateX(-50%);
+    bottom:calc(12px + env(safe-area-inset-bottom));z-index:40}
+  .sticky-cta a{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;
+    background:linear-gradient(180deg,var(--cheese),#f7c84a);color:#2a1e0b;border:none;
+    box-shadow:0 10px 22px rgba(247,200,74,.32);font-weight:900;min-width:160px}
+  .sticky-cta a:active{transform:translate(-50%,1px)}
+
+  /* Form */
+  form{display:grid;gap:12px}
+  .field{display:grid;gap:6px}
+  .row-2{display:grid;gap:12px;grid-template-columns:1fr}
+  @media(min-width:720px){.row-2{grid-template-columns:1fr 1fr}}
+  input,select,textarea{width:100%;background:#120e0c;color:#fff9ef;border:1px solid #3a2e2a;border-radius:12px;padding:12px 12px;font-size:15px}
+  input::placeholder,textarea::placeholder{color:#a99686}
+  .help{color:#a99686;font-size:12px}
+  .success{border:1px solid #2a5c3f;background:linear-gradient(180deg,rgba(63,191,123,.08),transparent);padding:12px;border-radius:12px;color:#c7f1db;display:none}
+
+  footer{border-top:1px solid var(--bd);color:var(--muted);padding:20px 0 36px;margin-top:22px;text-align:center}
+
+  /* Mobile tweaks */
+  @media (max-width: 860px){
+    .nav-cta{display:none;}
+    .hero-overlay{margin-top:-100px}
+    .cta .btn{width:100%}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="container nav-inner">
+    <div class="brand"><div class="logo">🧀</div><div>ニクパーティ</div></div>
+    <nav class="nav-cta">
+      <a class="chip" href="#price">料金</a>
+      <a class="chip" href="#entry">参加申込み</a>
+      <!-- 「事前」を削除し、ボタン文言を変更 -->
+      <a class="btn cheese" href="meat-bti/">あなたのタイプは？肉診断『Meat BTI』</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" aria-label="Hero">
+  <div class="hero-inner">
+    <div class="hero-media">
+      <img src="top.jpg" alt="ニクパーティのビジュアル" class="hero-img">
+    </div>
+    <div class="hero-overlay">
+      <span class="eyebrow">Cheese Meat Mania KU-DETA presents</span>
+      <h1 class="h1">肉好き同士、ちゃんと出会える夜。</h1>
+      <p class="lead">11/15(土) 19:00–21:00｜岐阜・KU-DETA｜男女各25名限定</p>
+      <div class="cta">
+        <a class="btn primary" href="#entry">👇 参加申込みはこちら</a>
+        <a class="btn cheese" href="meat-bti/">あなたのタイプは？肉診断『Meat BTI』</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Big Offer -->
+<section class="offer" role="note" aria-label="特典案内">
+  <div class="inner">
+    <h2>🎁 参加者限定の超特典</h2>
+    <p><b>イベント参加後〜12/15まで</b>に<b>カップル（男女）でKU-DETAのランチ</b>へご来店で、<b>どれでも無料！</b></p>
+  </div>
+</section>
+
+<main class="container">
+  <!-- Meat BTI teaser -->
+  <section class="teaser" aria-labelledby="bti-teaser">
+    <div class="teaser-inner">
+      <div>
+        <h3 id="bti-teaser">あなたのタイプは？<span style="color:var(--cheese)">肉診断『Meat BTI』</span></h3>
+        <p>20問・6段階で<strong>“部位タイプ”</strong>を判定。出会いの話題づくりに。</p>
+        <div class="points">
+          <span class="chip">⏱ 所要1〜2分</span>
+          <span class="chip">🥩 12タイプ表示</span>
+          <span class="chip">🎯 相性No.1も表示</span>
+        </div>
+        <div class="cta"><a class="btn cheese" href="meat-bti/">診断してみる</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 募集要項 -->
+  <section class="card section">
+    <h2 class="h2">👩‍❤️‍👨 募集要項</h2>
+    <div class="divider"></div>
+    <ul style="margin:0 0 4px 18px;padding:0">
+      <li>📅 <b>11/15(土) 19:00–21:00</b></li>
+      <li>👫 <b>20〜40歳ぐらい</b> の独身 各<b>25名限定</b></li>
+      <li>💰 男性 <b>6,500円</b>／女性 <b>3,500円</b>（<b>飲み放題＋肉ビュッフェ</b>）</li>
+    </ul>
+  </section>
+
+  <!-- 料金 -->
+  <section id="price" class="pricing" aria-label="料金">
+    <!-- 男性 -->
+    <article class="p-card">
+      <div class="p-head male">
+        <div style="width:40px;height:40px;border-radius:999px;background:rgba(0,0,0,.15);display:grid;place-items:center">👨</div>
+        <div style="font-size:18px;letter-spacing:.35em">男　性</div>
+      </div>
+      <div class="p-body">
+        <div class="p-row"><div class="label">通常価格（1名様）</div><div class="new">6,500円</div></div>
+        <div class="p-row"><div class="label">2名様 <span class="old">13,000円</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="seal"><small>¥</small><b>500</b><small>OFF</small></div><div class="new"><span class="no1">人気No.1</span>12,500円</div></div></div>
+        <div class="p-row"><div class="label">3名様 <span class="old">19,500円</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="seal"><small>¥</small><b>1,000</b><small>OFF</small></div><div class="new">9,500円/人 → 18,500円</div></div></div>
+        <div class="p-row"><div class="label">4名様 <span class="old">26,000円</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="seal"><small>¥</small><b>1,500</b><small>OFF</small></div><div class="new">24,500円</div></div></div>
+        <div class="p-row"><div class="label">5名様 <span class="old">32,500円</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="seal"><small>¥</small><b>2,000</b><small>OFF</small></div><div class="new">30,500円</div></div></div>
+      </div>
+    </article>
+
+    <!-- 女性 -->
+    <article class="p-card">
+      <div class="p-head female">
+        <div style="width:40px;height:40px;border-radius:999px;background:rgba(0,0,0,.15);display:grid;place-items:center">👩</div>
+        <div style="font-size:18px;letter-spacing:.35em">女　性</div>
+      </div>
+      <div class="p-body">
+        <div class="p-row"><div class="label">通常価格（1名様）</div><div class="new">3,500円</div></div>
+        <div class="p-row"><div class="label">2名様 <span class="old">7,000円</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="seal"><small>¥</small><b>500</b><small>OFF</small></div><div class="new"><span class="no1">人気No.1</span>6,500円</div></div></div>
+        <div class="p-row"><div class="label">3名様 <span class="old">10,500円</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="seal"><small>¥</small><b>1,000</b><small>OFF</small></div><div class="new">9,500円</div></div></div>
+        <div class="p-row"><div class="label">4名様 <span class="old">14,000円</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="seal"><small>¥</small><b>1,500</b><small>OFF</small></div><div class="new">12,500円</div></div></div>
+        <div class="p-row"><div class="label">5名様 <span class="old">17,500円</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="seal"><small>¥</small><b>2,000</b><small>OFF</small></div><div class="new">15,500円</div></div></div>
+      </div>
+    </article>
+  </section>
+
+  <!-- 申込みフォーム -->
+  <section id="entry" class="card section" aria-labelledby="entry-title" style="margin-top:16px">
+    <h2 id="entry-title" class="h2">👇 参加申込みフォーム</h2>
+    <div class="divider"></div>
+
+    <div id="msg" class="success">
+      送信ありがとうございました。<br>
+      この送信をもって<strong>お申込みは完了</strong>です。<br>
+      <strong>担当からの連絡はありません。</strong><br>
+      当日は会場受付で<strong>代表者名</strong>をお伝えください。
+    </div>
+
+    <!-- Formspree（返信なし） -->
+    <form id="form" action="https://formspree.io/f/mblzajvd" method="POST" novalidate>
+      <input type="hidden" name="_subject" value="【ニクパーティ】参加申込み">
+      <input type="hidden" name="event" value="ニクパーティ - Meet Meat Night（11/15 19:00〜）">
+
+      <!-- 計測フィールド -->
+      <input type="hidden" name="landing_url" id="landing_url">
+      <input type="hidden" name="referrer" id="referrer">
+      <input type="hidden" name="lp_variant" id="lp_variant">
+      <input type="hidden" name="audience" id="audience">
+
+      <div class="field">
+        <label for="name">お名前（代表者）<span aria-hidden="true">＊</span></label>
+        <input id="name" name="name" type="text" required placeholder="例）山田 太郎">
+      </div>
+
+      <div class="row-2">
+        <div class="field">
+          <label for="men">男性の人数</label>
+          <input id="men" name="men_count" type="number" min="0" step="1" placeholder="未入力可">
+        </div>
+        <div class="field">
+          <label for="women">女性の人数</label>
+          <input id="women" name="women_count" type="number" min="0" step="1" placeholder="未入力可">
+        </div>
+      </div>
+      <p class="help">※男性／女性のどちらか片方のみの入力でも申し込み可能です。</p>
+
+      <div class="field">
+        <label for="age">年齢層（代表者）<span aria-hidden="true">＊</span></label>
+        <select id="age" name="age_band" required>
+          <option value="" disabled selected>選択してください</option>
+          <option>20–24</option>
+          <option>25–29</option>
+          <option>30–35</option>
+          <option>35–42</option>
+          <option>その他（自由入力欄に記載）</option>
+        </select>
+      </div>
+
+      <div class="row-2">
+        <div class="field">
+          <label for="email">メールアドレス<span aria-hidden="true">＊</span></label>
+          <input id="email" name="email" type="email" required placeholder="you@example.com" inputmode="email" autocomplete="email">
+        </div>
+        <div class="field">
+          <label for="tel">連絡先（電話）<span aria-hidden="true">＊</span></label>
+          <input id="tel" name="tel" type="tel" required placeholder="090-1234-5678" inputmode="tel">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="notes">備考</label>
+        <textarea id="notes" name="notes" rows="4" placeholder="例）到着が19:30頃になります。〇名で参加予定です。"></textarea>
+      </div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
+        <button class="btn primary" type="submit">上記内容で申込み</button>
+        <a class="btn cheese" href="meat-bti/">あなたのタイプは？肉診断『Meat BTI』</a>
+      </div>
+      <p class="help">※確認の連絡や自動返信はありません。内容変更のみお電話またはSNSのDMでご連絡ください。</p>
+    </form>
+  </section>
+</main>
+
+<footer>© <span id="y"></span> Cheese Meat Mania KU-DETA / ニクパーティ</footer>
+
+<!-- 常時表示の下部CTA（幅短め・文言は「申し込む」） -->
+<div class="sticky-cta">
+  <a href="#entry" id="sticky-apply" aria-label="申し込む">申し込む</a>
+</div>
+
+<script>
+  // 年号
+  document.getElementById('y').textContent = new Date().getFullYear();
+
+  // スムーススクロール（CTA）
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click', e=>{
+      const id=a.getAttribute('href').slice(1);
+      const t=document.getElementById(id);
+      if(!t) return;
+      e.preventDefault();
+      const top=t.getBoundingClientRect().top + window.scrollY - 70;
+      window.scrollTo({top,behavior:'smooth'});
+    });
+  });
+
+  // 計測フィールド自動埋め：index1-3=male, 4-6=female / video1-3
+  (function(){
+    const set = (id,val)=>{ const el=document.getElementById(id); if(el) el.value = val || ""; };
+    const m = location.pathname.match(/index(\d)\.html$/);
+    const n = m ? parseInt(m[1],10) : null;
+
+    // video1..3（index1/4=1, 2/5=2, 3/6=3）
+    const creative = n ? ((n - 1) % 3) + 1 : null;
+    set('lp_variant', creative ? `video${creative}` : 'unknown');
+
+    // audience（1..3 = male / 4..6 = female）
+    const audEl = document.getElementById('audience');
+    if (audEl) audEl.value = n && n <= 3 ? 'male' : (n && n <= 6 ? 'female' : '');
+
+    set('landing_url', location.href.split('#')[0]);
+    set('referrer', document.referrer || '');
+  })();
+
+  // 申込バリデーション：男性/女性どちらか1つ以上が 1 以上
+  const form = document.getElementById('form');
+  const msg  = document.getElementById('msg');
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const url = form.getAttribute('action');
+
+    const men = parseInt(document.getElementById('men').value || '0',10);
+    const women = parseInt(document.getElementById('women').value || '0',10);
+    if ((men + women) < 1) {
+      alert('男性または女性の人数を1名以上ご入力ください。');
+      return;
+    }
+    if (!form.reportValidity()) return;
+
+    const data = new FormData(form);
+    try{
+      const res = await fetch(url, { method:'POST', body:data, headers:{ 'Accept':'application/json' }});
+      if(res.ok){
+        msg.style.display = 'block';
+        form.reset();
+        const top = msg.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top, behavior:'smooth' });
+      }else{
+        alert('送信に失敗しました。時間をおいて再度お試しください。');
+      }
+    }catch(err){
+      alert('通信エラーが発生しました。回線状況をご確認ください。');
+    }
+  });
+</script>
+</body>
+</html>
