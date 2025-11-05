@@ -15,7 +15,8 @@
   *{box-sizing:border-box}
   html,body{height:100%}
   body{margin:0;background:var(--bg);color:var(--ink);
-    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;letter-spacing:.02em;line-height:1.65}
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;
+    letter-spacing:.02em;line-height:1.65}
   a{color:inherit;text-decoration:none}
 
   .container{width:min(1040px,92vw);margin:0 auto}
@@ -65,7 +66,7 @@
   .divider{height:1px;background:#201b18;margin:10px 0}
   .help{color:#a99686;font-size:12px}
 
-  /* --- AIDMA: I (Interest) --- */
+  /* --- I (Interest) --- */
   .grid-3{display:grid;gap:12px;grid-template-columns:1fr}
   @media(min-width:860px){.grid-3{grid-template-columns:1fr 1fr 1fr}}
   .i-item{background:#171210;border:1px solid #3a2e2a;border-radius:14px;padding:14px}
@@ -79,7 +80,7 @@
   .menu-card h3{margin:10px 12px 4px;font-size:16px;font-weight:900}
   .menu-card p{margin:0 12px 12px;color:#ccbfae;font-size:14px}
 
-  /* --- AIDMA: D (Desire) 料金 --- */
+  /* --- D (Desire) 料金 --- */
   .pricing{display:grid;gap:14px;grid-template-columns:1fr}
   @media(min-width:860px){.pricing{grid-template-columns:1fr 1fr}}
   .p-card{border:1px solid var(--bd);border-radius:16px;overflow:hidden;background:#171210}
@@ -97,12 +98,12 @@
   .seal b{font-size:15px;line-height:1.1}
   .no1{color:#ff9b95;font-weight:900;margin-right:6px}
 
-  /* --- AIDMA: M (Memory) FAQ & Flow --- */
+  /* details / faq */
   details{background:#171210;border:1px solid #3a2e2a;border-radius:12px;padding:12px}
   details+details{margin-top:10px}
   summary{cursor:pointer;font-weight:700}
 
-  /* --- AIDMA: A (Action) フォーム --- */
+  /* --- A (Action) フォーム --- */
   form{display:grid;gap:12px}
   .field{display:grid;gap:6px}
   .row-2{display:grid;gap:12px;grid-template-columns:1fr}
@@ -111,6 +112,7 @@
   input::placeholder,textarea::placeholder{color:#a99686}
   .success{border:1px solid #2a5c3f;background:linear-gradient(180deg,rgba(63,191,123,.08),transparent);padding:12px;border-radius:12px;color:#c7f1db;display:none}
 
+  footer{border-top:1px solid var(--bd);color:#muted;padding:20px 0 36px;margin-top:22px;text-align:center}
   footer{border-top:1px solid var(--bd);color:var(--muted);padding:20px 0 36px;margin-top:22px;text-align:center}
 
   /* Sticky CTA */
@@ -133,6 +135,7 @@
       <a class="chip" href="#interest">内容</a>
       <a class="chip" href="#menu">料理</a>
       <a class="chip" href="#price">料金</a>
+      <a class="chip" href="#flow-title">流れ</a>
       <a class="chip" href="#entry">申込み</a>
       <a class="btn cheese" href="meat-bti/">事前：Meat BTI 診断</a>
     </nav>
@@ -179,7 +182,7 @@
     <div class="grid-3" style="margin-top:8px">
       <div class="i-item">
         <h3>スタッフが進行・会話サポート</h3>
-        <p>アイスブレイク→自己紹介→話題カードで、初対面でも会話が止まりません。</p>
+        <p>乾杯のあと、自己紹介→話題カードでスムーズに。初対面でも会話が止まりません。</p>
       </div>
       <div class="i-item">
         <h3>席替え×ミニゲームで接点UP</h3>
@@ -199,6 +202,12 @@
     <h2 id="menu-title" class="h2">どんな料理が出るの？（一例）</h2>
     <div class="divider"></div>
 
+      <article class="menu-card">
+        <img class="menu-img" src="menu_yabaton.jpg"
+             alt="骨付きロースのヤバトン!!" loading="lazy">
+        <h3>骨付きロースのヤバトン!!</h3>
+        <p>骨付きの旨みを豪快に。みんなでワイワイ盛り上がる主役プレート。</p>
+      </article>
     <div class="menu-grid">
       <article class="menu-card">
         <img class="menu-img" src="menu_roastbeef.jpg"
@@ -207,12 +216,6 @@
         <p>ド迫力の塊をその場でスライス。思わずシャッターが止まらない名物です。</p>
       </article>
 
-      <article class="menu-card">
-        <img class="menu-img" src="menu_yabaton.jpg"
-             alt="骨付きロースのヤバトン!!" loading="lazy">
-        <h3>骨付きロースのヤバトン!!</h3>
-        <p>骨付きの旨みを豪快に。みんなでワイワイ盛り上がる主役プレート。</p>
-      </article>
 
       <article class="menu-card">
         <img class="menu-img" src="menu_fries.jpg"
@@ -270,18 +273,23 @@
     </article>
   </section>
 
-  <!-- M: Memory（流れ & FAQ） -->
+  <!-- M: Memory（当日の流れ & FAQ） -->
   <section class="card section" aria-labelledby="flow-title">
-    <h2 id="flow-title" class="h2">当日の流れ（例）</h2>
+    <h2 id="flow-title" class="h2">当日の流れ</h2>
     <div class="divider"></div>
     <ol style="margin:0 0 0 18px;padding:0">
-      <li>受付（18:40〜）／名札・Meat BTIタイプ確認</li>
-      <li>乾杯＆自己紹介（運営がファシリテート）</li>
-      <li>席替え①（20〜30分）ミニゲーム</li>
-      <li>席替え②（20〜30分）フリートーク</li>
-      <li>マッチング投票・クロージング</li>
+      <li>受付（18:30〜）</li>
+      <li>乾杯＆自己紹介タイム</li>
+      <li>ビュッフェスタート</li>
+      <li>席替え</li>
+      <li>メインディッシュ登場</li>
+      <li>腕相撲大会</li>
+      <li>おしゃれコンテスト</li>
+      <li>マッチング投票</li>
     </ol>
     <div class="divider"></div>
+    <p class="help">※終了後、希望者でそのまま<strong>2次会へGO！</strong></p>
+
     <details>
       <summary>参加条件は？</summary>
       <p>独身の方。20〜40歳ぐらいの方を想定しています。</p>
