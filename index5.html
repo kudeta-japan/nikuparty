@@ -6,6 +6,16 @@
 <title>ニクパーティ - Meet Meat Night｜Cheese Meat Mania KU-DETA</title>
 <meta name="description" content="11/15(土) 19:00〜 岐阜。お肉×出会いの一夜。男女各25名限定。グループ割あり。">
 <meta name="theme-color" content="#0b0a0a">
+
+<!-- GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V39MNGQD5H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-V39MNGQD5H', { send_page_view: true });
+</script>
+
 <style>
   :root{
     --bg:#0b0a0a; --panel:#141111; --ink:#fff9ef; --muted:#ccbfae; --bd:#2a2421;
@@ -41,7 +51,13 @@
   .hero{position:relative;border-bottom:1px solid var(--bd);background:#000}
   .hero-inner{display:grid;grid-template-columns:1fr;gap:18px;align-items:end;width:min(1040px,92vw);margin:0 auto;padding:0}
   .hero-media{width:100%}
-  .hero-img{width:100%;height:clamp(380px,68vh,600px);object-fit:cover;object-position:center 40%;filter:brightness(.82) contrast(1.05)}
+  .hero-img{
+    width:100%;
+    height:clamp(380px,68vh,600px);
+    object-fit:cover;
+    object-position:center 40%; /* 顔やメインが切れにくい位置 */
+    filter:brightness(.82) contrast(1.05)
+  }
   .hero-overlay{position:relative;margin-top:-110px;padding:0 0 22px}
   .hero-overlay::before{content:"";position:absolute;inset:-24px 0 -22px 0;
     background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.75) 60%,rgba(0,0,0,.9) 100%);
@@ -369,12 +385,54 @@
         form.reset();
         const top = msg.getBoundingClientRect().top + window.scrollY - 80;
         window.scrollTo({ top, behavior:'smooth' });
+
+        // === GA4: 応募コンバージョン送信 ===
+        form.dispatchEvent(new CustomEvent('niku_submit_success'));
       }else{
         alert('送信に失敗しました。時間をおいて再度お試しください。');
       }
     }catch(err){
       alert('通信エラーが発生しました。回線状況をご確認ください。');
     }
+  });
+
+  // ===== GA4: user_properties とイベント送信 =====
+  document.addEventListener('DOMContentLoaded', () => {
+    const audience = (document.getElementById('audience')?.value || '').toString();
+    const variant  = (document.getElementById('lp_variant')?.value || '').toString();
+    const landing  = (document.getElementById('landing_url')?.value || location.href);
+
+    if (typeof gtag === 'function') {
+      gtag('set', 'user_properties', {
+        audience: audience || 'unknown',   // male / female / unknown
+        lp_variant: variant || 'unknown'   // video1 / video2 / video3
+      });
+    }
+
+    // 主要CTAクリック計測
+    const sticky = document.getElementById('sticky-apply');
+    if (sticky) sticky.addEventListener('click', () => {
+      gtag('event', 'cta_click', { id: 'apply_sticky', audience, lp_variant: variant, landing });
+    });
+
+    const heroApply = document.querySelector('.hero .btn.primary[href="#entry"]');
+    if (heroApply) heroApply.addEventListener('click', () => {
+      gtag('event', 'cta_click', { id: 'apply_hero', audience, lp_variant: variant, landing });
+    });
+
+    document.querySelectorAll('a[href="meat-bti/"]').forEach((a, i) => {
+      a.addEventListener('click', () => {
+        gtag('event', 'cta_click', { id: 'meat_bti', pos: i===0?'nav':(i===1?'hero':'body'), audience, lp_variant: variant, landing });
+      });
+    });
+
+    // 応募成功（generate_lead）
+    form.addEventListener('niku_submit_success', () => {
+      gtag('event', 'generate_lead', {
+        audience, lp_variant: variant, landing,
+        method: 'formspree', value: 0, currency: 'JPY'
+      });
+    }, { once:true });
   });
 </script>
 </body>
