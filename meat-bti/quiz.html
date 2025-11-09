@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Meat BTI 診断｜見やすい5段階 × 20問</title>
-<meta name="description" content="A寄り〜B寄りの5段階で20問に答えるだけ。あなたの“肉タイプ”と相性No.1／要注意タイプを診断。">
+<title>Meat BTI 診断｜片手でサクサク 5段階×20問</title>
+<meta name="description" content="A寄り〜B寄りを大きなスライダーで直感回答。20問で“肉タイプ”と相性No.1・要注意を診断。">
 <link rel="preconnect" href="https://www.googletagmanager.com">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-V39MNGQD5H"></script>
 <script>
@@ -56,32 +56,44 @@
 
   .qcard{
     border:1px solid #203159;background:#0e172d;border-radius:14px;padding:14px;
-    display:flex;flex-direction:column;gap:10px;
+    display:flex;flex-direction:column;gap:12px;
   }
   .qcard.focus{outline:2px solid #2f77ff;outline-offset:0}
   .qnum{font-weight:900;font-size:14px;color:#aecdff;letter-spacing:.06em}
   .qhead{font-weight:900;margin:0;font-size:clamp(16px,4.6vw,18px)}
   .qtext{margin:0;color:#dbe7ff}
-  .anchors{display:flex;justify-content:space-between;gap:10px;align-items:center}
-  .chip{background:var(--chip);border:1px solid var(--chip-bd);padding:6px 10px;border-radius:999px;font-size:12px;color:#d7e2fa}
-  .chip A{color:inherit}
-  .ab{display:flex;gap:8px;align-items:center}
-  .ab .A,.ab .B{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid var(--chip-bd);background:#0e1730;font-size:12px}
-  .ab .A::before{content:"A";display:inline-grid;place-items:center;width:18px;height:18px;border-radius:999px;background:#133860;color:#cfe5ff;font-weight:900}
-  .ab .B::before{content:"B";display:inline-grid;place-items:center;width:18px;height:18px;border-radius:999px;background:#5d1a0f;color:#ffe1d9;font-weight:900}
 
-  /* 5-scale buttons */
-  .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
-  .cell{
-    display:grid;gap:4px;place-items:center;padding:12px 4px;height:56px;
-    background:var(--tap);border:1px solid var(--tap-bd);border-radius:12px;cursor:pointer;user-select:none;
+  /* Anchors (A/B) — タップで極端値 */
+  .anchors{display:flex;justify-content:space-between;gap:10px;align-items:center}
+  .ab{display:flex;gap:8px;align-items:center;justify-content:space-between;width:100%}
+  .side{
+    display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:999px;
+    border:1px solid var(--chip-bd);background:#0d162e;font-size:14px;cursor:pointer;user-select:none;
   }
-  .cell strong{font-size:14px;line-height:1}
-  .cell small{font-size:10px;color:#c3d1ea;opacity:.9}
-  .cell[data-sel="1"]{outline:2px solid var(--cheese);background:#172443}
+  .side.A::before{content:"A";display:inline-grid;place-items:center;width:20px;height:20px;border-radius:999px;background:#133860;color:#cfe5ff;font-weight:900}
+  .side.B::before{content:"B";display:inline-grid;place-items:center;width:20px;height:20px;border-radius:999px;background:#5d1a0f;color:#ffe1d9;font-weight:900}
+
+  /* Slider */
+  .slider-wrap{display:grid;gap:8px}
+  .slider{width:100%; -webkit-appearance:none; appearance:none; height:14px; background:#0c1430; border:1px solid #2a3963; border-radius:999px; outline:none}
+  .slider::-webkit-slider-thumb{
+    -webkit-appearance:none; appearance:none; width:34px; height:34px; border-radius:999px;
+    background:linear-gradient(180deg,#86b7ff,#4186ff); border:2px solid #0a121f; box-shadow:0 8px 16px rgba(65,134,255,.35);
+    cursor:pointer; margin-top:-10px;
+  }
+  .ticks{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  .ticks span{font-size:11px;color:#c3d1ea;text-align:center}
+
+  /* Quick chips */
+  .quick{display:flex;gap:8px;flex-wrap:wrap}
+  .qchip{
+    padding:10px 12px;border-radius:12px;font-weight:800;font-size:13px;cursor:pointer;user-select:none;
+    background:var(--tap);border:1px solid var(--tap-bd);
+  }
+  .qchip[data-acc="1"]{outline:2px solid var(--cheese)}
 
   /* footer of page */
-  .page-foot{display:flex;justify-content:space-between;align-items:center;margin-top:12px;flex-wrap:wrap;gap:8px}
+  .page-foot{display:flex;justify-content:space-between;align-items:center;margin-top:4px;flex-wrap:wrap;gap:8px}
   .pill{display:inline-flex;gap:6px;align-items:center;padding:6px 12px;border-radius:999px;background:var(--chip);border:1px solid var(--chip-bd);font-size:12px;color:#d7e2fa}
   .remain{font-size:13px;color:#ced9ec}
 
@@ -126,7 +138,7 @@
         <div id="qGrid" class="grid5"><!-- 5問を描画 --></div>
 
         <div class="page-foot">
-          <span class="pill">ショートカット：<code>1</code>〜<code>5</code>（選ぶと次へ）</span>
+          <span class="pill">ショートカット：数字キー <code>1</code>〜<code>5</code></span>
           <div style="display:flex;gap:8px">
             <button class="btn" id="prevPage">前の5問</button>
             <button class="btn primary" id="nextPage" disabled>次の5問へ</button>
@@ -172,7 +184,7 @@
   /* ==== 12タイプ（位置ベクトル・一言・相性） ==== */
   const TYPES = {
     'ヒレ男爵':           { c:{rich:-2, adv:-2, tempo:-2, social:-2, texture:-2}, one:'静かな主役。無駄なく上品、芯は強い。', best:'書道家ミスジ', caution:'ギャルカルビ' },
-    'タン隊長':           { c:{rich:-1, adv:+1, tempo:+2, social:+1, texture:+2}, one:'合図と段取りで場を回すムード牽引。', best:'リブロースボス', caution:'シャトーブリアン女王' },
+    'タン隊長':           { c:{rich:-1, adv:+1, tempo:+2, social:+1, texture:+2}, one:'段取りと合図で場を回すムード牽引。', best:'リブロースボス', caution:'シャトーブリアン女王' },
     'イチボママ':         { c:{rich:+1, adv:-1, tempo:-1, social:-1, texture:-1}, one:'面倒見の良さと安心感。控えめでも頼れる。', best:'やり手の営業マンハラミ', caution:'サーロイン王' },
     'ランプ博士':         { c:{rich:-1, adv:+2, tempo:+1, social: 0, texture:+1}, one:'小さな実験で会話を広げる観察眼。', best:'カイノミ舞妓はん', caution:'リブロースボス' },
     'リブロースボス':     { c:{rich:+2, adv:-1, tempo: 0, social:+1, texture:-1}, one:'どっしり満足度。頼れる統率力。', best:'ギャルカルビ', caution:'カイノミ舞妓はん' },
@@ -201,7 +213,7 @@
     'シャトーブリアン女王':'shato-.png',
   };
 
-  /* ==== 20問（見やすく表現） ==== */
+  /* ==== 20問（A↔Bをスライダーで） ==== */
   const Q = [
     {id:1,  axis:'rich',   head:'最初の一皿は？',       text:'同じ価格ならどちらを選ぶ？', A:'赤身で軽く', B:'コクのあるリッチ'},
     {id:2,  axis:'rich',   head:'メインの一皿',         text:'満足度を優先するなら',       A:'ヒレ・ランプなど赤身', B:'リブロース・サーロイン'},
@@ -232,7 +244,7 @@
   /* ==== 状態 ==== */
   const PAGE_SIZE = 5, TOTAL_PAGES = Q.length / PAGE_SIZE; // 4
   let page = 0; // 0..3
-  let answers = []; // {id, value(-2..2)}
+  let answers = []; // {id, value(-2..+2)}
   let focusId = null;
 
   const $ = (id)=>document.getElementById(id);
@@ -241,6 +253,7 @@
   $('prevPage').onclick = ()=>{ if(page>0){ page--; renderPage(); } };
   $('nextPage').onclick = ()=>{ if(canNextPage()){ page++; renderPage(); } };
 
+  // 数字キー 1〜5
   window.addEventListener('keydown',(e)=>{
     if(!/^[1-5]$/.test(e.key)) return;
     if(focusId==null) return;
@@ -250,9 +263,7 @@
   renderPage();
 
   function renderPage(){
-    // dots
     for(let i=1;i<=4;i++) $('dot'+i).classList.toggle('active', i===page+1);
-
     $('bar').style.width = (answeredCount()/Q.length*100)+'%';
     $('answered').textContent = answeredCount();
     $('remainTxt').textContent = `残り ${Q.length - answeredCount()} 問`;
@@ -262,57 +273,74 @@
     const firstUn = slice.find(q => findAnswer(q.id)==null);
     focusId = firstUn ? firstUn.id : slice[0].id;
 
-    slice.forEach((q,i)=>{
-      grid.appendChild(renderCard(q, i));
-    });
+    slice.forEach((q)=> grid.appendChild(renderCard(q)) );
 
     $('prevPage').disabled = (page===0);
     $('nextPage').disabled = !canNextPage();
-    // 最初のフォーカスへ軽くスクロール
     setTimeout(()=> scrollToCard(focusId), 10);
   }
 
-  function renderCard(q, idx){
+  function renderCard(q){
     const card = document.createElement('div');
     card.className = 'qcard' + (q.id===focusId?' focus':'');
     card.dataset.qid = q.id;
 
     const ans = findAnswer(q.id)?.value;
-    const labels = [
-      {v:-2, t:'Aにとても近い'},
-      {v:-1, t:'Aに近い'},
-      {v: 0, t:'中間'},
-      {v:+1, t:'Bに近い'},
-      {v:+2, t:'Bにとても近い'},
-    ];
-    const cells = labels.map(({v,t},i)=>`
-      <div class="cell" data-val="${v}" data-sel="${ans===v?1:0}" role="button" aria-label="${t}">
-        <strong>${i+1}</strong><small>${t}</small>
-      </div>
-    `).join('');
+    const sliderVal = (ans==null)? 3 : (ans+3); // -2..+2 => 1..5
+    const labels = ['A','A寄り','中間','B寄り','B'];
 
     card.innerHTML = `
       <div class="qnum">Q${q.id} / 20</div>
       <p class="qhead">${q.head}</p>
       <p class="qtext">${q.text}</p>
+
       <div class="anchors">
         <div class="ab">
-          <span class="A">${q.A}</span>
-          <span class="B">${q.B}</span>
+          <span class="side A" data-ext="-2" role="button" aria-label="A（極端）">${q.A}</span>
+          <span class="side B" data-ext="+2" role="button" aria-label="B（極端）">${q.B}</span>
         </div>
-        <span class="chip">タップ or キー <b>1〜5</b></span>
       </div>
-      <div class="scale">${cells}</div>
+
+      <div class="slider-wrap">
+        <input type="range" min="1" max="5" step="1" value="${sliderVal}" class="slider" aria-label="A〜Bの5段階">
+        <div class="ticks">${labels.map(t=>`<span>${t}</span>`).join('')}</div>
+      </div>
+
+      <div class="quick">
+        <span class="qchip" data-q="-1">A寄り</span>
+        <span class="qchip" data-q="0">中間</span>
+        <span class="qchip" data-q="+1">B寄り</span>
+      </div>
     `;
 
+    // フォーカス表示
     card.addEventListener('click',()=> {
       focusId = q.id;
       document.querySelectorAll('.qcard').forEach(c=>c.classList.toggle('focus', c.dataset.qid==q.id));
     });
 
-    card.querySelectorAll('.cell').forEach(cell=>{
-      cell.addEventListener('click', ()=>{
-        const v = Number(cell.dataset.val);
+    // A/B 極端タップ
+    card.querySelectorAll('.side').forEach(el=>{
+      el.addEventListener('click', (ev)=>{
+        ev.stopPropagation();
+        const v = Number(el.dataset.ext); // -2 or +2
+        chooseAnswer(q.id, v, {autoAdvance:true});
+      });
+    });
+
+    // スライダー
+    const slider = card.querySelector('.slider');
+    // 触って離したら確定 & 自動次へ（changeが離した時に発火）
+    slider.addEventListener('change', ()=>{
+      const v = Number(slider.value); // 1..5
+      chooseAnswer(q.id, v-3, {autoAdvance:true});
+    });
+
+    // クイック芯（A寄り/中間/B寄り）
+    card.querySelectorAll('.qchip').forEach(ch=>{
+      ch.addEventListener('click', (ev)=>{
+        ev.stopPropagation();
+        const v = Number(ch.dataset.q); // -1,0,+1
         chooseAnswer(q.id, v, {autoAdvance:true});
       });
     });
@@ -324,11 +352,15 @@
     const i = answers.findIndex(a=>a.id===qid);
     if(i>=0) answers[i].value = v; else answers.push({id:qid, value:v});
 
+    // 表示更新（chipsハイライト）
     const card = document.querySelector(`.qcard[data-qid="${qid}"]`);
     if(card){
-      card.querySelectorAll('.cell').forEach((c, idx)=>{
-        const vv = [-2,-1,0,1,2][idx]; c.dataset.sel = (vv===v)?'1':'0';
+      card.querySelectorAll('.qchip').forEach(ch=>{
+        const vv = Number(ch.dataset.q);
+        ch.dataset.acc = (vv===v)?'1':'0';
       });
+      const slider = card.querySelector('.slider');
+      if(slider) slider.value = v+3;
     }
 
     $('answered').textContent = answeredCount();
@@ -338,7 +370,7 @@
 
     if(autoAdvance){
       const slice = Q.slice(page*PAGE_SIZE, page*PAGE_SIZE+PAGE_SIZE);
-      const nextUn = slice.find(q => findAnswer(q.id)==null);
+      const nextUn = slice.find(qq => findAnswer(qq.id)==null);
       if(nextUn){
         focusId = nextUn.id;
         setFocusVisual(focusId);
@@ -347,7 +379,7 @@
         setTimeout(()=>{
           if(page < TOTAL_PAGES-1){ page++; renderPage(); }
           else{ showResult(); }
-        }, 180);
+        }, 140);
       }
     }
   }
@@ -403,25 +435,25 @@
     document.getElementById('quizCard').hidden = true;
     document.getElementById('resultCard').hidden = false;
 
-    $('rType').textContent = r.name;
-    $('rOne').textContent  = r.one;
-    $('bestMate').textContent = r.bestMate;
-    $('caution').textContent  = r.caution;
+    document.getElementById('rType').textContent = r.name;
+    document.getElementById('rOne').textContent  = r.one;
+    document.getElementById('bestMate').textContent = r.bestMate;
+    document.getElementById('caution').textContent  = r.caution;
 
     const img = TYPE_IMAGE[r.name] || '';
-    const rImg = $('rImg'); rImg.src = img; rImg.alt = r.name;
+    const rImg = document.getElementById('rImg'); rImg.src = img; rImg.alt = r.name;
 
-    const holder = $('rTags'); holder.innerHTML='';
+    const holder = document.getElementById('rTags'); holder.innerHTML='';
     tagify(r.vec).forEach(s=>{
       const span=document.createElement('span'); span.className='tag'; span.textContent=s; holder.appendChild(span);
     });
 
-    $('retryBtn').onclick = ()=>{
+    document.getElementById('retryBtn').onclick = ()=>{
       page=0; answers=[]; renderPage();
-      $('resultCard').hidden = true; $('quizCard').hidden = false;
+      document.getElementById('resultCard').hidden = true; document.getElementById('quizCard').hidden = false;
       window.scrollTo({top:0,behavior:'smooth'});
     };
-    $('saveBtn').onclick = ()=>{
+    document.getElementById('saveBtn').onclick = ()=>{
       const payload = { type:r.name, one:r.one, best:r.bestMate, caution:r.caution, vector:r.vec, answers, generatedAt:new Date().toISOString() };
       const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
       const url=URL.createObjectURL(blob);
