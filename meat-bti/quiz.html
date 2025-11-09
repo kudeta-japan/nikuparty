@@ -3,465 +3,346 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Meat BTI 診断｜片手でサクサク 5段階×20問</title>
-<meta name="description" content="A寄り〜B寄りを大きなスライダーで直感回答。20問で“肉タイプ”と相性No.1・要注意を診断。">
-<link rel="preconnect" href="https://www.googletagmanager.com">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-V39MNGQD5H"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){ dataLayer.push(arguments); }
-  gtag('js', new Date()); gtag('config', 'G-V39MNGQD5H');
-</script>
+<title>Meat BTI 診断｜回答しやすい5段階UI</title>
+<meta name="theme-color" content="#0b0a0a">
 <style>
   :root{
-    --bg:#0a0d14; --panel:#0f1524; --ink:#f7fbff; --muted:#b8c6da; --bd:#1b2640;
-    --cheese:#ffd966; --tomato:#ff6b4a; --blue:#57a6ff; --ok:#2ed39b; --warn:#ffd166;
-    --chip:#111a31; --chip-bd:#27355a; --shadow:0 14px 34px rgba(0,0,0,.35);
-    --tap:#151f39; --tap-bd:#2a3963;
+    --bg:#0b0a0a; --panel:#131723; --ink:#f7f7fb; --muted:#c5c9d3; --bd:#232a3a;
+    --brand:#ffd966; --accent:#ff6b4a; --ok:#3fbf7b; --pill:#151b2a; --pillbd:#2b344a;
+    --a:#7bc3ff; --b:#ff9bb3;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
   body{
-    margin:0;background:var(--bg);color:var(--ink);
-    font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;
-    letter-spacing:.02em; line-height:1.75;
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;
+    letter-spacing:.02em; line-height:1.65;
   }
   a{color:inherit;text-decoration:none}
-  .wrap{min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto}
-  header{position:sticky;top:0;z-index:20;background:rgba(13,18,32,.85);backdrop-filter:saturate(120%) blur(8px);border-bottom:1px solid var(--bd)}
-  .head-in{width:min(980px,92vw);margin:0 auto;height:60px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-  .brand{display:flex;align-items:center;gap:12px}
-  .logo{width:34px;height:34px;border-radius:10px;background:conic-gradient(from 140deg,var(--cheese),var(--tomato));display:grid;place-items:center;color:#111;font-weight:900}
-  .brand b{font-size:18px}
-  .btn{appearance:none;border:1px solid var(--bd);background:#14203a;color:var(--ink);padding:12px 16px;border-radius:12px;font-weight:800;cursor:pointer;transition:transform .06s ease}
-  .btn:hover{transform:translateY(-1px)}
-  .btn.primary{background:linear-gradient(180deg,var(--tomato),#ff4a2c);color:#111;border:none}
-  .btn.ghost{background:transparent}
-  .main{width:min(980px,92vw);margin:0 auto;padding:14px 0 28px}
-  .card{background:var(--panel);border:1px solid var(--bd);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
-
-  /* progress */
-  .progress{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px;padding:12px 14px;border-bottom:1px solid var(--bd)}
-  .bar{height:10px;background:#0e1730;border:1px solid var(--bd);border-radius:999px;overflow:hidden}
-  .bar>div{height:100%;width:0%;background:linear-gradient(90deg,var(--cheese),var(--tomato))}
-  .meta{font-size:13px;color:#ced9ec}
-  .pgdots{display:flex;gap:8px}
-  .dot{width:9px;height:9px;border-radius:999px;background:#283b65;border:1px solid #3a528a;opacity:.7}
-  .dot.active{background:#86b7ff;opacity:1}
-
-  /* quiz grid */
-  .qwrap{padding:16px 16px 18px}
-  .grid5{display:grid;grid-template-columns:1fr;gap:14px}
-  @media(min-width:900px){ .grid5{grid-template-columns:1fr 1fr} }
-
-  .qcard{
-    border:1px solid #203159;background:#0e172d;border-radius:14px;padding:14px;
-    display:flex;flex-direction:column;gap:12px;
+  /* Shell */
+  header{
+    position:sticky; top:0; z-index:20; background:rgba(11,12,16,.75);
+    backdrop-filter:saturate(120%) blur(8px); border-bottom:1px solid var(--bd);
   }
-  .qcard.focus{outline:2px solid #2f77ff;outline-offset:0}
-  .qnum{font-weight:900;font-size:14px;color:#aecdff;letter-spacing:.06em}
-  .qhead{font-weight:900;margin:0;font-size:clamp(16px,4.6vw,18px)}
-  .qtext{margin:0;color:#dbe7ff}
-
-  /* Anchors (A/B) — タップで極端値 */
-  .anchors{display:flex;justify-content:space-between;gap:10px;align-items:center}
-  .ab{display:flex;gap:8px;align-items:center;justify-content:space-between;width:100%}
-  .side{
-    display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:999px;
-    border:1px solid var(--chip-bd);background:#0d162e;font-size:14px;cursor:pointer;user-select:none;
+  .wrap{width:min(1080px,92vw); margin:0 auto}
+  .nav{
+    height:56px; display:flex; align-items:center; gap:10px; justify-content:space-between;
   }
-  .side.A::before{content:"A";display:inline-grid;place-items:center;width:20px;height:20px;border-radius:999px;background:#133860;color:#cfe5ff;font-weight:900}
-  .side.B::before{content:"B";display:inline-grid;place-items:center;width:20px;height:20px;border-radius:999px;background:#5d1a0f;color:#ffe1d9;font-weight:900}
+  .nav .left{display:flex; align-items:center; gap:10px}
+  .logo{width:28px;height:28px;border-radius:8px;background:conic-gradient(from 140deg,var(--brand),var(--accent));display:grid;place-items:center}
+  .back{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--bd);border-radius:10px;background:#121726}
+  .prog{height:6px;background:#0e1322;border-radius:999px;overflow:hidden;margin:8px 0 14px;border:1px solid var(--bd)}
+  .bar{height:100%;width:0%;background:linear-gradient(90deg,var(--brand),#ffc64a);transition:width .25s ease}
+  h1{font-size:clamp(18px,4.6vw,26px);margin:0 0 2px}
+  .note{color:var(--muted);margin:0 0 12px}
 
-  /* Slider */
-  .slider-wrap{display:grid;gap:8px}
-  .slider{width:100%; -webkit-appearance:none; appearance:none; height:14px; background:#0c1430; border:1px solid #2a3963; border-radius:999px; outline:none}
-  .slider::-webkit-slider-thumb{
-    -webkit-appearance:none; appearance:none; width:34px; height:34px; border-radius:999px;
-    background:linear-gradient(180deg,#86b7ff,#4186ff); border:2px solid #0a121f; box-shadow:0 8px 16px rgba(65,134,255,.35);
-    cursor:pointer; margin-top:-10px;
+  /* Cards */
+  .grid{display:grid;gap:14px;grid-template-columns:1fr}
+  @media(min-width:920px){.grid{grid-template-columns:1fr 1fr}}
+  .card{background:var(--panel); border:1px solid var(--bd); border-radius:16px; padding:14px; position:relative}
+  .qhead{display:flex; justify-content:space-between; align-items:center; gap:10px}
+  .qno{font-weight:900; color:#9fb0d6}
+  .qtitle{margin:6px 0 8px; font-size:clamp(16px,2.6vw,18px); font-weight:800}
+  .anchors{display:flex; justify-content:space-between; gap:10px; font-size:12px; color:var(--muted)}
+  .anchors .a{color:var(--a);font-weight:700}
+  .anchors .b{color:var(--b);font-weight:700}
+
+  /* 5段階ピル */
+  .scale{display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-top:10px}
+  .opt{
+    appearance:none; border:1px solid var(--pillbd); background:var(--pill); color:var(--ink);
+    padding:12px 8px; border-radius:12px; font-weight:900; cursor:pointer; text-align:center;
+    transition:transform .05s ease, border-color .15s ease, background .15s ease; user-select:none;
   }
-  .ticks{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-  .ticks span{font-size:11px;color:#c3d1ea;text-align:center}
+  .opt small{display:block; font-weight:700; color:var(--muted); letter-spacing:.02em}
+  .opt:active{transform:translateY(1px)}
+  .opt[data-val="1"] small{color:var(--a)}
+  .opt[data-val="5"] small{color:var(--b)}
+  .opt.active{border-color:#ffcf66; box-shadow:0 0 0 1px #ffcf66 inset}
 
-  /* Quick chips */
-  .quick{display:flex;gap:8px;flex-wrap:wrap}
-  .qchip{
-    padding:10px 12px;border-radius:12px;font-weight:800;font-size:13px;cursor:pointer;user-select:none;
-    background:var(--tap);border:1px solid var(--tap-bd);
+  /* Pager */
+  .pager{
+    display:flex; justify-content:space-between; gap:10px; margin:16px 0 8px;
   }
-  .qchip[data-acc="1"]{outline:2px solid var(--cheese)}
+  .btn{
+    appearance:none; border:1px solid var(--bd); background:#151b2a; color:var(--ink);
+    padding:12px 14px; border-radius:12px; font-weight:900; cursor:pointer;
+  }
+  .btn.primary{background:linear-gradient(180deg,var(--brand),#f7c84a); color:#2a1e0b; border:none}
+  .btn.ghost{background:#121726}
+  .btn:disabled{opacity:.5; cursor:not-allowed}
 
-  /* footer of page */
-  .page-foot{display:flex;justify-content:space-between;align-items:center;margin-top:4px;flex-wrap:wrap;gap:8px}
-  .pill{display:inline-flex;gap:6px;align-items:center;padding:6px 12px;border-radius:999px;background:var(--chip);border:1px solid var(--chip-bd);font-size:12px;color:#d7e2fa}
-  .remain{font-size:13px;color:#ced9ec}
+  .foot{display:flex; justify-content:flex-end; gap:10px; margin:6px 0 24px}
+  .hint{color:#9aa6c7; font-size:12px; margin:2px 0 0}
 
-  /* result */
-  .result{display:grid;gap:16px}
-  .r-hero{display:grid;grid-template-columns:1fr 1.2fr;gap:14px}
-  @media(max-width:900px){.r-hero{grid-template-columns:1fr}}
-  .r-img{aspect-ratio:1/1;border:1px solid #21345f;background:#0b1224;border-radius:14px;overflow:hidden}
-  .r-img img{width:100%;height:100%;object-fit:cover}
-  .rtype{font-size:clamp(22px,5.6vw,28px);font-weight:900;margin:0}
-  .rone{margin:8px 0 0;color:#e8f0ff}
-  .r-tags{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px}
-  .tag{padding:6px 10px;border:1px solid #2a3b6c;border-radius:999px;background:#101a35;font-size:12px}
-  .r-pairs{display:grid;gap:6px;margin-top:10px}
-  .pair{display:flex;gap:8px;align-items:center}
-  .badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid #364a83;background:#0f1834;font-size:12px}
-  footer{border-top:1px solid var(--bd);color:#9fb0cc;font-size:12px;text-align:center;padding:16px}
+  /* Floating submit */
+  .floating{
+    position:fixed; right:18px; bottom:18px; z-index:30;
+    display:flex; gap:10px; align-items:center;
+  }
+  .floating .btn{box-shadow:0 12px 26px rgba(247,200,74,.28)}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div class="head-in">
-      <div class="brand"><div class="logo">🥩</div><b>Meat BTI 診断</b></div>
-      <a class="btn ghost" href="../index.html">← LPへ戻る</a>
+<header>
+  <div class="wrap">
+    <div class="nav">
+      <div class="left">
+        <div class="logo">🥩</div>
+        <a class="back" href="../index1.html" title="LPへ戻る">← LPへ戻る</a>
+      </div>
+      <div style="font-weight:900">Meat BTI 診断</div>
     </div>
-  </header>
+    <div class="prog"><div class="bar" id="bar"></div></div>
+  </div>
+</header>
 
-  <main class="main">
-    <!-- QUIZ -->
-    <section class="card" id="quizCard" aria-label="診断">
-      <div class="progress">
-        <div class="meta"><b id="answered">0</b>/20</div>
-        <div class="bar"><div id="bar"></div></div>
-        <div class="pgdots" aria-hidden="true">
-          <span class="dot" id="dot1"></span><span class="dot" id="dot2"></span>
-          <span class="dot" id="dot3"></span><span class="dot" id="dot4"></span>
+<main class="wrap" id="app" aria-live="polite">
+  <h1>好みや食べ方の“傾き”を5段階でサクサク選ぶだけ。</h1>
+  <p class="note">各設問は <b>1=「かなりA寄り」</b>〜<b>5=「かなりB寄り」</b> 。タップすると自動で次へ進みます（キーボード <b>1〜5</b> でも回答OK）。</p>
+
+  <!-- ページ1 -->
+  <section class="page" data-page="1">
+    <div class="grid">
+      <!-- Q1 -->
+      <article class="card" data-q="1">
+        <div class="qhead"><div class="qno">Q1/20</div></div>
+        <div class="qtitle">最初の一皿は？</div>
+        <div class="anchors"><span class="a">A：タン塩など軽快に</span><span class="b">B：リブロース/サーロインで華やかに</span></div>
+        <div class="scale" role="group" aria-label="Q1">
+          <button class="opt" data-val="1"><small>A寄り</small>1</button>
+          <button class="opt" data-val="2"><small>ややA</small>2</button>
+          <button class="opt" data-val="3"><small>中立</small>3</button>
+          <button class="opt" data-val="4"><small>ややB</small>4</button>
+          <button class="opt" data-val="5"><small>B寄り</small>5</button>
         </div>
-      </div>
+      </article>
 
-      <div class="qwrap">
-        <div id="qGrid" class="grid5"><!-- 5問を描画 --></div>
-
-        <div class="page-foot">
-          <span class="pill">ショートカット：数字キー <code>1</code>〜<code>5</code></span>
-          <div style="display:flex;gap:8px">
-            <button class="btn" id="prevPage">前の5問</button>
-            <button class="btn primary" id="nextPage" disabled>次の5問へ</button>
-          </div>
+      <!-- Q2 -->
+      <article class="card" data-q="2">
+        <div class="qhead"><div class="qno">Q2/20</div></div>
+        <div class="qtitle">メインの一皿を優先するなら？</div>
+        <div class="anchors"><span class="a">A：ヒレ/ランプ/赤身</span><span class="b">B：リブロース/サーロイン</span></div>
+        <div class="scale" role="group" aria-label="Q2">
+          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
         </div>
-        <div class="remain" id="remainTxt">残り 20 問</div>
-      </div>
-    </section>
+      </article>
 
-    <!-- RESULT -->
-    <section class="card" id="resultCard" hidden aria-label="結果">
-      <div class="qwrap result">
-        <div class="r-hero">
-          <div class="r-img"><img id="rImg" alt=""></div>
-          <div>
-            <h2 class="rtype" id="rType">—</h2>
-            <p class="rone" id="rOne">—</p>
-            <div class="r-tags" id="rTags"></div>
-
-            <div class="r-pairs">
-              <div class="pair"><span class="badge">🎯 相性No.1</span><b id="bestMate">—</b></div>
-              <div class="pair"><span class="badge" style="border-color:#7d5a20;background:#241a0b">⚠ 要注意</span><b id="caution">—</b></div>
-            </div>
-
-            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
-              <button class="btn" id="retryBtn">もう一度</button>
-              <button class="btn" id="saveBtn">結果を保存(JSON)</button>
-              <a class="btn primary" href="../index.html">LPへ戻る</a>
-            </div>
-          </div>
+      <!-- Q3 -->
+      <article class="card" data-q="3">
+        <div class="qhead"><div class="qno">Q3/20</div></div>
+        <div class="qtitle">脂の重さはどちらが心地よい？</div>
+        <div class="anchors"><span class="a">A：軽め・キレ重視</span><span class="b">B：濃厚でも満足</span></div>
+        <div class="scale" role="group" aria-label="Q3">
+          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
         </div>
-      </div>
-    </section>
-  </main>
+      </article>
 
-  <footer>© <span id="y"></span> Meat BTI</footer>
+      <!-- Q4 -->
+      <article class="card" data-q="4">
+        <div class="qhead"><div class="qno">Q4/20</div></div>
+        <div class="qtitle">量と赤身のバランスは？</div>
+        <div class="anchors"><span class="a">A：赤身多めで満足</span><span class="b">B：ボリューム優先もOK</span></div>
+        <div class="scale" role="group" aria-label="Q4">
+          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
+        </div>
+      </article>
+
+      <!-- Q5 -->
+      <article class="card" data-q="5">
+        <div class="qhead"><div class="qno">Q5/20</div></div>
+        <div class="qtitle">オーダー方針は？</div>
+        <div class="anchors"><span class="a">A：定番中心で確実に</span><span class="b">B：新作・変化球も攻める</span></div>
+        <div class="scale" role="group" aria-label="Q5">
+          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
+        </div>
+      </article>
+    </div>
+    <div class="pager"><button class="btn ghost" disabled>前の5問</button><button class="btn primary next">次の5問へ</button></div>
+  </section>
+
+  <!-- ページ2 -->
+  <section class="page" data-page="2" hidden>
+    <div class="grid">
+      <article class="card" data-q="6"><div class="qhead"><div class="qno">Q6/20</div></div><div class="qtitle">焼き加減の好みは？</div><div class="anchors"><span class="a">A：レア寄り</span><span class="b">B：ミディアム〜ウェル</span></div><div class="scale" role="group" aria-label="Q6">
+        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+
+      <article class="card" data-q="7"><div class="qhead"><div class="qno">Q7/20</div></div><div class="qtitle">香りの演出は？</div><div class="anchors"><span class="a">A：炭火や焼き目の香ばしさ</span><span class="b">B：フランベなど香り立ち</span></div><div class="scale" role="group" aria-label="Q7">
+        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+
+      <article class="card" data-q="8"><div class="qhead"><div class="qno">Q8/20</div></div><div class="qtitle">味つけは？</div><div class="anchors"><span class="a">A：塩で旨みを際立てる</span><span class="b">B：特製ソースで華やかに</span></div><div class="scale" role="group" aria-label="Q8">
+        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+
+      <article class="card" data-q="9"><div class="qhead"><div class="qno">Q9/20</div></div><div class="qtitle">シェアのスタイルは？</div><div class="anchors"><span class="a">A：少量×多皿で比較</span><span class="b">B：どーんと大皿で満足</span></div><div class="scale" role="group" aria-label="Q9">
+        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+
+      <article class="card" data-q="10"><div class="qhead"><div class="qno">Q10/20</div></div><div class="qtitle">締め（〆）は？</div><div class="anchors"><span class="a">A：軽め（サラダ/スープ）</span><span class="b">B：しっかり（ご飯/麺）</span></div><div class="scale" role="group" aria-label="Q10">
+        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+    </div>
+    <div class="pager"><button class="btn ghost prev">前の5問</button><button class="btn primary next">次の5問へ</button></div>
+  </section>
+
+  <!-- ページ3 -->
+  <section class="page" data-page="3" hidden>
+    <div class="grid">
+      <article class="card" data-q="11"><div class="qhead"><div class="qno">Q11/20</div></div><div class="qtitle">食事のテンポは？</div><div class="anchors"><span class="a">A：テンポ良く回す</span><span class="b">B：ゆっくり会話を楽しむ</span></div><div class="scale" role="group" aria-label="Q11">
+        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+
+      <article class="card" data-q="12"><div class="qhead"><div class="qno">Q12/20</div></div><div class="qtitle">写真・映えは？</div><div class="anchors"><span class="a">A：ほどほどでOK</span><span class="b">B：しっかり撮って楽しむ</span></div><div class="scale" role="group" aria-label="Q12">
+        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+
+      <article class="card" data-q="13"><div class="qhead"><div class="qno">Q13/20</div></div><div class="qtitle">席の雰囲気は？</div><div class="anchors"><span class="a">A：静かめ・落ち着き</span><span class="b">B：賑やか・活気</span></div><div class="scale" role="group" aria-label="Q13">
+        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+
+      <article class="card" data-q="14"><div class="qhead"><div class="qno">Q14/20</div></div><div class="qtitle">乾杯ドリンクは？</div><div class="anchors"><span class="a">A：ハイボール/スパークリング</span><span class="b">B：ワイン/カクテル系</span></div><div class="scale" role="group" aria-label="Q14">
+        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+
+      <article class="card" data-q="15"><div class="qhead"><div class="qno">Q15/20</div></div><div class="qtitle">食感の魅力は？</div><div class="anchors"><span class="a">A：歯切れ・噛み心地</span><span class="b">B：とろける口どけ</span></div><div class="scale" role="group" aria-label="Q15">
+        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+    </div>
+    <div class="pager"><button class="btn ghost prev">前の5問</button><button class="btn primary next">次の5問へ</button></div>
+  </section>
+
+  <!-- ページ4 -->
+  <section class="page" data-page="4" hidden>
+    <div class="grid">
+      <article class="card" data-q="16"><div class="qhead"><div class="qno">Q16/20</div></div><div class="qtitle">種類の組み方は？</div><div class="anchors"><span class="a">A：赤身の比較中心</span><span class="b">B：霜降り・リッチ中心</span></div><div class="scale" role="group" aria-label="Q16">
+        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+
+      <article class="card" data-q="17"><div class="qhead"><div class="qno">Q17/20</div></div><div class="qtitle">チャレンジ度合いは？</div><div class="anchors"><span class="a">A：定番を極めたい</span><span class="b">B：変わり種も積極的に</span></div><div class="scale" role="group" aria-label="Q17">
+        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+
+      <article class="card" data-q="18"><div class="qhead"><div class="qno">Q18/20</div></div><div class="qtitle">焼き台の役割は？</div><div class="anchors"><span class="a">A：自分でじっくり管理</span><span class="b">B：お店に任せテンポ良く</span></div><div class="scale" role="group" aria-label="Q18">
+        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+
+      <article class="card" data-q="19"><div class="qhead"><div class="qno">Q19/20</div></div><div class="qtitle">食後の流れは？</div><div class="anchors"><span class="a">A：少人数で深話</span><span class="b">B：大人数でワイワイ</span></div><div class="scale" role="group" aria-label="Q19">
+        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+
+      <article class="card" data-q="20"><div class="qhead"><div class="qno">Q20/20</div></div><div class="qtitle">会話のスタイルは？</div><div class="anchors"><span class="a">A：落ち着いて相手を見る</span><span class="b">B：ノリ良く盛り上げる</span></div><div class="scale" role="group" aria-label="Q20">
+        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+    </div>
+    <div class="pager"><button class="btn ghost prev">前の5問</button><button class="btn primary" id="toResult">結果を見る</button></div>
+  </section>
+
+  <div class="foot">
+    <button class="btn ghost" id="reset">回答をリセット</button>
+    <p class="hint">進捗は端末に自動保存されます。</p>
+  </div>
+</main>
+
+<!-- 浮遊送信ボタン（モバイル補助） -->
+<div class="floating">
+  <button class="btn primary" id="floatSubmit" style="display:none">結果を見る</button>
 </div>
 
 <script>
-  /* ==== 設定（軸） ==== */
-  const AXES = ['rich','adv','tempo','social','texture'];
+  const TOTAL = 20;
+  const answers = JSON.parse(localStorage.getItem('meatbti_answers_v2')||'{}');
+  const bar = document.getElementById('bar');
 
-  /* ==== 12タイプ（位置ベクトル・一言・相性） ==== */
-  const TYPES = {
-    'ヒレ男爵':           { c:{rich:-2, adv:-2, tempo:-2, social:-2, texture:-2}, one:'静かな主役。無駄なく上品、芯は強い。', best:'書道家ミスジ', caution:'ギャルカルビ' },
-    'タン隊長':           { c:{rich:-1, adv:+1, tempo:+2, social:+1, texture:+2}, one:'段取りと合図で場を回すムード牽引。', best:'リブロースボス', caution:'シャトーブリアン女王' },
-    'イチボママ':         { c:{rich:+1, adv:-1, tempo:-1, social:-1, texture:-1}, one:'面倒見の良さと安心感。控えめでも頼れる。', best:'やり手の営業マンハラミ', caution:'サーロイン王' },
-    'ランプ博士':         { c:{rich:-1, adv:+2, tempo:+1, social: 0, texture:+1}, one:'小さな実験で会話を広げる観察眼。', best:'カイノミ舞妓はん', caution:'リブロースボス' },
-    'リブロースボス':     { c:{rich:+2, adv:-1, tempo: 0, social:+1, texture:-1}, one:'どっしり満足度。頼れる統率力。', best:'ギャルカルビ', caution:'カイノミ舞妓はん' },
-    'サーロイン王':       { c:{rich:+2, adv:+1, tempo:+1, social:+2, texture: 0}, one:'華やかな演出で場を明るくする王道。', best:'シャトーブリアン女王', caution:'書道家ミスジ' },
-    '美食家ザブトン':     { c:{rich:+2, adv:-2, tempo:-2, social:-1, texture:-1}, one:'しっとり濃厚。言葉も所作も丁寧。', best:'タン隊長', caution:'やり手の営業マンハラミ' },
-    'ギャルカルビ':       { c:{rich:+2, adv:+2, tempo:+2, social:+2, texture: 0}, one:'ご褒美感で場を爆上げするエンタメ力。', best:'サーロイン王', caution:'ランプ博士' },
-    'やり手の営業マンハラミ': { c:{rich: 0, adv:+1, tempo:+2, social:+1, texture:+1}, one:'テンポ良く実務も会話も回す切替上手。', best:'イチボママ', caution:'美食家ザブトン' },
-    'カイノミ舞妓はん':   { c:{rich:+1, adv: 0, tempo:+1, social: 0, texture:-1}, one:'軽やか上品。場の橋渡しが得意。', best:'ランプ博士', caution:'やり手の営業マンハラミ' },
-    '書道家ミスジ':       { c:{rich:+1, adv:-2, tempo:-2, social:-2, texture:-2}, one:'繊細な美意識。静かに深く向き合う。', best:'ヒレ男爵', caution:'イチボママ' },
-    'シャトーブリアン女王': { c:{rich:+1, adv:-1, tempo:-2, social:-1, texture:-2}, one:'量より質の一点集中。静かな格上。', best:'美食家ザブトン', caution:'ヒレ男爵' },
-  };
-
-  /* ==== キャラ画像 ==== */
-  const TYPE_IMAGE = {
-    'ヒレ男爵':'hire.png',
-    'タン隊長':'tan.png',
-    'イチボママ':'ichibo.png',
-    'ランプ博士':'ranpu.png',
-    'リブロースボス':'riburo-su.png',
-    'サーロイン王':'sa-roin.png',
-    '美食家ザブトン':'zabuton.png',
-    'ギャルカルビ':'karubi.png',
-    'やり手の営業マンハラミ':'harami.png',
-    'カイノミ舞妓はん':'kainomi.png',
-    '書道家ミスジ':'misuji.png',
-    'シャトーブリアン女王':'shato-.png',
-  };
-
-  /* ==== 20問（A↔Bをスライダーで） ==== */
-  const Q = [
-    {id:1,  axis:'rich',   head:'最初の一皿は？',       text:'同じ価格ならどちらを選ぶ？', A:'赤身で軽く', B:'コクのあるリッチ'},
-    {id:2,  axis:'rich',   head:'メインの一皿',         text:'満足度を優先するなら',       A:'ヒレ・ランプなど赤身', B:'リブロース・サーロイン'},
-    {id:3,  axis:'rich',   head:'脂の量の好み',         text:'好きな方向性に近いのは',     A:'脂控えめでキレ', B:'脂の旨みをしっかり'},
-    {id:4,  axis:'rich',   head:'ボリューム感',         text:'量と重さのバランスは',       A:'軽めが好き', B:'重厚でもOK'},
-
-    {id:5,  axis:'adv',    head:'オーダー方針',         text:'はじめてのお店で',           A:'王道メニュー中心', B:'限定・創作も攻める'},
-    {id:6,  axis:'adv',    head:'新メニュー',           text:'未知の一皿があったら',       A:'様子見', B:'まず試す'},
-    {id:7,  axis:'adv',    head:'味付けの選び方',       text:'基本は',                     A:'定番の塩／特製ソース', B:'旬のソースやスパイス歓迎'},
-    {id:8,  axis:'adv',    head:'焼き方カスタム',       text:'自分で調整するのは',         A:'あまりしない', B:'積極的にやる'},
-
-    {id:9,  axis:'tempo',  head:'食事のテンポ',         text:'理想の進行は',               A:'一皿ずつゆっくり', B:'サクサク軽快に'},
-    {id:10, axis:'tempo',  head:'席替えの頻度',         text:'会の盛り上げとして',         A:'ほとんどしない', B:'テンポよく行う'},
-    {id:11, axis:'tempo',  head:'BGMと雰囲気',          text:'心地よいのは',               A:'落ち着いた雰囲気', B:'賑やかな雰囲気'},
-    {id:12, axis:'tempo',  head:'写真・動画の撮影',     text:'進行の中で',                 A:'最小限でOK', B:'テンポ良く撮って共有'},
-
-    {id:13, axis:'social', head:'人数の好み',           text:'居心地が良いのは',           A:'2〜3人でじっくり', B:'大人数でワイワイ'},
-    {id:14, axis:'social', head:'乾杯後の動き',         text:'最初にやりがちなのは',       A:'向かいの人と深く話す', B:'テーブル全員に声をかける'},
-    {id:15, axis:'social', head:'記念撮影',             text:'写真を撮るなら',             A:'必要な人だけで', B:'全員で撮りたい'},
-    {id:16, axis:'social', head:'席の選び方',           text:'落ち着くのは',               A:'隅の席で落ち着く', B:'中央寄りで交流しやすく'},
-
-    {id:17, axis:'texture',head:'食感の好み',           text:'どちらがより好み？',         A:'口どけなめらか', B:'歯ごたえしっかり'},
-    {id:18, axis:'texture',head:'カット厚',             text:'肉の厚みに関して',           A:'薄めで軽く', B:'厚めで噛みたい'},
-    {id:19, axis:'texture',head:'焼き加減',             text:'基本の火入れは',             A:'レア寄りで柔らかく', B:'ミディアム以上で食べ応え'},
-    {id:20, axis:'texture',head:'調理の方向性',         text:'仕上がりのニュアンス',       A:'低温でしっとり', B:'炭火香で噛み締める'},
-  ];
-
-  /* ==== 状態 ==== */
-  const PAGE_SIZE = 5, TOTAL_PAGES = Q.length / PAGE_SIZE; // 4
-  let page = 0; // 0..3
-  let answers = []; // {id, value(-2..+2)}
-  let focusId = null;
-
-  const $ = (id)=>document.getElementById(id);
-  $('y').textContent = new Date().getFullYear();
-
-  $('prevPage').onclick = ()=>{ if(page>0){ page--; renderPage(); } };
-  $('nextPage').onclick = ()=>{ if(canNextPage()){ page++; renderPage(); } };
-
-  // 数字キー 1〜5
-  window.addEventListener('keydown',(e)=>{
-    if(!/^[1-5]$/.test(e.key)) return;
-    if(focusId==null) return;
-    chooseAnswer(focusId, (+e.key)-3, {autoAdvance:true}); // 1→-2 ... 5→+2
-  });
-
-  renderPage();
-
-  function renderPage(){
-    for(let i=1;i<=4;i++) $('dot'+i).classList.toggle('active', i===page+1);
-    $('bar').style.width = (answeredCount()/Q.length*100)+'%';
-    $('answered').textContent = answeredCount();
-    $('remainTxt').textContent = `残り ${Q.length - answeredCount()} 問`;
-
-    const grid = $('qGrid'); grid.innerHTML='';
-    const slice = Q.slice(page*PAGE_SIZE, page*PAGE_SIZE+PAGE_SIZE);
-    const firstUn = slice.find(q => findAnswer(q.id)==null);
-    focusId = firstUn ? firstUn.id : slice[0].id;
-
-    slice.forEach((q)=> grid.appendChild(renderCard(q)) );
-
-    $('prevPage').disabled = (page===0);
-    $('nextPage').disabled = !canNextPage();
-    setTimeout(()=> scrollToCard(focusId), 10);
+  // 進捗更新
+  function updateProgress(){
+    const answered = Object.keys(answers).length;
+    bar.style.width = ((answered/TOTAL)*100)+'%';
+    // 最後のページに来たらフローティングボタン表示
+    document.getElementById('floatSubmit').style.display = answered>=TOTAL ? 'inline-flex':'none';
   }
 
-  function renderCard(q){
-    const card = document.createElement('div');
-    card.className = 'qcard' + (q.id===focusId?' focus':'');
-    card.dataset.qid = q.id;
-
-    const ans = findAnswer(q.id)?.value;
-    const sliderVal = (ans==null)? 3 : (ans+3); // -2..+2 => 1..5
-    const labels = ['A','A寄り','中間','B寄り','B'];
-
-    card.innerHTML = `
-      <div class="qnum">Q${q.id} / 20</div>
-      <p class="qhead">${q.head}</p>
-      <p class="qtext">${q.text}</p>
-
-      <div class="anchors">
-        <div class="ab">
-          <span class="side A" data-ext="-2" role="button" aria-label="A（極端）">${q.A}</span>
-          <span class="side B" data-ext="+2" role="button" aria-label="B（極端）">${q.B}</span>
-        </div>
-      </div>
-
-      <div class="slider-wrap">
-        <input type="range" min="1" max="5" step="1" value="${sliderVal}" class="slider" aria-label="A〜Bの5段階">
-        <div class="ticks">${labels.map(t=>`<span>${t}</span>`).join('')}</div>
-      </div>
-
-      <div class="quick">
-        <span class="qchip" data-q="-1">A寄り</span>
-        <span class="qchip" data-q="0">中間</span>
-        <span class="qchip" data-q="+1">B寄り</span>
-      </div>
-    `;
-
-    // フォーカス表示
-    card.addEventListener('click',()=> {
-      focusId = q.id;
-      document.querySelectorAll('.qcard').forEach(c=>c.classList.toggle('focus', c.dataset.qid==q.id));
+  // ページ切替
+  function showPage(n){
+    document.querySelectorAll('.page').forEach(p=>{
+      p.hidden = (p.dataset.page != n);
     });
-
-    // A/B 極端タップ
-    card.querySelectorAll('.side').forEach(el=>{
-      el.addEventListener('click', (ev)=>{
-        ev.stopPropagation();
-        const v = Number(el.dataset.ext); // -2 or +2
-        chooseAnswer(q.id, v, {autoAdvance:true});
-      });
-    });
-
-    // スライダー
-    const slider = card.querySelector('.slider');
-    // 触って離したら確定 & 自動次へ（changeが離した時に発火）
-    slider.addEventListener('change', ()=>{
-      const v = Number(slider.value); // 1..5
-      chooseAnswer(q.id, v-3, {autoAdvance:true});
-    });
-
-    // クイック芯（A寄り/中間/B寄り）
-    card.querySelectorAll('.qchip').forEach(ch=>{
-      ch.addEventListener('click', (ev)=>{
-        ev.stopPropagation();
-        const v = Number(ch.dataset.q); // -1,0,+1
-        chooseAnswer(q.id, v, {autoAdvance:true});
-      });
-    });
-
-    return card;
-  }
-
-  function chooseAnswer(qid, v, {autoAdvance}={}){
-    const i = answers.findIndex(a=>a.id===qid);
-    if(i>=0) answers[i].value = v; else answers.push({id:qid, value:v});
-
-    // 表示更新（chipsハイライト）
-    const card = document.querySelector(`.qcard[data-qid="${qid}"]`);
-    if(card){
-      card.querySelectorAll('.qchip').forEach(ch=>{
-        const vv = Number(ch.dataset.q);
-        ch.dataset.acc = (vv===v)?'1':'0';
-      });
-      const slider = card.querySelector('.slider');
-      if(slider) slider.value = v+3;
-    }
-
-    $('answered').textContent = answeredCount();
-    $('bar').style.width = (answeredCount()/Q.length*100)+'%';
-    $('remainTxt').textContent = `残り ${Q.length - answeredCount()} 問`;
-    $('nextPage').disabled = !canNextPage();
-
-    if(autoAdvance){
-      const slice = Q.slice(page*PAGE_SIZE, page*PAGE_SIZE+PAGE_SIZE);
-      const nextUn = slice.find(qq => findAnswer(qq.id)==null);
-      if(nextUn){
-        focusId = nextUn.id;
-        setFocusVisual(focusId);
-        scrollToCard(focusId);
-      }else{
-        setTimeout(()=>{
-          if(page < TOTAL_PAGES-1){ page++; renderPage(); }
-          else{ showResult(); }
-        }, 140);
-      }
-    }
-  }
-
-  function setFocusVisual(fid){
-    document.querySelectorAll('.qcard').forEach(c=>c.classList.toggle('focus', c.dataset.qid==fid));
-  }
-  function scrollToCard(fid){
-    const el = document.querySelector(`.qcard[data-qid="${fid}"]`);
-    if(!el) return;
-    const top = el.getBoundingClientRect().top + window.scrollY - 110;
-    window.scrollTo({top, behavior:'smooth'});
-  }
-
-  function answeredCount(){ return answers.length; }
-  function findAnswer(id){ return answers.find(a=>a.id===id) || null; }
-  function canNextPage(){
-    const slice = Q.slice(page*PAGE_SIZE, page*PAGE_SIZE+PAGE_SIZE);
-    return slice.every(q => findAnswer(q.id));
-  }
-
-  /* ==== 判定ロジック（最小二乗） ==== */
-  function diagnose(ans){
-    const sum = Object.fromEntries(AXES.map(a=>[a,0]));
-    const cnt = Object.fromEntries(AXES.map(a=>[a,0]));
-    for(const a of ans){
-      const q = Q.find(x=>x.id===a.id); if(!q) continue;
-      sum[q.axis]+=a.value; cnt[q.axis]+=1;
-    }
-    const vec = {}; for(const ax of AXES){ vec[ax] = cnt[ax] ? (sum[ax]/cnt[ax]) : 0; }
-
-    let best=null, bestDist=Infinity;
-    for(const [name, t] of Object.entries(TYPES)){
-      const d = AXES.reduce((s,ax)=> s + Math.pow(vec[ax]-t.c[ax],2), 0);
-      if(d<bestDist || (d===bestDist && name.localeCompare(best)<0)){ bestDist=d; best=name; }
-    }
-    const t = TYPES[best];
-    return { name:best, vec, one:t.one, bestMate:t.best, caution:t.caution };
-  }
-
-  function tagify(vec){
-    const t=[];
-    t.push( vec.rich<=-1 ? '赤身寄り' : vec.rich>=1 ? 'コク寄り' : '中庸');
-    t.push( vec.adv <=-1 ? '王道派'  : vec.adv >=1 ? '冒険派'  : '時と場合');
-    t.push( vec.tempo<=-1 ? 'しっとり' : vec.tempo>=1 ? 'にぎやか' : 'バランス');
-    t.push( vec.social<=-1 ? '少人数好き' : vec.social>=1 ? '大人数好き' : 'どちらでも');
-    t.push( vec.texture<=-1 ? '口どけ派' : vec.texture>=1 ? '噛みごたえ派' : 'どちらもOK');
-    return t;
-  }
-
-  function showResult(){
-    const r = diagnose(answers);
-    document.getElementById('quizCard').hidden = true;
-    document.getElementById('resultCard').hidden = false;
-
-    document.getElementById('rType').textContent = r.name;
-    document.getElementById('rOne').textContent  = r.one;
-    document.getElementById('bestMate').textContent = r.bestMate;
-    document.getElementById('caution').textContent  = r.caution;
-
-    const img = TYPE_IMAGE[r.name] || '';
-    const rImg = document.getElementById('rImg'); rImg.src = img; rImg.alt = r.name;
-
-    const holder = document.getElementById('rTags'); holder.innerHTML='';
-    tagify(r.vec).forEach(s=>{
-      const span=document.createElement('span'); span.className='tag'; span.textContent=s; holder.appendChild(span);
-    });
-
-    document.getElementById('retryBtn').onclick = ()=>{
-      page=0; answers=[]; renderPage();
-      document.getElementById('resultCard').hidden = true; document.getElementById('quizCard').hidden = false;
-      window.scrollTo({top:0,behavior:'smooth'});
-    };
-    document.getElementById('saveBtn').onclick = ()=>{
-      const payload = { type:r.name, one:r.one, best:r.bestMate, caution:r.caution, vector:r.vec, answers, generatedAt:new Date().toISOString() };
-      const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
-      const url=URL.createObjectURL(blob);
-      const a=document.createElement('a'); a.href=url; a.download=`MeatBTI_${r.name}.json`; a.click(); URL.revokeObjectURL(url);
-    };
-
     window.scrollTo({top:0,behavior:'smooth'});
   }
+  document.querySelectorAll('.page .next').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const cur = Number(btn.closest('.page').dataset.page);
+      showPage(cur+1);
+    });
+  });
+  document.querySelectorAll('.page .prev').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const cur = Number(btn.closest('.page').dataset.page);
+      showPage(cur-1);
+    });
+  });
+
+  // 回答クリック（自動で次カードへ）
+  document.querySelectorAll('.card .opt').forEach(opt=>{
+    opt.addEventListener('click', e=>{
+      const card = e.target.closest('.card');
+      const q = card.dataset.q;
+      // active表示
+      card.querySelectorAll('.opt').forEach(b=>b.classList.remove('active'));
+      opt.classList.add('active');
+
+      answers[q] = Number(opt.dataset.val);
+      localStorage.setItem('meatbti_answers_v2', JSON.stringify(answers));
+      updateProgress();
+
+      // 未回答の次カードへフォーカス
+      const cards = [...card.parentElement.querySelectorAll('.card')];
+      const idx = cards.indexOf(card);
+      const next = cards.slice(idx+1).find(c=>!answers[c.dataset.q]);
+      if(next){ next.scrollIntoView({behavior:'smooth', block:'center'}); }
+      else{
+        // 現ページが埋まっていたら自動で次ページ
+        const page = card.closest('.page');
+        const remain = [...page.querySelectorAll('.card')].filter(c=>!answers[c.dataset.q]);
+        if(remain.length===0){
+          const nextPage = Number(page.dataset.page)+1;
+          const hasNext = document.querySelector(`.page[data-page="${nextPage}"]`);
+          if(hasNext){ showPage(nextPage); }
+        }
+      }
+    });
+  });
+
+  // 既存回答反映（再訪時）
+  document.querySelectorAll('.card').forEach(card=>{
+    const q = card.dataset.q;
+    if(answers[q]){
+      const btn = card.querySelector(`.opt[data-val="${answers[q]}"]`);
+      if(btn) btn.classList.add('active');
+    }
+  });
+  updateProgress();
+
+  // キーボード 1〜5 で直近のカードに回答
+  let lastHoverCard = null;
+  document.querySelectorAll('.card').forEach(c=>{
+    c.addEventListener('pointerenter',()=>lastHoverCard=c);
+    c.addEventListener('focusin',()=>lastHoverCard=c);
+  });
+  window.addEventListener('keydown',e=>{
+    if(e.key<'1'||e.key>'5') return;
+    const val=e.key;
+    const card = lastHoverCard || document.querySelector('.page:not([hidden]) .card');
+    if(!card) return;
+    const btn = card.querySelector(`.opt[data-val="${val}"]`);
+    if(btn) btn.click();
+  });
+
+  // リセット
+  document.getElementById('reset').addEventListener('click',()=>{
+    if(!confirm('回答をリセットしますか？')) return;
+    localStorage.removeItem('meatbti_answers_v2');
+    location.reload();
+  });
+
+  // 結果へ
+  function goResult(){
+    if(Object.keys(answers).length < TOTAL){
+      alert('全設問の回答をお願いします。');
+      return;
+    }
+    // 結果ページが既存の sub.html（または result.html）ならそこへ
+    // ここでは以前の構成に合わせて sub.html を想定しています
+    location.href = 'sub.html';
+  }
+  document.getElementById('toResult')?.addEventListener('click', goResult);
+  document.getElementById('floatSubmit')?.addEventListener('click', goResult);
 </script>
 </body>
 </html>
