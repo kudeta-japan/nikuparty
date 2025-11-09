@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Meat BTI 診断（20問・質問画面）</title>
-<meta name="description" content="20問であなたの“肉タイプ”を診断。12タイプのキャラと相性No.1・要注意タイプを表示。">
+<title>Meat BTI 診断（5段階・自動進行）</title>
+<meta name="description" content="20問をA寄り〜B寄りの5段階で回答。12タイプと相性No.1・要注意タイプを表示。">
 <!-- GA4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-V39MNGQD5H"></script>
 <script>
@@ -32,12 +32,14 @@ gtag('js', new Date()); gtag('config', 'G-V39MNGQD5H');
   .qwrap{padding:16px}
   .qhead{font-weight:900;margin:0 0 6px}
   .qtext{margin:0 0 10px;color:#dce6ff}
-  .choices{display:grid;gap:10px}
-  .choice{display:flex;align-items:center;gap:10px;border:1px solid #293653;background:#121a31;border-radius:12px;padding:12px;cursor:pointer}
-  .choice[data-sel="1"]{outline:2px solid var(--cheese);border-color:#6b5722;background:#1b243b}
-  .pill{display:inline-block;padding:4px 10px;border-radius:999px;background:#10172a;border:1px solid #26314b;font-size:12px;color:#cdd8ef}
+  .anchors{display:flex;justify-content:space-between;color:#9fb0cc;font-size:13px;margin:8px 2px 10px}
+  .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .cell{display:grid;place-items:center;border:1px solid #293653;background:#121a31;border-radius:12px;padding:14px;cursor:pointer;user-select:none}
+  .cell[data-sel="1"]{outline:2px solid var(--cheese);border-color:#6b5722;background:#1b243b}
+  .cell small{display:block;opacity:.8;font-size:12px;margin-top:4px}
   .qfoot{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
   .kbd{font-family:ui-monospace,Menlo,Consolas,monospace;background:#0e1424;border:1px solid #2a3651;border-radius:6px;padding:2px 6px;font-size:12px;color:#9fb0cc}
+  .pill{display:inline-block;padding:4px 10px;border-radius:999px;background:#10172a;border:1px solid #26314b;font-size:12px;color:#cdd8ef}
   .result{display:grid;gap:16px}
   .r-hero{display:grid;grid-template-columns:1fr 1.2fr;gap:14px}
   @media(max-width:800px){.r-hero{grid-template-columns:1fr}}
@@ -67,9 +69,14 @@ gtag('js', new Date()); gtag('config', 'G-V39MNGQD5H');
       <div class="qwrap">
         <p class="qhead" id="qHead">設問</p>
         <p class="qtext" id="qText"></p>
-        <div class="choices" id="choices"></div>
+
+        <div class="anchors"><span id="aLeft">A</span><span id="aRight">B</span></div>
+        <div class="scale" id="scale">
+          <!-- 5セル（-2,-1,0,+1,+2） -->
+        </div>
+
         <div class="qfoot">
-          <div class="pill">A/Bは <span class="kbd">1</span>/<span class="kbd">2</span>、A/B/Cは <span class="kbd">1</span>/<span class="kbd">2</span>/<span class="kbd">3</span></div>
+          <div class="pill">ショートカット <span class="kbd">1</span>〜<span class="kbd">5</span>（押すと自動で次へ）</div>
           <div style="display:flex;gap:8px">
             <button class="btn" id="prevBtn">戻る</button>
             <button class="btn primary" id="nextBtn" disabled>次へ</button>
@@ -106,7 +113,7 @@ gtag('js', new Date()); gtag('config', 'G-V39MNGQD5H');
 
 <script>
   // === Axes (5) ===
-  const AXES = ['rich','adv','tempo','social','texture']; // +側：濃厚/冒険/にぎやか/大勢/噛みごたえ
+  const AXES = ['rich','adv','tempo','social','texture'];
 
   // === Type definitions ===
   const TYPES = {
@@ -140,37 +147,38 @@ gtag('js', new Date()); gtag('config', 'G-V39MNGQD5H');
     'シャトーブリアン女王':'shato-.png',
   };
 
-  // === 20 Questions (AB / ABC) ===
+  // === 20 Questions（5段階。左右にA/Bのアンカー表示） ===
   const Q = [
-    {id:1,  kind:'AB',  axis:'rich',   head:'最初の一皿は？', text:'同じ価格ならどちらを選ぶ？', A:'赤身で軽く', B:'コクのあるリッチな部位'},
-    {id:2,  kind:'AB',  axis:'rich',   head:'メインの一皿', text:'満足度を優先するなら？', A:'ヒレ・ランプなど赤身', B:'リブロース・サーロインなどコク'},
-    {id:3,  kind:'AB',  axis:'rich',   head:'脂の量の好み', text:'好きな方向性に近いのは？', A:'脂控えめでキレ重視', B:'脂の旨みをしっかり'},
-    {id:4,  kind:'ABC', axis:'rich',   head:'ボリューム感', text:'量と重さのバランスは？', A:'軽めが好き', B:'どちらでも', C:'重厚でもOK'},
+    {id:1,  axis:'rich',   head:'最初の一皿は？',           text:'同じ価格ならどちらを選ぶ？', A:'赤身で軽く', B:'コクのあるリッチ'},
+    {id:2,  axis:'rich',   head:'メインの一皿',             text:'満足度を優先するなら？',     A:'ヒレ・ランプなど赤身', B:'リブロース・サーロインなどコク'},
+    {id:3,  axis:'rich',   head:'脂の量の好み',             text:'好きな方向性に近いのは？', A:'脂控えめでキレ', B:'脂の旨みをしっかり'},
+    {id:4,  axis:'rich',   head:'ボリューム感',             text:'量と重さのバランスは？',     A:'軽めが好き', B:'重厚でもOK'},
 
-    {id:5,  kind:'AB',  axis:'adv',    head:'オーダー方針', text:'はじめてのお店で', A:'王道メニュー中心', B:'限定・創作も攻める'},
-    {id:6,  kind:'ABC', axis:'adv',    head:'新メニュー', text:'未知の一皿があったら', A:'様子見', B:'どちらでも', C:'まず試す'},
-    {id:7,  kind:'AB',  axis:'adv',    head:'味付けの選び方', text:'基本は', A:'定番の塩・特製ソース', B:'旬のソースやスパイスも歓迎'},
-    {id:8,  kind:'ABC', axis:'adv',    head:'焼き方カスタム', text:'自分で調整するのは', A:'あまりしない', B:'こだわらない', C:'積極的にやる'},
+    {id:5,  axis:'adv',    head:'オーダー方針',             text:'はじめてのお店で',         A:'王道メニュー中心', B:'限定・創作も攻める'},
+    {id:6,  axis:'adv',    head:'新メニュー',               text:'未知の一皿があったら',     A:'様子見', B:'まず試す'},
+    {id:7,  axis:'adv',    head:'味付けの選び方',           text:'基本は',                   A:'定番の塩・特製ソース', B:'旬のソースやスパイス歓迎'},
+    {id:8,  axis:'adv',    head:'焼き方カスタム',           text:'自分で調整するのは',       A:'あまりしない', B:'積極的にやる'},
 
-    {id:9,  kind:'AB',  axis:'tempo',  head:'食事のテンポ', text:'理想の進行は？', A:'一皿ずつゆっくり', B:'サクサク軽快に'},
-    {id:10, kind:'ABC', axis:'tempo',  head:'席替えの頻度', text:'会の盛り上げとして', A:'ほとんどしない', B:'場に合わせる', C:'テンポよく行う'},
-    {id:11, kind:'AB',  axis:'tempo',  head:'BGMと雰囲気', text:'心地よいのは', A:'落ち着いた雰囲気', B:'賑やかな雰囲気'},
-    {id:12, kind:'ABC', axis:'tempo',  head:'写真・動画の撮影', text:'進行の中で', A:'最小限でOK', B:'どちらでも', C:'テンポ良く撮って共有'},
+    {id:9,  axis:'tempo',  head:'食事のテンポ',             text:'理想の進行は？',           A:'一皿ずつゆっくり', B:'サクサク軽快に'},
+    {id:10, axis:'tempo',  head:'席替えの頻度',             text:'会の盛り上げとして',       A:'ほとんどしない', B:'テンポよく行う'},
+    {id:11, axis:'tempo',  head:'BGMと雰囲気',              text:'心地よいのは',             A:'落ち着いた雰囲気', B:'賑やかな雰囲気'},
+    {id:12, axis:'tempo',  head:'写真・動画の撮影',         text:'進行の中で',               A:'最小限でOK', B:'テンポ良く撮って共有'},
 
-    {id:13, kind:'AB',  axis:'social', head:'人数の好み', text:'居心地が良いのは', A:'2〜3人でじっくり', B:'大人数でワイワイ'},
-    {id:14, kind:'AB',  axis:'social', head:'乾杯後の動き', text:'最初にやりがちなのは', A:'向かいの人と深く話す', B:'テーブル全員に声をかける'},
-    {id:15, kind:'ABC', axis:'social', head:'記念撮影', text:'写真を撮るなら', A:'必要な人だけで', B:'どちらでも', C:'全員で撮りたい'},
-    {id:16, kind:'AB',  axis:'social', head:'席の選び方', text:'落ち着くのは', A:'隅の席で落ち着く', B:'中央寄りで交流しやすく'},
+    {id:13, axis:'social', head:'人数の好み',               text:'居心地が良いのは',         A:'2〜3人でじっくり', B:'大人数でワイワイ'},
+    {id:14, axis:'social', head:'乾杯後の動き',             text:'最初にやりがちなのは',     A:'向かいの人と深く話す', B:'テーブル全員に声をかける'},
+    {id:15, axis:'social', head:'記念撮影',                 text:'写真を撮るなら',           A:'必要な人だけで', B:'全員で撮りたい'},
+    {id:16, axis:'social', head:'席の選び方',               text:'落ち着くのは',             A:'隅の席で落ち着く', B:'中央寄りで交流しやすく'},
 
-    {id:17, kind:'AB',  axis:'texture',head:'食感の好み', text:'どちらがより好み？', A:'口どけなめらか', B:'歯ごたえしっかり'},
-    {id:18, kind:'ABC', axis:'texture',head:'カット厚', text:'肉の厚みに関して', A:'薄めで軽く', B:'こだわらない', C:'厚めで噛みたい'},
-    {id:19, kind:'AB',  axis:'texture',head:'焼き加減', text:'基本の火入れは', A:'レア寄りで柔らかく', B:'ミディアム以上で食べ応え'},
-    {id:20, kind:'ABC', axis:'texture',head:'調理の方向性', text:'仕上がりのニュアンス', A:'低温でしっとり', B:'どちらでも', C:'炭火香で噛み締める'},
+    {id:17, axis:'texture',head:'食感の好み',               text:'どちらがより好み？',       A:'口どけなめらか', B:'歯ごたえしっかり'},
+    {id:18, axis:'texture',head:'カット厚',                 text:'肉の厚みに関して',         A:'薄めで軽く', B:'厚めで噛みたい'},
+    {id:19, axis:'texture',head:'焼き加減',                 text:'基本の火入れは',           A:'レア寄りで柔らかく', B:'ミディアム以上で食べ応え'},
+    {id:20, axis:'texture',head:'調理の方向性',             text:'仕上がりのニュアンス',     A:'低温でしっとり', B:'炭火香で噛み締める'},
   ];
 
   // === State ===
-  let idx = 0;
-  let answers = []; // {id, choice:'A'|'B'|'C'}
+  let idx = 0; // 0..19
+  // answers: {id, value} where value ∈ {-2,-1,0,1,2}
+  let answers = [];
 
   const $ = (id)=>document.getElementById(id);
   $('y').textContent = new Date().getFullYear();
@@ -181,19 +189,13 @@ gtag('js', new Date()); gtag('config', 'G-V39MNGQD5H');
   $('prevBtn').onclick = ()=>{ if(idx>0){ idx--; renderQ(); } };
   $('nextBtn').onclick = ()=>{ if(idx < Q.length-1){ idx++; renderQ(); } else { showResult(); } };
 
+  // キー操作 1..5
   window.addEventListener('keydown',(e)=>{
-    const q = Q[idx]; if(!q) return;
-    if(['1','2','3'].includes(e.key)){
-      if(q.kind==='AB' && (e.key==='1'||e.key==='2')) selectChoice(q, e.key==='1'?'A':'B');
-      if(q.kind==='ABC'){
-        if(e.key==='1') selectChoice(q,'A');
-        else if(e.key==='2') selectChoice(q,'B');
-        else if(e.key==='3') selectChoice(q,'C');
-      }
-    }
+    if(!/^[1-5]$/.test(e.key)) return;
+    choose( (+e.key)-3 ); // 1→-2, 2→-1, 3→0, 4→+1, 5→+2
   });
 
-  // init
+  // 初期描画
   renderQ();
 
   function renderQ(){
@@ -202,92 +204,108 @@ gtag('js', new Date()); gtag('config', 'G-V39MNGQD5H');
     $('bar').style.width = ((idx)/Q.length*100) + '%';
     $('qHead').textContent = q.head;
     $('qText').textContent = q.text;
+    $('aLeft').textContent  = `A：${q.A}`;
+    $('aRight').textContent = `B：${q.B}`;
 
-    const holder = $('choices'); holder.innerHTML='';
-    const prev = answers.find(a=>a.id===q.id)?.choice;
+    const holder = $('scale');
+    holder.innerHTML = '';
+    const prev = answers.find(a=>a.id===q.id)?.value; // -2..2
 
-    const add = (label, text) => {
+    const labels = [
+      {v:-2, t:'Aにとても近い'},
+      {v:-1, t:'Aに近い'},
+      {v: 0, t:'中間'},
+      {v:+1, t:'Bに近い'},
+      {v:+2, t:'Bにとても近い'},
+    ];
+
+    labels.forEach(({v,t})=>{
       const div = document.createElement('div');
-      div.className = 'choice';
-      div.dataset.sel = (prev===label)?'1':'0';
-      div.setAttribute('role','button');
-      div.innerHTML = `<span class="pill">${label}</span><span>${text}</span>`;
-      div.onclick = ()=> selectChoice(q,label);
+      div.className = 'cell';
+      div.dataset.sel = (prev===v)?'1':'0';
+      div.innerHTML = `<div style="font-weight:900">${mapKeyFromValue(v)}</div><small>${t}</small>`;
+      div.onclick = ()=> choose(v);
       holder.appendChild(div);
-    };
-    if(q.kind==='AB'){ add('A',q.A); add('B',q.B); }
-    else { add('A',q.A); add('B',q.B); add('C',q.C); }
+    });
 
     $('prevBtn').disabled = (idx===0);
     $('nextBtn').disabled = (prev==null);
   }
 
-  function selectChoice(q,label){
+  // v ∈ {-2,-1,0,1,2}
+  function choose(v){
+    const q = Q[idx];
     const i = answers.findIndex(a=>a.id===q.id);
-    if(i>=0) answers[i].choice = label; else answers.push({id:q.id, choice:label});
-    Array.from($('choices').children).forEach((c, k)=>{
-      const want = (q.kind==='AB'?(k===0?'A':'B'):(k===0?'A':k===1?'B':'C'));
-      c.dataset.sel = (want===label)?'1':'0';
+    if(i>=0) answers[i].value = v; else answers.push({id:q.id, value:v});
+    // ビジュアル選択更新
+    Array.from($('scale').children).forEach((c, i)=>{
+      const vv = [-2,-1,0,1,2][i];
+      c.dataset.sel = (vv===v)?'1':'0';
     });
     $('nextBtn').disabled = false;
+
+    // 自動で次へ
+    setTimeout(()=>{
+      if(idx < Q.length-1){ idx++; renderQ(); }
+      else{ showResult(); }
+    }, 160);
   }
 
-  function valueFrom(choice, kind){
-    if(kind==='AB') return (choice==='A')? -1 : +1;
-    if(kind==='ABC')return (choice==='A')? -1 : (choice==='B'?0:+1);
-    return 0;
+  function mapKeyFromValue(v){
+    // 表示用のキー（1..5）
+    return ({'-2':'1','-1':'2','0':'3','1':'4','2':'5'})[String(v)];
   }
 
   function diagnose(ans){
-    const score = Object.fromEntries(AXES.map(a=>[a,0]));
-    const cnt   = Object.fromEntries(AXES.map(a=>[a,0]));
+    // 各軸を合算→平均（-2..+2）
+    const sum = Object.fromEntries(AXES.map(a=>[a,0]));
+    const cnt = Object.fromEntries(AXES.map(a=>[a,0]));
     for(const a of ans){
       const q = Q.find(x=>x.id===a.id); if(!q) continue;
-      const v = valueFrom(a.choice, q.kind);
-      score[q.axis]+=v; cnt[q.axis]+=1;
+      sum[q.axis]+=a.value; cnt[q.axis]+=1;
     }
-    for(const ax of AXES){ if(cnt[ax]) score[ax]/=cnt[ax]; }
+    const vec = {};
+    for(const ax of AXES){ vec[ax] = cnt[ax] ? (sum[ax]/cnt[ax]) : 0; }
 
+    // 12タイプ（ターゲット座標は-2..+2）とのユークリッド距離
     let best=null, bestDist=Infinity;
     for(const [name, t] of Object.entries(TYPES)){
-      const d = AXES.reduce((s,ax)=> s + Math.pow(score[ax]-t.c[ax],2), 0);
+      const d = AXES.reduce((s,ax)=> s + Math.pow(vec[ax]-t.c[ax],2), 0);
       if(d<bestDist || (d===bestDist && name.localeCompare(best)<0)){ bestDist=d; best=name; }
     }
-    return { name:best, vec:score, one:TYPES[best].one, bestMate:TYPES[best].best, caution:TYPES[best].caution };
+    return { name:best, vec, one:TYPES[best].one, bestMate:TYPES[best].best, caution:TYPES[best].caution };
   }
 
   function tagify(vec){
     const t=[];
-    t.push( vec.rich<=-0.5 ? '赤身寄り' : vec.rich>=0.5 ? 'コク寄り' : '中庸');
-    t.push( vec.adv <=-0.5 ? '王道派'  : vec.adv >=0.5 ? '冒険派'  : '時と場合');
-    t.push( vec.tempo<=-0.5 ? 'しっとり' : vec.tempo>=0.5 ? 'にぎやか' : 'バランス');
-    t.push( vec.social<=-0.5 ? '少人数好き' : vec.social>=0.5 ? '大人数好き' : 'どちらでも');
-    t.push( vec.texture<=-0.5 ? '口どけ派' : vec.texture>=0.5 ? '噛みごたえ派' : 'どちらもOK');
+    t.push( vec.rich<=-1 ? '赤身寄り' : vec.rich>=1 ? 'コク寄り' : '中庸');
+    t.push( vec.adv <=-1 ? '王道派'  : vec.adv >=1 ? '冒険派'  : '時と場合');
+    t.push( vec.tempo<=-1 ? 'しっとり' : vec.tempo>=1 ? 'にぎやか' : 'バランス');
+    t.push( vec.social<=-1 ? '少人数好き' : vec.social>=1 ? '大人数好き' : 'どちらでも');
+    t.push( vec.texture<=-1 ? '口どけ派' : vec.texture>=1 ? '噛みごたえ派' : 'どちらもOK');
     return t;
   }
 
   function showResult(){
     const r = diagnose(answers);
-    // swap cards
-    document.getElementById('quizCard').hidden = true;
-    document.getElementById('resultCard').hidden = false;
+    quizCard.hidden = true;
+    resultCard.hidden = false;
 
-    document.getElementById('rType').textContent = r.name;
-    document.getElementById('rOne').textContent  = r.one;
-    document.getElementById('bestMate').textContent = r.bestMate;
-    document.getElementById('caution').textContent  = r.caution;
+    $('rType').textContent = r.name;
+    $('rOne').textContent  = r.one;
+    $('bestMate').textContent = r.bestMate;
+    $('caution').textContent  = r.caution;
 
     const img = TYPE_IMAGE[r.name] || '';
-    const rImg = document.getElementById('rImg');
-    rImg.src = img; rImg.alt = r.name;
+    const rImg = $('rImg'); rImg.src = img; rImg.alt = r.name;
 
-    const holder = document.getElementById('rTags'); holder.innerHTML='';
+    const holder = $('rTags'); holder.innerHTML='';
     tagify(r.vec).forEach(s=>{
       const span=document.createElement('span'); span.className='tag'; span.textContent=s; holder.appendChild(span);
     });
 
-    document.getElementById('retryBtn').onclick = ()=>{ idx=0; answers=[]; document.getElementById('resultCard').hidden=true; document.getElementById('quizCard').hidden=false; renderQ(); window.scrollTo({top:0,behavior:'smooth'}); };
-    document.getElementById('saveBtn').onclick = ()=>{
+    $('retryBtn').onclick = ()=>{ idx=0; answers=[]; resultCard.hidden=true; quizCard.hidden=false; renderQ(); window.scrollTo({top:0,behavior:'smooth'}); };
+    $('saveBtn').onclick = ()=>{
       const payload = { type:r.name, one:r.one, best:r.bestMate, caution:r.caution, vector:r.vec, answers, generatedAt:new Date().toISOString() };
       const blob = new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
       const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=`MeatBTI_${r.name}.json`; a.click(); URL.revokeObjectURL(url);
