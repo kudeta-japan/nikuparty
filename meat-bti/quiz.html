@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Meat BTI 診断（5段階・自動進行）</title>
+<title>Meat BTI 診断｜5段階・5問×4ページ</title>
 <meta name="description" content="20問をA寄り〜B寄りの5段階で回答。12タイプと相性No.1・要注意タイプを表示。">
 <!-- GA4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-V39MNGQD5H"></script>
@@ -13,36 +13,49 @@ function gtag(){ dataLayer.push(arguments); }
 gtag('js', new Date()); gtag('config', 'G-V39MNGQD5H');
 </script>
 <style>
-  :root{--bg:#0b0d13;--panel:#111522;--ink:#f7faff;--muted:#b9c2d3;--bd:#1b2334;--cheese:#ffd966;--tomato:#ff6b4a;--ok:#35d19d;--shadow:0 14px 32px rgba(0,0,0,.35)}
-  *{box-sizing:border-box} html,body{height:100%}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;letter-spacing:.02em;line-height:1.7}
+  :root{
+    --bg:#0b0d13;--panel:#111522;--ink:#f7faff;--muted:#b9c2d3;--bd:#1b2334;
+    --cheese:#ffd966;--tomato:#ff6b4a;--ok:#35d19d;--warn:#ffd166;--shadow:0 14px 32px rgba(0,0,0,.35);
+    --chip:#10172a;--chip-bd:#26314b;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;letter-spacing:.02em;line-height:1.7}
   a{color:inherit;text-decoration:none}
   .wrap{min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto}
   header{position:sticky;top:0;background:rgba(17,21,34,.8);backdrop-filter:saturate(120%) blur(8px);border-bottom:1px solid var(--bd);z-index:10}
-  .head-in{width:min(960px,92vw);margin:0 auto;height:56px;display:flex;align-items:center;justify-content:space-between}
+  .head-in{width:min(980px,92vw);margin:0 auto;height:56px;display:flex;align-items:center;justify-content:space-between}
   .brand{display:flex;align-items:center;gap:10px}
   .logo{width:30px;height:30px;border-radius:10px;background:conic-gradient(from 140deg,var(--cheese),var(--tomato));display:grid;place-items:center;color:#111;font-weight:900}
   .btn{appearance:none;border:1px solid var(--bd);background:#152037;color:var(--ink);padding:10px 14px;border-radius:10px;font-weight:800;cursor:pointer;transition:transform .06s ease}
+  .btn:hover{transform:translateY(-1px)}
   .btn.primary{background:linear-gradient(180deg,var(--tomato),#ff4e2f);color:#111;border:none}
-  .main{width:min(820px,92vw);margin:0 auto;padding:16px 0}
+  .btn.ghost{background:transparent}
+  .main{width:min(980px,92vw);margin:0 auto;padding:16px 0}
   .card{background:var(--panel);border:1px solid var(--bd);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
   .progress{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--bd)}
   .bar{height:8px;background:#121a2f;border:1px solid var(--bd);border-radius:999px;overflow:hidden;flex:1}
   .bar>div{height:100%;width:0%;background:linear-gradient(90deg,var(--cheese),var(--tomato))}
-  .qwrap{padding:16px}
+  .meta{color:#b9c2d3;font-size:13px}
+  .qwrap{padding:14px 14px 18px}
+  .grid5{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:860px){.grid5{grid-template-columns:1fr 1fr}}
+  .qcard{border:1px solid #1c2740;background:#0f1628;border-radius:14px;padding:14px}
+  .qcard.focus{outline:2px solid #2b73ff;outline-offset:0}
   .qhead{font-weight:900;margin:0 0 6px}
-  .qtext{margin:0 0 10px;color:#dce6ff}
-  .anchors{display:flex;justify-content:space-between;color:#9fb0cc;font-size:13px;margin:8px 2px 10px}
-  .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
-  .cell{display:grid;place-items:center;border:1px solid #293653;background:#121a31;border-radius:12px;padding:14px;cursor:pointer;user-select:none}
+  .qtext{margin:0 0 8px;color:#dce6ff}
+  .anchors{display:flex;justify-content:space-between;color:#9fb0cc;font-size:12px;margin:6px 2px 8px}
+  .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  .cell{display:grid;place-items:center;border:1px solid #293653;background:#121a31;border-radius:12px;padding:12px;cursor:pointer;user-select:none}
   .cell[data-sel="1"]{outline:2px solid var(--cheese);border-color:#6b5722;background:#1b243b}
-  .cell small{display:block;opacity:.8;font-size:12px;margin-top:4px}
-  .qfoot{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+  .cell small{display:block;opacity:.8;font-size:11px;margin-top:4px}
   .kbd{font-family:ui-monospace,Menlo,Consolas,monospace;background:#0e1424;border:1px solid #2a3651;border-radius:6px;padding:2px 6px;font-size:12px;color:#9fb0cc}
-  .pill{display:inline-block;padding:4px 10px;border-radius:999px;background:#10172a;border:1px solid #26314b;font-size:12px;color:#cdd8ef}
+  .page-foot{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+  .pill{display:inline-block;padding:4px 10px;border-radius:999px;background:var(--chip);border:1px solid var(--chip-bd);font-size:12px;color:#cdd8ef}
   .result{display:grid;gap:16px}
   .r-hero{display:grid;grid-template-columns:1fr 1.2fr;gap:14px}
-  @media(max-width:800px){.r-hero{grid-template-columns:1fr}}
+  @media(max-width:860px){.r-hero{grid-template-columns:1fr}}
   .r-img{aspect-ratio:1/1;background:#0b1222;border-radius:12px;overflow:hidden;border:1px solid #1f2a43}
   .r-img img{width:100%;height:100%;object-fit:cover}
   .rtype{font-size:clamp(22px,5vw,28px);font-weight:900;margin:0}
@@ -56,30 +69,24 @@ gtag('js', new Date()); gtag('config', 'G-V39MNGQD5H');
   <header>
     <div class="head-in">
       <div class="brand"><div class="logo">🥩</div><b>Meat BTI 診断</b></div>
-      <a class="btn" href="index.html">← 図鑑に戻る</a>
+      <a class="btn ghost" href="../index.html">← LPへ戻る</a>
     </div>
   </header>
 
   <main class="main">
     <div class="card" id="quizCard">
       <div class="progress">
-        <div><b id="qIdx">1</b>/20</div>
+        <div><b id="answered">0</b>/20</div>
         <div class="bar"><div id="bar"></div></div>
+        <div class="meta">ページ <b id="pageNow">1</b> / 4</div>
       </div>
       <div class="qwrap">
-        <p class="qhead" id="qHead">設問</p>
-        <p class="qtext" id="qText"></p>
-
-        <div class="anchors"><span id="aLeft">A</span><span id="aRight">B</span></div>
-        <div class="scale" id="scale">
-          <!-- 5セル（-2,-1,0,+1,+2） -->
-        </div>
-
-        <div class="qfoot">
-          <div class="pill">ショートカット <span class="kbd">1</span>〜<span class="kbd">5</span>（押すと自動で次へ）</div>
+        <div id="qGrid" class="grid5"><!-- 5問が入る --></div>
+        <div class="page-foot">
+          <div class="pill">ショートカット：<span class="kbd">1</span>〜<span class="kbd">5</span>（選ぶと自動で次へ）</div>
           <div style="display:flex;gap:8px">
-            <button class="btn" id="prevBtn">戻る</button>
-            <button class="btn primary" id="nextBtn" disabled>次へ</button>
+            <button class="btn" id="prevPage">前の5問</button>
+            <button class="btn primary" id="nextPage" disabled>次の5問へ</button>
           </div>
         </div>
       </div>
@@ -96,7 +103,7 @@ gtag('js', new Date()); gtag('config', 'G-V39MNGQD5H');
             <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
               <button class="btn" id="retryBtn">もう一度</button>
               <button class="btn" id="saveBtn">結果を保存(JSON)</button>
-              <a class="btn primary" href="index.html">図鑑へ戻る</a>
+              <a class="btn primary" href="../index.html">LPへ戻る</a>
             </div>
           </div>
         </div>
@@ -147,7 +154,7 @@ gtag('js', new Date()); gtag('config', 'G-V39MNGQD5H');
     'シャトーブリアン女王':'shato-.png',
   };
 
-  // === 20 Questions（5段階。左右にA/Bのアンカー表示） ===
+  // === 20 Questions（5段階。A/Bアンカー） ===
   const Q = [
     {id:1,  axis:'rich',   head:'最初の一皿は？',           text:'同じ価格ならどちらを選ぶ？', A:'赤身で軽く', B:'コクのあるリッチ'},
     {id:2,  axis:'rich',   head:'メインの一皿',             text:'満足度を優先するなら？',     A:'ヒレ・ランプなど赤身', B:'リブロース・サーロインなどコク'},
@@ -156,7 +163,7 @@ gtag('js', new Date()); gtag('config', 'G-V39MNGQD5H');
 
     {id:5,  axis:'adv',    head:'オーダー方針',             text:'はじめてのお店で',         A:'王道メニュー中心', B:'限定・創作も攻める'},
     {id:6,  axis:'adv',    head:'新メニュー',               text:'未知の一皿があったら',     A:'様子見', B:'まず試す'},
-    {id:7,  axis:'adv',    head:'味付けの選び方',           text:'基本は',                   A:'定番の塩・特製ソース', B:'旬のソースやスパイス歓迎'},
+    {id:7,  axis:'adv',    head:'味付けの選び方',           text:'基本は',                   A:'定番の塩／特製ソース', B:'旬のソースやスパイス歓迎'},
     {id:8,  axis:'adv',    head:'焼き方カスタム',           text:'自分で調整するのは',       A:'あまりしない', B:'積極的にやる'},
 
     {id:9,  axis:'tempo',  head:'食事のテンポ',             text:'理想の進行は？',           A:'一皿ずつゆっくり', B:'サクサク軽快に'},
@@ -176,41 +183,62 @@ gtag('js', new Date()); gtag('config', 'G-V39MNGQD5H');
   ];
 
   // === State ===
-  let idx = 0; // 0..19
-  // answers: {id, value} where value ∈ {-2,-1,0,1,2}
-  let answers = [];
+  const PAGE_SIZE = 5;
+  const TOTAL_PAGES = Q.length / PAGE_SIZE; // 4
+  let page = 0; // 0..3
+  let answers = []; // {id, value(-2..2)}
+  let focusId = null; // 現在フォーカス中の設問ID（ページ内）
 
   const $ = (id)=>document.getElementById(id);
   $('y').textContent = new Date().getFullYear();
 
-  const quizCard = $('quizCard');
-  const resultCard = $('resultCard');
+  // 画面イベント
+  $('prevPage').onclick = ()=>{ if(page>0){ page--; renderPage(); } };
+  $('nextPage').onclick = ()=>{ if(canNextPage()){ page++; renderPage(); } };
 
-  $('prevBtn').onclick = ()=>{ if(idx>0){ idx--; renderQ(); } };
-  $('nextBtn').onclick = ()=>{ if(idx < Q.length-1){ idx++; renderQ(); } else { showResult(); } };
-
-  // キー操作 1..5
+  // キー操作 1..5（現在フォーカスの設問に回答）
   window.addEventListener('keydown',(e)=>{
     if(!/^[1-5]$/.test(e.key)) return;
-    choose( (+e.key)-3 ); // 1→-2, 2→-1, 3→0, 4→+1, 5→+2
+    if(focusId==null) return;
+    const v = (+e.key) - 3; // 1→-2, 2→-1, 3→0, 4→+1, 5→+2
+    chooseAnswer(focusId, v, {autoAdvance:true});
   });
 
-  // 初期描画
-  renderQ();
+  renderPage();
 
-  function renderQ(){
-    const q = Q[idx];
-    $('qIdx').textContent = (idx+1);
-    $('bar').style.width = ((idx)/Q.length*100) + '%';
-    $('qHead').textContent = q.head;
-    $('qText').textContent = q.text;
-    $('aLeft').textContent  = `A：${q.A}`;
-    $('aRight').textContent = `B：${q.B}`;
+  function renderPage(){
+    $('pageNow').textContent = (page+1);
+    $('bar').style.width = (answeredCount()/Q.length * 100) + '%';
+    $('answered').textContent = answeredCount();
 
-    const holder = $('scale');
-    holder.innerHTML = '';
-    const prev = answers.find(a=>a.id===q.id)?.value; // -2..2
+    const grid = $('qGrid');
+    grid.innerHTML = '';
 
+    const start = page * PAGE_SIZE;
+    const slice = Q.slice(start, start + PAGE_SIZE);
+
+    // フォーカス対象：このページで最初の未回答 or 先頭
+    const firstUnanswered = slice.find(q => findAnswer(q.id) == null);
+    focusId = (firstUnanswered ? firstUnanswered.id : slice[0].id);
+
+    slice.forEach(q=>{
+      grid.appendChild(renderQuestionCard(q));
+    });
+
+    $('prevPage').disabled = (page===0);
+    $('nextPage').disabled = !canNextPage();
+  }
+
+  function renderQuestionCard(q){
+    const card = document.createElement('div');
+    card.className = 'qcard' + (q.id===focusId ? ' focus' : '');
+    card.dataset.qid = q.id;
+
+    const ans = findAnswer(q.id)?.value;
+
+    const anchors = `
+      <div class="anchors"><span>A：${q.A}</span><span>B：${q.B}</span></div>
+    `;
     const labels = [
       {v:-2, t:'Aにとても近い'},
       {v:-1, t:'Aに近い'},
@@ -219,45 +247,84 @@ gtag('js', new Date()); gtag('config', 'G-V39MNGQD5H');
       {v:+2, t:'Bにとても近い'},
     ];
 
-    labels.forEach(({v,t})=>{
-      const div = document.createElement('div');
-      div.className = 'cell';
-      div.dataset.sel = (prev===v)?'1':'0';
-      div.innerHTML = `<div style="font-weight:900">${mapKeyFromValue(v)}</div><small>${t}</small>`;
-      div.onclick = ()=> choose(v);
-      holder.appendChild(div);
+    const cells = labels.map(({v,t},i)=>`
+      <div class="cell" data-val="${v}" data-sel="${ans===v?1:0}" title="${t}">
+        <div style="font-weight:900">${i+1}</div><small>${t}</small>
+      </div>
+    `).join('');
+
+    card.innerHTML = `
+      <p class="qhead">${q.head}</p>
+      <p class="qtext">${q.text}</p>
+      ${anchors}
+      <div class="scale">${cells}</div>
+    `;
+
+    // クリックでフォーカス
+    card.addEventListener('click', e=>{
+      focusId = q.id;
+      // 再描画でfocus反映（軽量化のため枠だけ更新）
+      document.querySelectorAll('.qcard').forEach(c=>c.classList.toggle('focus', c.dataset.qid==q.id));
     });
 
-    $('prevBtn').disabled = (idx===0);
-    $('nextBtn').disabled = (prev==null);
-  }
-
-  // v ∈ {-2,-1,0,1,2}
-  function choose(v){
-    const q = Q[idx];
-    const i = answers.findIndex(a=>a.id===q.id);
-    if(i>=0) answers[i].value = v; else answers.push({id:q.id, value:v});
-    // ビジュアル選択更新
-    Array.from($('scale').children).forEach((c, i)=>{
-      const vv = [-2,-1,0,1,2][i];
-      c.dataset.sel = (vv===v)?'1':'0';
+    // ボタン動作
+    card.querySelectorAll('.cell').forEach(cell=>{
+      cell.addEventListener('click', ()=>{
+        const v = Number(cell.dataset.val);
+        chooseAnswer(q.id, v, {autoAdvance:true});
+      });
     });
-    $('nextBtn').disabled = false;
 
-    // 自動で次へ
-    setTimeout(()=>{
-      if(idx < Q.length-1){ idx++; renderQ(); }
-      else{ showResult(); }
-    }, 160);
+    return card;
   }
 
-  function mapKeyFromValue(v){
-    // 表示用のキー（1..5）
-    return ({'-2':'1','-1':'2','0':'3','1':'4','2':'5'})[String(v)];
+  function chooseAnswer(qid, v, {autoAdvance}={}){
+    const i = answers.findIndex(a=>a.id===qid);
+    if(i>=0) answers[i].value = v; else answers.push({id:qid, value:v});
+
+    // 見た目更新（このqのセルだけ）
+    const card = document.querySelector(`.qcard[data-qid="${qid}"]`);
+    if(card){
+      card.querySelectorAll('.cell').forEach((c, idx)=>{
+        const vv = [-2,-1,0,1,2][idx];
+        c.dataset.sel = (vv===v)?'1':'0';
+      });
+    }
+
+    $('answered').textContent = answeredCount();
+    $('bar').style.width = (answeredCount()/Q.length * 100) + '%';
+    $('nextPage').disabled = !canNextPage();
+
+    if(autoAdvance){
+      // 同ページの次の未回答へ、なければ次ページ or 結果へ
+      const slice = Q.slice(page*PAGE_SIZE, page*PAGE_SIZE + PAGE_SIZE);
+      const nextUn = slice.find(q => findAnswer(q.id)==null);
+      if(nextUn){
+        focusId = nextUn.id;
+        // focus見た目切替
+        document.querySelectorAll('.qcard').forEach(c=>c.classList.toggle('focus', c.dataset.qid==String(focusId)));
+      }else{
+        setTimeout(()=>{
+          if(page < TOTAL_PAGES-1){
+            page++; renderPage();
+          }else{
+            showResult();
+          }
+        }, 180);
+      }
+    }
   }
 
+  function answeredCount(){ return answers.length; }
+  function findAnswer(id){ return answers.find(a=>a.id===id) || null; }
+  function canNextPage(){
+    const start = page*PAGE_SIZE;
+    const slice = Q.slice(start, start+PAGE_SIZE);
+    return slice.every(q => findAnswer(q.id));
+  }
+
+  // ===== 判定ロジック =====
   function diagnose(ans){
-    // 各軸を合算→平均（-2..+2）
     const sum = Object.fromEntries(AXES.map(a=>[a,0]));
     const cnt = Object.fromEntries(AXES.map(a=>[a,0]));
     for(const a of ans){
@@ -267,7 +334,6 @@ gtag('js', new Date()); gtag('config', 'G-V39MNGQD5H');
     const vec = {};
     for(const ax of AXES){ vec[ax] = cnt[ax] ? (sum[ax]/cnt[ax]) : 0; }
 
-    // 12タイプ（ターゲット座標は-2..+2）とのユークリッド距離
     let best=null, bestDist=Infinity;
     for(const [name, t] of Object.entries(TYPES)){
       const d = AXES.reduce((s,ax)=> s + Math.pow(vec[ax]-t.c[ax],2), 0);
@@ -288,27 +354,32 @@ gtag('js', new Date()); gtag('config', 'G-V39MNGQD5H');
 
   function showResult(){
     const r = diagnose(answers);
-    quizCard.hidden = true;
-    resultCard.hidden = false;
+    document.getElementById('quizCard').hidden = true;
+    document.getElementById('resultCard').hidden = false;
 
-    $('rType').textContent = r.name;
-    $('rOne').textContent  = r.one;
-    $('bestMate').textContent = r.bestMate;
-    $('caution').textContent  = r.caution;
+    document.getElementById('rType').textContent = r.name;
+    document.getElementById('rOne').textContent  = r.one;
+    document.getElementById('bestMate').textContent = r.bestMate;
+    document.getElementById('caution').textContent  = r.caution;
 
     const img = TYPE_IMAGE[r.name] || '';
-    const rImg = $('rImg'); rImg.src = img; rImg.alt = r.name;
+    const rImg = document.getElementById('rImg'); rImg.src = img; rImg.alt = r.name;
 
-    const holder = $('rTags'); holder.innerHTML='';
+    const holder = document.getElementById('rTags'); holder.innerHTML='';
     tagify(r.vec).forEach(s=>{
       const span=document.createElement('span'); span.className='tag'; span.textContent=s; holder.appendChild(span);
     });
 
-    $('retryBtn').onclick = ()=>{ idx=0; answers=[]; resultCard.hidden=true; quizCard.hidden=false; renderQ(); window.scrollTo({top:0,behavior:'smooth'}); };
-    $('saveBtn').onclick = ()=>{
+    document.getElementById('retryBtn').onclick = ()=>{
+      page=0; answers=[]; renderPage();
+      document.getElementById('resultCard').hidden = true;
+      document.getElementById('quizCard').hidden = false;
+      window.scrollTo({top:0,behavior:'smooth'});
+    };
+    document.getElementById('saveBtn').onclick = ()=>{
       const payload = { type:r.name, one:r.one, best:r.bestMate, caution:r.caution, vector:r.vec, answers, generatedAt:new Date().toISOString() };
-      const blob = new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
-      const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=`MeatBTI_${r.name}.json`; a.click(); URL.revokeObjectURL(url);
+      const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+      const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=`MeatBTI_${r.name}.json`; a.click(); URL.revokeObjectURL(url);
     };
     window.scrollTo({top:0,behavior:'smooth'});
   }
