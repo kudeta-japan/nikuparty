@@ -3,389 +3,372 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Meat BTI｜20問でわかる“あなたの部位タイプ”</title>
-<meta name="description" content="20問・所要1〜2分。肉好きのための性格×部位タイプ診断『Meat BTI』。おすすめ部位と相性No.1タイプを表示。">
-<meta name="theme-color" content="#0b0a0a">
+<title>Meat BTI 診断（20問）｜タイプ判定＆相性表示</title>
+<meta name="description" content="20問であなたの“肉タイプ”を診断。12タイプのキャラクターと相性No.1・要注意タイプも表示。ヒレ男爵/タン隊長/イチボママ/ランプ博士/リブロースボス/サーロイン王/美食家ザブトン/ギャルカルビ/やり手の営業マンハラミ/カイノミ舞妓はん/書道家ミスジ/シャトーブリアン女王。">
 <style>
   :root{
-    --bg:#0b0a0a; --panel:#141111; --ink:#fff9ef; --muted:#ccbfae; --bd:#2a2421;
-    --cheese:#ffd966; --tomato:#ff6b4a; --basil:#3fbf7b; --wine:#9b4a8f;
+    --bg:#0b0d13; --panel:#111522; --ink:#f7faff; --muted:#b9c2d3; --bd:#1b2334;
+    --cheese:#ffd966; --tomato:#ff6b4a; --ok:#35d19d;
+    --shadow:0 14px 32px rgba(0,0,0,.35);
   }
   *{box-sizing:border-box}
   html,body{height:100%}
   body{margin:0;background:var(--bg);color:var(--ink);
-    font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;
-    letter-spacing:.02em;line-height:1.65}
-  img{max-width:100%;display:block}
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;letter-spacing:.02em;line-height:1.7}
   a{color:inherit;text-decoration:none}
-  .container{width:min(960px,92vw);margin:0 auto;padding:20px 0}
+  img{max-width:100%;display:block}
 
-  header{position:sticky;top:0;z-index:10;background:rgba(11,10,10,.7);
-    backdrop-filter:saturate(120%) blur(8px);border-bottom:1px solid var(--bd)}
-  .nav{display:flex;align-items:center;gap:10px;height:56px}
-  .logo{width:28px;height:28px;border-radius:10px;background:conic-gradient(from 140deg,var(--cheese),var(--tomato));display:grid;place-items:center}
-  .brand{font-weight:900}
+  .container{width:min(1040px,92vw);margin:0 auto;padding:20px}
+  .card{background:var(--panel);border:1px solid var(--bd);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
 
-  .hero{padding:18px 0 8px}
-  .eyebrow{display:inline-flex;gap:8px;align-items:center;background:rgba(255,232,137,.14);border:1px solid #3a2d0d;color:#ffe9b0;padding:6px 10px;border-radius:999px;font-size:12px}
-  h1{font-size:clamp(22px,5.6vw,36px);margin:10px 0 6px}
-  .lead{color:var(--muted);margin:0}
+  header.top{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--bd)}
+  .brand{display:flex;align-items:center;gap:10px}
+  .logo{width:34px;height:34px;border-radius:10px;background:conic-gradient(from 140deg,var(--cheese),var(--tomato));display:grid;place-items:center;color:#111;font-weight:900}
+  .title{font-weight:900}
+  .btn{appearance:none;border:1px solid var(--bd);background:#152037;color:var(--ink);
+    padding:12px 16px;border-radius:12px;font-weight:800;cursor:pointer;transition:transform .06s ease}
+  .btn:hover{transform:translateY(-1px)}
+  .btn.primary{background:linear-gradient(180deg,var(--tomato),#ff4e2f);color:#111;border:none}
+  .btn.ghost{background:transparent;border-color:#2a3651}
 
-  .card{background:var(--panel);border:1px solid var(--bd);border-radius:16px;padding:16px}
-  .q{border:1px solid #2a2421;border-radius:14px;padding:14px;margin:12px 0;background:#161211}
-  .q h3{margin:0 0 8px;font-size:16px}
-  .scale{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
-  .opt{position:relative}
-  .opt input{position:absolute;inset:0;opacity:0}
-  .opt label{display:block;text-align:center;border:1px solid #3a2e2a;border-radius:10px;padding:10px 6px;font-size:13px;color:#e8dcc9;cursor:pointer;background:#120e0c}
-  .opt input:checked + label{border-color:#f7c84a;box-shadow:0 0 0 2px rgba(247,200,74,.25) inset}
-  .ends{display:flex;justify-content:space-between;color:#a99686;font-size:12px;margin-top:6px}
-  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-  .btn{appearance:none;border:1px solid var(--bd);background:#1a1513;color:var(--ink);
-    padding:12px 16px;border-radius:12px;font-weight:800;cursor:pointer}
-  .btn.primary{background:linear-gradient(180deg,var(--cheese),#f7c84a);color:#2a1e0b;border:none}
-  .btn.ghost{background:#120e0c}
-  .muted{color:#a99686}
+  .intro{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;padding:18px}
+  @media (max-width:860px){ .intro{grid-template-columns:1fr} }
+  .eyebrow{display:inline-flex;gap:8px;align-items:center;background:rgba(255,217,102,.12);border:1px solid #3a2d14;color:#ffe9a8;padding:6px 10px;border-radius:999px;font-size:12px}
+  .h1{font-size:clamp(22px,4.8vw,30px);line-height:1.25;font-weight:900;margin:4px 0 0}
+  .lead{color:var(--muted);margin:4px 0 0}
+  .intro .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
 
-  .result{display:none;margin-top:16px}
-  .result h2{margin:0 0 8px}
-  .badge{display:inline-flex;align-items:center;gap:8px;background:#1a1513;border:1px solid var(--bd);padding:6px 10px;border-radius:999px;font-size:12px}
-  .flex{display:grid;grid-template-columns:1fr;gap:16px}
-  @media(min-width:860px){.flex{grid-template-columns:1fr .9fr}}
-  .heroimg{width:100%;border-radius:14px;border:1px solid var(--bd);background:#0f0c0a}
+  .gallery{padding:0 18px 18px}
+  .h2{font-weight:900;font-size:clamp(18px,4.6vw,22px);margin:0 0 10px}
+  .grid-12{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+  @media (max-width:980px){ .grid-12{grid-template-columns:repeat(4,1fr)} }
+  @media (max-width:680px){ .grid-12{grid-template-columns:repeat(3,1fr)} }
+  .ch{background:#0f1525;border:1px solid #1f2a43;border-radius:14px;overflow:hidden}
+  .ch .ph{aspect-ratio:1/1;background:#0b1222;display:grid;place-items:center}
+  .ch img{width:100%;height:100%;object-fit:cover}
+  .ch .meta{padding:8px 10px}
+  .ch .name{font-weight:900;font-size:14px}
+  .ch .mini{color:#9fb0cc;font-size:12px}
 
-  .kv{display:grid;grid-template-columns:80px 1fr;gap:12px;align-items:center}
-  .kv img{width:80px;height:80px;object-fit:contain;border-radius:14px;background:#0f0c0a;border:1px solid var(--bd)}
-  .kv .tt{font-weight:900;font-size:20px}
-  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .quiz{padding:16px;border-top:1px solid var(--bd)}
+  .progress{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .bar{height:8px;background:#121a2f;border:1px solid var(--bd);border-radius:999px;overflow:hidden;flex:1;margin-left:10px}
+  .bar>div{height:100%;width:0%;background:linear-gradient(90deg,var(--cheese),var(--tomato))}
+  .qcard{background:#0f1424;border:1px solid #243152;border-radius:14px;padding:14px}
+  .qhead{font-weight:900;margin:0 0 8px}
+  .qtext{margin:0 0 10px}
+  .choices{display:grid;gap:8px}
+  .choice{display:flex;align-items:center;gap:10px;border:1px solid #293653;background:#121a31;border-radius:12px;padding:12px;cursor:pointer}
+  .choice[data-sel="1"]{outline:2px solid var(--cheese);border-color:#6b5722;background:#1c243a}
+  .pill{display:inline-block;padding:4px 10px;border-radius:999px;background:#10172a;border:1px solid #26314b;font-size:12px;color:#cdd8ef}
+  .qfoot{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+  .kbd{font-family:ui-monospace,Menlo,Consolas,monospace;background:#0e1424;border:1px solid #2a3651;border-radius:6px;padding:2px 6px;font-size:12px;color:#9fb0cc}
 
-  footer{color:#a99686;text-align:center;padding:24px 0;border-top:1px solid var(--bd);margin-top:24px}
+  .result{display:grid;gap:16px;padding:16px;border-top:1px solid var(--bd)}
+  .rgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media (max-width:860px){ .rgrid{grid-template-columns:1fr} }
+  .r-hero{background:#0f1525;border:1px solid #253153;border-radius:14px;display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:14px}
+  @media (max-width:860px){ .r-hero{grid-template-columns:1fr} }
+  .r-img{aspect-ratio:1/1;background:#0b1222;border-radius:12px;overflow:hidden}
+  .r-img img{width:100%;height:100%;object-fit:cover}
+  .rtype{font-size:clamp(22px,5vw,28px);font-weight:900;margin:0}
+  .r-tags{margin-top:6px;display:flex;flex-wrap:wrap;gap:6px}
+  .tag{padding:6px 10px;border:1px solid #2a385e;border-radius:999px;background:#111a31;font-size:12px}
+  .rline{margin-top:8px;color:#c7d2ea}
+  .r-compat{background:#0f1424;border:1px solid #273355;border-radius:14px;padding:14px}
+  .r-compat h3{margin:0 0 8px;font-size:16px}
+  footer{color:#9fb0cc;font-size:12px;padding:14px 16px}
 </style>
 </head>
 <body>
-<header>
-  <div class="container nav">
-    <div class="logo">🧀</div><div class="brand">Meat BTI</div>
-  </div>
-</header>
-
 <main class="container">
-  <section class="hero">
-    <span class="eyebrow">20問・所要1〜2分</span>
-    <h1>あなたの“部位タイプ”と相性No.1を診断</h1>
-    <p class="lead">回答は6段階。直感で選んでOK。</p>
-  </section>
+  <div class="card">
+    <header class="top">
+      <div class="brand"><div class="logo">🥩</div><div class="title">Meat BTI 診断（20問）</div></div>
+      <button class="btn primary" id="startBtn">診断をはじめる</button>
+    </header>
 
-  <section id="quiz" class="card">
-    <form id="form">
-      <!-- Qs will be injected by JS -->
-      <div id="questions"></div>
-      <div class="actions">
-        <button type="button" id="reset" class="btn ghost">リセット</button>
-        <button type="submit" id="submit" class="btn primary">結果を見る</button>
-        <span id="progress" class="muted"></span>
-      </div>
-    </form>
-  </section>
-
-  <section id="result" class="result card">
-    <div class="flex">
+    <!-- Intro -->
+    <section class="intro">
       <div>
-        <div class="kv">
-          <img id="typeImg" alt="">
-          <div>
-            <div class="tt" id="typeName">—</div>
-            <div id="typeNick" class="muted" style="margin-top:2px"></div>
+        <span class="eyebrow">20問・AB＋ABC（中立あり）</span>
+        <h1 class="h1">あなたの“肉タイプ”を判定。相性の良いタイプも表示。</h1>
+        <p class="lead">A/B二択に加え、A/B/C（B＝中立）設問あり。<br>5つの嗜好軸から12タイプへ一意にマッピングします。</p>
+        <div class="actions">
+          <button class="btn primary" id="startBtn2">今すぐ診断（1〜2分）</button>
+          <button class="btn ghost" id="jumpGallery">キャラクターを見る</button>
+        </div>
+      </div>
+      <div style="display:grid;place-items:center">
+        <div style="width:min(420px,100%);aspect-ratio:16/9;border:1px dashed #2a3651;border-radius:14px;display:grid;place-items:center;color:#9fb0cc">
+          結果ページにあなたのキャラ画像が表示されます
+        </div>
+      </div>
+    </section>
+
+    <!-- Characters gallery (12 images) -->
+    <section class="gallery" id="gallery">
+      <h2 class="h2">キャラクター図鑑（12タイプ）</h2>
+      <div class="grid-12">
+        <div class="ch"><div class="ph"><img src="hire.png" alt="ヒレ男爵" loading="lazy"></div><div class="meta"><div class="name">ヒレ男爵</div><div class="mini">静かな主役。無駄なく上品。</div></div></div>
+        <div class="ch"><div class="ph"><img src="tan.png" alt="タン隊長" loading="lazy"></div><div class="meta"><div class="name">タン隊長</div><div class="mini">合図と段取りで場を回す。</div></div></div>
+        <div class="ch"><div class="ph"><img src="ichibo.png" alt="イチボママ" loading="lazy"></div><div class="meta"><div class="name">イチボママ</div><div class="mini">面倒見◎。安心感で包む。</div></div></div>
+        <div class="ch"><div class="ph"><img src="ranpu.png" alt="ランプ博士" loading="lazy"></div><div class="meta"><div class="name">ランプ博士</div><div class="mini">小さな実験で会話を広げる。</div></div></div>
+        <div class="ch"><div class="ph"><img src="riburo-su.png" alt="リブロースボス" loading="lazy"></div><div class="meta"><div class="name">リブロースボス</div><div class="mini">満足度重視。頼れる統率。</div></div></div>
+        <div class="ch"><div class="ph"><img src="sa-roin.png" alt="サーロイン王" loading="lazy"></div><div class="meta"><div class="name">サーロイン王</div><div class="mini">華やかな演出、サービス精神。</div></div></div>
+        <div class="ch"><div class="ph"><img src="zabuton.png" alt="美食家ザブトン" loading="lazy"></div><div class="meta"><div class="name">美食家ザブトン</div><div class="mini">しっとり濃厚。言葉は丁寧。</div></div></div>
+        <div class="ch"><div class="ph"><img src="karubi.png" alt="ギャルカルビ" loading="lazy"></div><div class="meta"><div class="name">ギャルカルビ</div><div class="mini">ご褒美感で場を爆上げ。</div></div></div>
+        <div class="ch"><div class="ph"><img src="harami.png" alt="やり手の営業マンハラミ" loading="lazy"></div><div class="meta"><div class="name">やり手の営業マンハラミ</div><div class="mini">テンポ◎、実務も会話も。</div></div></div>
+        <div class="ch"><div class="ph"><img src="kainomi.png" alt="カイノミ舞妓はん" loading="lazy"></div><div class="meta"><div class="name">カイノミ舞妓はん</div><div class="mini">軽やか上品。橋渡し上手。</div></div></div>
+        <div class="ch"><div class="ph"><img src="misuji.png" alt="書道家ミスジ" loading="lazy"></div><div class="meta"><div class="name">書道家ミスジ</div><div class="mini">繊細美意識。所作が綺麗。</div></div></div>
+        <div class="ch"><div class="ph"><img src="shato-.png" alt="シャトーブリアン女王" loading="lazy"></div><div class="meta"><div class="name">シャトーブリアン女王</div><div class="mini">量より質。静かな格上。</div></div></div>
+      </div>
+    </section>
+
+    <!-- Quiz -->
+    <section class="quiz" id="quiz" hidden>
+      <div class="progress">
+        <div><b id="qIndex">1</b>/20</div>
+        <div class="bar"><div id="bar"></div></div>
+      </div>
+      <div class="qcard">
+        <p class="qhead" id="qHead">設問</p>
+        <p class="qtext" id="qText"></p>
+        <div class="choices" id="choices"></div>
+        <div class="qfoot">
+          <div class="pill">A/Bは <span class="kbd">1</span>/<span class="kbd">2</span>、A/B/Cは <span class="kbd">1</span>/<span class="kbd">2</span>/<span class="kbd">3</span></div>
+          <div style="display:flex;gap:8px">
+            <button class="btn" id="prevBtn">戻る</button>
+            <button class="btn primary" id="nextBtn" disabled>次へ</button>
           </div>
         </div>
-        <p id="typeCatch" style="margin:12px 0 8px"></p>
-        <div id="typeTips" class="chips"></div>
-        <div style="margin-top:12px">
-          <span class="badge">相性 No.1</span>
-          <div style="margin-top:8px;font-weight:900" id="bestMatch">—</div>
-          <div class="muted" id="bestWhy" style="margin-top:4px"></div>
+      </div>
+    </section>
+
+    <!-- Result -->
+    <section class="result" id="result" hidden>
+      <div class="rgrid">
+        <div class="r-hero">
+          <div class="r-img"><img id="rImg" alt=""></div>
+          <div>
+            <h2 class="rtype" id="rType">—</h2>
+            <div class="r-tags" id="rTags"></div>
+            <p class="rline" id="rOne">—</p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
+              <button class="btn" id="retryBtn">もう一度</button>
+              <button class="btn" id="saveBtn">結果を保存(JSON)</button>
+            </div>
+          </div>
         </div>
-        <div class="actions" style="margin-top:14px">
-          <button class="btn ghost" id="copy">結果をコピー</button>
-          <a class="btn" href="./" id="back">LPに戻る</a>
+        <div class="r-compat">
+          <h3>相性</h3>
+          <p><b>相性No.1：</b><span id="bestMate">—</span></p>
+          <p style="color:#ffd7b8"><b>要注意：</b><span id="caution">—</span></p>
         </div>
       </div>
-      <div>
-        <img class="heroimg" id="viz" alt="診断イメージ">
-        <p class="muted" style="margin-top:8px">※画像はタイプのイメージです（ヒレ／タン／ミスジはキャラ画像を表示）。</p>
-      </div>
-    </div>
-  </section>
+    </section>
+
+    <footer>© <span id="y"></span> Meat BTI</footer>
+  </div>
 </main>
 
-<footer>© <span id="y"></span> Meat BTI</footer>
-
 <script>
-  document.getElementById('y').textContent = new Date().getFullYear();
+  // ==== Axes ====
+  const AXES = ['rich','adv','tempo','social','texture']; // +側：濃厚/冒険/にぎやか/大勢/噛みごたえ
 
-  // =============== 設定 ===============
-  // 20問：左(1)〜右(6)の6段階
-  const QUESTIONS = [
-    // 軸: rich(脂) / lean(赤身), tender(柔) / chewy(噛み), classic / adventure, pace(slow/fast), social(deep/party)
-    { id:'q1',  a:'最初の一皿は さっぱり塩でウォームアップ', b:'最初から名物のコクで華やかに', axis:{rich:+1, classic:+0.6} },
-    { id:'q2',  a:'焼き加減はレア寄り', b:'ミディアム〜しっかり', axis:{tender:+0.3, pace:-0.2} },
-    { id:'q3',  a:'味付けは塩が基本', b:'特製ソースでしっかり味', axis:{classic:+0.4, rich:+0.6} },
-    { id:'q4',  a:'とろける柔らかさが好き', b:'噛むほど旨い食感が好き', axis:{tender:+1} },
-    { id:'q5',  a:'会話をじっくり楽しむペース', b:'テンポよく回していく', axis:{pace:-1, social:-0.4} },
-    { id:'q6',  a:'少量×多種類をシェア', b:'好きな皿をしっかり', axis:{classic:+0.2, pace:+0.2} },
-    { id:'q7',  a:'定番をまず押さえる', b:'新メニューも少し冒険', axis:{classic:-1} },
-    { id:'q8',  a:'素材の香りを活かす静かな演出', b:'目の前で燃える/湯気が上がる演出', axis:{social:+0.8, classic:-0.4} },
-    { id:'q9',  a:'乾杯はスパークリング/ハイボール', b:'赤ワインや濃いめカクテル', axis:{rich:+0.5, pace:+0.2} },
-    { id:'q10', a:'軽めをこまめに', b:'大ぶりで満足重視', axis:{pace:+0.4, rich:+0.3} },
-    { id:'q11', a:'赤身寄りが好み', b:'サシの入りが好き', axis:{rich:+1} },
-    { id:'q12', a:'〆は軽くあっさり', b:'デザート/しっかり系も', axis:{rich:+0.3} },
-    { id:'q13', a:'落ち着いた席で腰を据える', b:'会場中央など賑やかな席', axis:{social:+1, pace:+0.4} },
-    { id:'q14', a:'写真は少しだけ', b:'映えを狙ってしっかり撮る', axis:{social:+0.6, classic:-0.2} },
-    { id:'q15', a:'深めの対話が好き', b:'明るく広く盛り上げたい', axis:{social:+1} },
-    { id:'q16', a:'焼き担当は任せて静かに整える', b:'みんなでワイワイ焼く', axis:{social:+0.6, pace:+0.3} },
-    { id:'q17', a:'ほのかな香りで上品に', b:'香ばしくパンチを効かせたい', axis:{rich:+0.4, classic:-0.2} },
-    { id:'q18', a:'薄切りや繊細な火入れが好き', b:'厚切りで存在感重視', axis:{tender:+0.6, pace:+0.2} },
-    { id:'q19', a:'量より質にこだわる', b:'コスパも大事', axis:{classic:+0.2, pace:+0.2} },
-    { id:'q20', a:'二次会は腰を据えて話したい', b:'回遊してハシゴしたい', axis:{pace:+0.8, social:+0.6} },
+  // ==== Type definitions (centroids & compatibility) ====
+  const TYPES = {
+    'ヒレ男爵':           { c:{rich:-2, adv:-2, tempo:-2, social:-2, texture:-2}, one:'静かな主役。無駄なく上品、芯は強い。', best:'書道家ミスジ', caution:'ギャルカルビ' },
+    'タン隊長':           { c:{rich:-1, adv:+1, tempo:+2, social:+1, texture:+2}, one:'合図と段取りで場を回すムード牽引。', best:'リブロースボス', caution:'シャトーブリアン女王' },
+    'イチボママ':         { c:{rich:+1, adv:-1, tempo:-1, social:-1, texture:-1}, one:'面倒見の良さと安心感。控えめでも頼れる。', best:'やり手の営業マンハラミ', caution:'サーロイン王' },
+    'ランプ博士':         { c:{rich:-1, adv:+2, tempo:+1, social: 0, texture:+1}, one:'小さな実験で会話を広げる観察眼。', best:'カイノミ舞妓はん', caution:'リブロースボス' },
+    'リブロースボス':     { c:{rich:+2, adv:-1, tempo: 0, social:+1, texture:-1}, one:'どっしり満足度。頼れる統率力。', best:'ギャルカルビ', caution:'カイノミ舞妓はん' },
+    'サーロイン王':       { c:{rich:+2, adv:+1, tempo:+1, social:+2, texture: 0}, one:'華やかな演出で場を明るくする王道。', best:'シャトーブリアン女王', caution:'書道家ミスジ' },
+    '美食家ザブトン':     { c:{rich:+2, adv:-2, tempo:-2, social:-1, texture:-1}, one:'しっとり濃厚。言葉も所作も丁寧。', best:'タン隊長', caution:'やり手の営業マンハラミ' },
+    'ギャルカルビ':       { c:{rich:+2, adv:+2, tempo:+2, social:+2, texture: 0}, one:'ご褒美感で場を爆上げするエンタメ力。', best:'サーロイン王', caution:'ランプ博士' },
+    'やり手の営業マンハラミ': { c:{rich: 0, adv:+1, tempo:+2, social:+1, texture:+1}, one:'テンポ良く実務も会話も回す切替上手。', best:'イチボママ', caution:'美食家ザブトン' },
+    'カイノミ舞妓はん':   { c:{rich:+1, adv: 0, tempo:+1, social: 0, texture:-1}, one:'軽やか上品。場の橋渡しが得意。', best:'ランプ博士', caution:'やり手の営業マンハラミ' },
+    '書道家ミスジ':       { c:{rich:+1, adv:-2, tempo:-2, social:-2, texture:-2}, one:'繊細な美意識。静かに深く向き合う。', best:'ヒレ男爵', caution:'イチボママ' },
+    'シャトーブリアン女王': { c:{rich:+1, adv:-1, tempo:-2, social:-1, texture:-2}, one:'量より質の一点集中。静かな格上。', best:'美食家ザブトン', caution:'ヒレ男爵' },
+  };
+
+  // ==== Images (place these PNG files alongside this HTML) ====
+  const TYPE_IMAGE = {
+    'ヒレ男爵':'hire.png',
+    'タン隊長':'tan.png',
+    'イチボママ':'ichibo.png',
+    'ランプ博士':'ranpu.png',
+    'リブロースボス':'riburo-su.png',
+    'サーロイン王':'sa-roin.png',
+    '美食家ザブトン':'zabuton.png',
+    'ギャルカルビ':'karubi.png',
+    'やり手の営業マンハラミ':'harami.png',
+    'カイノミ舞妓はん':'kainomi.png',
+    '書道家ミスジ':'misuji.png',
+    'シャトーブリアン女王':'shato-.png',
+  };
+
+  // ==== 20 Questions (AB & ABC) ====
+  const Q = [
+    {id:1,  kind:'AB',  axis:'rich',   head:'最初の一皿は？', text:'同じ価格ならどちらを選ぶ？', A:'赤身で軽く', B:'コクのあるリッチな部位'},
+    {id:2,  kind:'AB',  axis:'rich',   head:'メインの一皿', text:'満足度を優先するなら？', A:'ヒレ・ランプなど赤身', B:'リブロース・サーロインなどコク'},
+    {id:3,  kind:'AB',  axis:'rich',   head:'脂の量の好み', text:'好きな方向性に近いのは？', A:'脂控えめでキレ重視', B:'脂の旨みをしっかり'},
+    {id:4,  kind:'ABC', axis:'rich',   head:'ボリューム感', text:'量と重さのバランスは？', A:'軽めが好き', B:'どちらでも', C:'重厚でもOK'},
+
+    {id:5,  kind:'AB',  axis:'adv',    head:'オーダー方針', text:'はじめてのお店で', A:'王道メニュー中心', B:'限定・創作も攻める'},
+    {id:6,  kind:'ABC', axis:'adv',    head:'新メニュー', text:'未知の一皿があったら', A:'様子見', B:'どちらでも', C:'まず試す'},
+    {id:7,  kind:'AB',  axis:'adv',    head:'味付けの選び方', text:'基本は', A:'定番の塩・特製ソース', B:'旬のソースやスパイスも歓迎'},
+    {id:8,  kind:'ABC', axis:'adv',    head:'焼き方カスタム', text:'自分で調整するのは', A:'あまりしない', B:'こだわらない', C:'積極的にやる'},
+
+    {id:9,  kind:'AB',  axis:'tempo',  head:'食事のテンポ', text:'理想の進行は？', A:'一皿ずつゆっくり', B:'サクサク軽快に'},
+    {id:10, kind:'ABC', axis:'tempo',  head:'席替えの頻度', text:'会の盛り上げとして', A:'ほとんどしない', B:'場に合わせる', C:'テンポよく行う'},
+    {id:11, kind:'AB',  axis:'tempo',  head:'BGMと雰囲気', text:'心地よいのは', A:'落ち着いた雰囲気', B:'賑やかな雰囲気'},
+    {id:12, kind:'ABC', axis:'tempo',  head:'写真・動画の撮影', text:'進行の中で', A:'最小限でOK', B:'どちらでも', C:'テンポ良く撮って共有'},
+
+    {id:13, kind:'AB',  axis:'social', head:'人数の好み', text:'居心地が良いのは', A:'2〜3人でじっくり', B:'大人数でワイワイ'},
+    {id:14, kind:'AB',  axis:'social', head:'乾杯後の動き', text:'最初にやりがちなのは', A:'向かいの人と深く話す', B:'テーブル全員に声をかける'},
+    {id:15, kind:'ABC', axis:'social', head:'記念撮影', text:'写真を撮るなら', A:'必要な人だけで', B:'どちらでも', C:'全員で撮りたい'},
+    {id:16, kind:'AB',  axis:'social', head:'席の選び方', text:'落ち着くのは', A:'隅の席で落ち着く', B:'中央寄りで交流しやすく'},
+
+    {id:17, kind:'AB',  axis:'texture',head:'食感の好み', text:'どちらがより好み？', A:'口どけなめらか', B:'歯ごたえしっかり'},
+    {id:18, kind:'ABC', axis:'texture',head:'カット厚', text:'肉の厚みに関して', A:'薄めで軽く', B:'こだわらない', C:'厚めで噛みたい'},
+    {id:19, kind:'AB',  axis:'texture',head:'焼き加減', text:'基本の火入れは', A:'レア寄りで柔らかく', B:'ミディアム以上で食べ応え'},
+    {id:20, kind:'ABC', axis:'texture',head:'調理の方向性', text:'仕上がりのニュアンス', A:'低温でしっとり', B:'どちらでも', C:'炭火香で噛み締める'},
   ];
 
-  // 部位タイプのベクトル（-1..+1）
-  const CUTS = {
-    "ヒレ":         {vec:{rich:-0.8,tender:+0.9,classic:+0.8,pace:-0.5,social:-0.6},
-                     nick:"静かな主役", catch:"無駄なく上品、芯が強い赤身派。",
-                     tips:["最初は塩で整える","相手の好みを拾って次の一皿へ","乾杯は軽やかに"]},
-    "タン":         {vec:{rich:-0.2,tender:-0.5,classic:+0.4,pace:+0.8,social:+0.9},
-                     nick:"場をほぐすムードメーカー", catch:"キレとテンポで明るく回す。",
-                     tips:["タン塩→赤身の黄金ルート","小皿シェアで会話を回す","一言コメントで盛り上げる"]},
-    "イチボ":       {vec:{rich:+0.2,tender:+0.2,classic:+0.5,pace:-0.2,social:-0.2},
-                     nick:"調律上手のバランサー", catch:"端正にまとめる余韻好き。",
-                     tips:["似た好みで比較食べ","火入れ微調整を提案","締めは軽めで余白を残す"]},
-    "ランプ":       {vec:{rich:-0.3,tender:-0.2,classic:-0.5,pace:+0.2,social:+0.3},
-                     nick:"小さな冒険家", catch:"赤身で新しい定番づくり。",
-                     tips:["少量×多皿でミニ実験","創作1皿を会話のネタに","焼き担当で観察＆話題"]},
-    "リブロース":   {vec:{rich:+0.6,tender:+0.5,classic:+0.8,pace:+0.2,social:+0.1},
-                     nick:"安心感のリーダー", catch:"王道リッチで満足度重視。",
-                     tips:["名物→名物で段取り良く","席替えや会計をリード","体験を濃く、写真は控えめ"]},
-    "サーロイン":   {vec:{rich:+0.9,tender:+0.6,classic:-0.3,pace:+0.8,social:+0.8},
-                     nick:"魅せ方名人", catch:"濃厚と“映え”で場の中心に。",
-                     tips:["フランベ等の演出で拍手","乾杯の音頭で明るく開始","隣席とも軽く乾杯"]},
-    "ザブトン":     {vec:{rich:+0.8,tender:+0.8,classic:+0.3,pace:-0.3,social:-0.3},
-                     nick:"とろける語り部", catch:"しっとり濃厚、少人数でじっくり。",
-                     tips:["少量高満足を提案","休ませ時間を大切に","深めの質問を1つだけ"]},
-    "カルビ":       {vec:{rich:+0.9,tender:+0.3,classic:-0.4,pace:+0.9,social:+0.9},
-                     nick:"ご褒美エンタメ", catch:"甘旨ジューシーで巻き込む。",
-                     tips:["序盤で“みんなの一口”カルビ","写真/動画を撮ってシェア","満足派の希望を拾って先導"]},
-    "ハラミ":       {vec:{rich:-0.1,tender:-0.1,classic:+0.1,pace:+0.9,social:+0.6},
-                     nick:"テンポの司令塔", catch:"躍動感ある赤身、スピード勝負。",
-                     tips:["回転を上げて会話の間を作らない","焼き台の管理役で活躍","飲みすぎ注意で笑顔キープ"]},
-    "カイノミ":     {vec:{rich:+0.3,tender:+0.2,classic:+0.2,pace:+0.4,social:+0.4},
-                     nick:"軽リッチのコーディネーター", catch:"塩もタレも“ちょうど良い”。",
-                     tips:["塩→タレの順序でメリハリ","軽い締めで余白を残す","相手の得意トークを振る"]},
-    "ミスジ":       {vec:{rich:+0.7,tender:+0.9,classic:+0.5,pace:-0.4,social:-0.4},
-                     nick:"寡黙な審美家", catch:"口どけ上品。丁寧な所作が魅力。",
-                     tips:["控えめ火入れで香りを共有","小声のツッコミで距離を縮める","甘めは量を絞って提案"]},
-    "シャトーブリアン": {vec:{rich:-0.2,tender:+1,classic:+0.9,pace:-0.6,social:-0.6},
-                     nick:"特選の一点集中", catch:"“量より質”で静かに深く。",
-                     tips:["質重視の軸を見せる","静かな側の席を選ぶ","デザート前に次回の約束を"]},
-  };
+  // ==== State & helpers ====
+  let idx = 0; // 0..19
+  let answers = []; // {id, choice:'A'|'B'|'C'}
 
-  // 画像（用意があるもののみ）
-  const TYPE_IMAGES = {
-    "ヒレ": "hire.png",
-    "タン": "tan.png",
-    "ミスジ": "misuji.png"
-  };
+  const $ = (id)=>document.getElementById(id);
+  const quizEl = $('quiz'), resultEl = $('result');
 
-  // =============== 質問UI生成 ===============
-  const qWrap = document.getElementById('questions');
-  function makeQuestion(q, idx){
-    const el = document.createElement('div');
-    el.className = 'q';
-    el.innerHTML = `
-      <h3>Q${idx+1}. ${q.a} ←→ ${q.b}</h3>
-      <div class="scale">
-        ${[1,2,3,4,5,6].map((n,i)=>`
-          <div class="opt">
-            <input type="radio" name="${q.id}" id="${q.id}-${i}" value="${i}">
-            <label for="${q.id}-${i}">${n}</label>
-          </div>`).join('')}
-      </div>
-      <div class="ends"><span>左に近い</span><span>右に近い</span></div>
-    `;
-    return el;
-  }
-  QUESTIONS.forEach((q,i)=> qWrap.appendChild(makeQuestion(q,i)));
+  $('y').textContent = new Date().getFullYear();
+  $('startBtn').onclick = $('startBtn2').onclick = () => startQuiz();
+  $('jumpGallery').onclick = () => $('gallery').scrollIntoView({behavior:'smooth'});
+  $('prevBtn').onclick = () => { if(idx>0){ idx--; renderQ(); } };
+  $('nextBtn').onclick = () => { if(idx < Q.length-1){ idx++; renderQ(); } else { showResult(); } };
 
-  // 進捗
-  const progress = document.getElementById('progress');
-  function updateProgress(){
-    const answered = QUESTIONS.filter(q => document.querySelector(`input[name="${q.id}"]:checked`)).length;
-    progress.textContent = `回答状況：${answered}/${QUESTIONS.length}`;
-  }
-  qWrap.addEventListener('change', updateProgress);
-  updateProgress();
-
-  // =============== 計算 ===============
-  // 6段階を -3,-2,-1,+1,+2,+3 に変換
-  function valToScore(v){ const i=parseInt(v,10); return i<3 ? (-3+i) : (i-2); }
-
-  function vectorAdd(a,b){
-    const out = {...a};
-    for(const k in b){ out[k] = (out[k]||0) + b[k]; }
-    return out;
-  }
-  function vectorScale(a,s){
-    const out={}; for(const k in a){ out[k]=a[k]*s; } return out;
-  }
-  function distance(a,b){
-    let s=0; for(const k of ['rich','tender','classic','pace','social']){
-      const d=(a[k]||0)-(b[k]||0); s+=d*d;
-    } return Math.sqrt(s);
-  }
-  function normalize(v){
-    const out={...v}; let max=0;
-    for(const k in out){ max=Math.max(max, Math.abs(out[k])); }
-    if(max===0) return out;
-    for(const k in out){ out[k]/=max; }
-    return out;
-  }
-
-  // 相性は「同ペース・同社交性」を重視しつつ、リッチ/食感/クラシック度は適度に補完
-  function partnerIdealOf(user){
-    return normalize({
-      rich:   -user.rich * 0.7,
-      tender: -user.tender * 0.7,
-      classic: user.classic * 0.2,  // 近すぎず離れすぎず
-      pace:    user.pace * 0.9,     // できるだけ同じ
-      social:  user.social * 0.9    // できるだけ同じ
-    });
-  }
-
-  function bestTypeFor(vec){
-    let best=null, bestD=1e9;
-    for(const name in CUTS){
-      const d = distance(vec, CUTS[name].vec);
-      if(d<bestD){ bestD=d; best=name; }
+  window.addEventListener('keydown', (e)=>{
+    const q = Q[idx]; if(!q) return;
+    if(['1','2','3'].includes(e.key)){
+      if(q.kind==='AB' && (e.key==='1' || e.key==='2')) selectChoice(q, e.key==='1' ? 'A' : 'B');
+      if(q.kind==='ABC'){
+        if(e.key==='1') selectChoice(q,'A'); else if(e.key==='2') selectChoice(q,'B'); else if(e.key==='3') selectChoice(q,'C');
+      }
     }
-    return best;
+  });
+
+  function startQuiz(){
+    resultEl.hidden = true;
+    quizEl.hidden = false;
+    idx = 0; answers = [];
+    renderQ();
+    window.scrollTo({top:0,behavior:'smooth'});
   }
 
-  // =============== 提出 ===============
-  const form = document.getElementById('form');
-  form.addEventListener('submit', (e)=>{
-    e.preventDefault();
+  function renderQ(){
+    const q = Q[idx];
+    $('qIndex').textContent = (idx+1);
+    $('bar').style.width = ((idx)/Q.length*100) + '%';
+    $('qHead').textContent = q.head;
+    $('qText').textContent = q.text;
 
-    // 回答収集
-    let userVec = {rich:0,tender:0,classic:0,pace:0,social:0};
-    for(const q of QUESTIONS){
-      const sel = document.querySelector(`input[name="${q.id}"]:checked`);
-      if(!sel){ alert('未回答の設問があります'); return; }
-      const s = valToScore(sel.value) / 3; // -1..+1
-      const contrib={};
-      for(const k in q.axis){ contrib[k]= q.axis[k]*s; }
-      userVec = vectorAdd(userVec, contrib);
+    const cs = $('choices');
+    cs.innerHTML = '';
+    const prev = answers.find(a=>a.id===q.id)?.choice;
+
+    const add = (label, caption) => {
+      const div = document.createElement('div');
+      div.className = 'choice';
+      div.setAttribute('role','button');
+      div.dataset.sel = (prev===label) ? '1' : '0';
+      div.innerHTML = `<span class="pill">${label}</span><span>${caption}</span>`;
+      div.onclick = () => selectChoice(q,label);
+      cs.appendChild(div);
+    };
+    if(q.kind==='AB'){ add('A',q.A); add('B',q.B); } else { add('A',q.A); add('B',q.B); add('C',q.C); }
+
+    $('prevBtn').disabled = (idx===0);
+    $('nextBtn').disabled = (prev==null);
+  }
+
+  function selectChoice(q, label){
+    const i = answers.findIndex(a=>a.id===q.id);
+    if(i>=0) answers[i].choice = label; else answers.push({id:q.id,choice:label});
+    Array.from($('choices').children).forEach((c, k)=>{
+      const want = (q.kind==='AB' ? (k===0?'A':'B') : (k===0?'A':k===1?'B':'C'));
+      c.dataset.sel = (want===label) ? '1' : '0';
+    });
+    $('nextBtn').disabled = false;
+  }
+
+  function valueFrom(choice, kind){
+    if(kind==='AB')  return (choice==='A') ? -1 : +1;       // A=-1, B=+1
+    if(kind==='ABC') return (choice==='A') ? -1 : (choice==='B' ? 0 : +1);
+    return 0;
+  }
+
+  function diagnose(ans){
+    const counts = Object.fromEntries(AXES.map(a=>[a,0]));
+    const score  = Object.fromEntries(AXES.map(a=>[a,0]));
+    for(const a of ans){
+      const q = Q.find(x=>x.id===a.id); if(!q) continue;
+      const v = valueFrom(a.choice, q.kind);
+      score[q.axis]  += v; counts[q.axis] += 1;
     }
-    userVec = normalize(userVec);
+    for(const ax of AXES){ if(counts[ax]>0) score[ax] /= counts[ax]; }
 
-    // おすすめ部位（40%）＋ 相性（60%）で総合
-    const cutOnly   = bestTypeFor(userVec);
-    const partnerId = partnerIdealOf(userVec);
-    const matchType = bestTypeFor(partnerId);
-
-    // 総合点で最終タイプ（cutOnly を基本に）
-    // ここでは “おすすめ部位” をそのまま採用し、相性は別枠で No.1 表示
-    const typeName = cutOnly;
-
-    showResult(typeName, matchType, userVec, partnerId);
-  });
-
-  document.getElementById('reset').addEventListener('click', ()=>{
-    form.reset(); updateProgress();
-    document.getElementById('result').style.display = 'none';
-    window.scrollTo({top:0, behavior:'smooth'});
-  });
-
-  // =============== 結果描画 ===============
-  function showResult(typeName, matchType, userVec, partnerVec){
-    const T = CUTS[typeName];
-    document.getElementById('typeName').textContent = `あなたは「${typeName}」タイプ`;
-    document.getElementById('typeNick').textContent = T.nick;
-    document.getElementById('typeCatch').textContent = T.catch;
-
-    // tips
-    const tipsEl = document.getElementById('typeTips'); tipsEl.innerHTML='';
-    T.tips.forEach(t=>{
-      const s=document.createElement('span'); s.className='badge'; s.textContent='🍽 ' + t; tipsEl.appendChild(s);
-    });
-
-    // image
-    const img = document.getElementById('typeImg');
-    const src = TYPE_IMAGES[typeName];
-    if(src){ img.src = src; img.alt = typeName; }
-    else { img.removeAttribute('src'); img.alt='No image'; img.style.background='#0f0c0a'; }
-
-    // 相性
-    document.getElementById('bestMatch').textContent = matchType;
-    const why = [];
-    if(Math.sign(partnerVec.pace)===Math.sign((CUTS[matchType].vec.pace)))  why.push('同じペース感');
-    if(Math.sign(partnerVec.social)===Math.sign((CUTS[matchType].vec.social)))why.push('心地よい賑やかさ/落ち着きが合う');
-    if(Math.sign(partnerVec.rich)!==Math.sign((CUTS[matchType].vec.rich)))   why.push('味のバランスが取りやすい');
-    document.getElementById('bestWhy').textContent = why.length? '理由：' + why.join('・') : '相性バランスが良好。';
-
-    // ビジュアル（簡易レーダー代替）
-    const v = CUTS[typeName].vec;
-    const txt = `
-      タイプ：${typeName}（${CUTS[typeName].nick}）
-      rich:${v.rich.toFixed(1)} tender:${v.tender.toFixed(1)}
-      classic:${v.classic.toFixed(1)} pace:${v.pace.toFixed(1)} social:${v.social.toFixed(1)}
-    `.replace(/\s+/g,' ').trim();
-    const canvas = document.createElement('canvas');
-    canvas.width=960; canvas.height=540;
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle='#0f0c0a'; ctx.fillRect(0,0,canvas.width,canvas.height);
-    // title
-    ctx.fillStyle='#ffe6a8'; ctx.font='bold 28px system-ui'; ctx.fillText(`Meat BTI Result`, 24, 46);
-    ctx.fillStyle='#fff9ef'; ctx.font='bold 36px system-ui'; ctx.fillText(typeName, 24, 100);
-    ctx.font='20px system-ui'; ctx.fillStyle='#ccbfae'; ctx.fillText(CUTS[typeName].nick, 24, 130);
-    // bars
-    const axes=['rich','tender','classic','pace','social'];
-    axes.forEach((k,i)=>{
-      const val = Math.max(-1, Math.min(1, v[k]));
-      const cx=24, cy=170+i*70;
-      ctx.fillStyle='#ccbfae'; ctx.fillText(k, cx, cy);
-      const x=130, y=cy-18, w=700, h=24;
-      ctx.fillStyle='#201b18'; ctx.fillRect(x,y,w,h);
-      ctx.fillStyle='#ffd966'; const len=(val+1)/2*w; ctx.fillRect(x,y,len,h);
-    });
-    document.getElementById('viz').src = canvas.toDataURL('image/png');
-
-    document.getElementById('result').style.display='block';
-    document.getElementById('result').scrollIntoView({behavior:'smooth'});
+    let best=null, bestDist=Infinity;
+    for(const [name, t] of Object.entries(TYPES)){
+      const d = AXES.reduce((s,ax)=> s + Math.pow(score[ax] - t.c[ax], 2), 0);
+      if(d < bestDist || (d===bestDist && name.localeCompare(best) < 0)){
+        bestDist = d; best = name;
+      }
+    }
+    return { name:best, vec:score, bestMate:TYPES[best].best, caution:TYPES[best].caution, one:TYPES[best].one };
   }
 
-  // クリップボード
-  document.getElementById('copy').addEventListener('click', async (e)=>{
-    e.preventDefault();
-    const t = document.getElementById('typeName').textContent + '\n' +
-              document.getElementById('typeNick').textContent + '\n' +
-              document.getElementById('typeCatch').textContent + '\n' +
-              '相性No.1：' + document.getElementById('bestMatch').textContent;
-    try{ await navigator.clipboard.writeText(t); alert('結果をコピーしました'); }
-    catch{ alert('コピーに失敗しました'); }
-  });
+  function tagify(vec){
+    const t = [];
+    t.push( (vec.rich<=-0.5) ? '赤身寄り' : (vec.rich>=0.5 ? 'コク寄り' : '中庸') );
+    t.push( (vec.adv<=-0.5) ? '王道派' : (vec.adv>=0.5 ? '冒険派' : '時と場合') );
+    t.push( (vec.tempo<=-0.5) ? 'しっとり' : (vec.tempo>=0.5 ? 'にぎやか' : 'バランス') );
+    t.push( (vec.social<=-0.5) ? '少人数好き' : (vec.social>=0.5 ? '大人数好き' : 'どちらでも') );
+    t.push( (vec.texture<=-0.5) ? '口どけ派' : (vec.texture>=0.5 ? '噛みごたえ派' : 'どちらもOK') );
+    return t;
+  }
 
-  // Google Analytics（GA4）
-  (function(){
-    const id = 'G-V39MNGQD';
-    if(!id) return;
-    const s = document.createElement('script');
-    s.async = true; s.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
-    document.head.appendChild(s);
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){ dataLayer.push(arguments); }
-    window.gtag = gtag;
-    gtag('js', new Date()); gtag('config', id);
-  })();
+  function showResult(){
+    const r = diagnose(answers);
+    quizEl.hidden = true;
+    resultEl.hidden = false;
+
+    $('rType').textContent = r.name;
+    $('rOne').textContent = r.one;
+    $('bestMate').textContent = r.bestMate;
+    $('caution').textContent = r.caution;
+
+    const img = TYPE_IMAGE[r.name] || '';
+    $('rImg').src = img; $('rImg').alt = r.name;
+
+    const tags = tagify(r.vec);
+    const holder = $('rTags'); holder.innerHTML = '';
+    tags.forEach(s=>{
+      const span = document.createElement('span');
+      span.className='tag'; span.textContent=s; holder.appendChild(span);
+    });
+
+    $('saveBtn').onclick = ()=>{
+      const payload = { type:r.name, one:r.one, best:r.bestMate, caution:r.caution, vector:r.vec, answers, generatedAt:new Date().toISOString() };
+      const blob = new Blob([JSON.stringify(payload,null,2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href=url; a.download=`MeatBTI_${r.name}.json`; a.click();
+      URL.revokeObjectURL(url);
+    };
+    $('retryBtn').onclick = ()=> startQuiz();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
 </script>
 </body>
 </html>
