@@ -1,423 +1,444 @@
 <!doctype html>
 <html lang="ja">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Meat BTI 診断｜自己完結版</title>
-<meta name="theme-color" content="#0b0e17">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MEAT-BTI｜テスト版（20問・6段階）</title>
+<meta name="description" content="20問×6段階、並び固定。あなたの“部位タイプ”と相性No.1を判定。"/>
+
 <style>
-:root{
-  --bg:#0b0e17; --panel:#121828; --panel2:#0f1524; --ink:#e9eef8; --muted:#98a2b3; --line:#203054;
-  --acc:#7aa2ff; --mid:#facc15; --good:#22c55e; --warn:#ff8a65;
-}
-*{box-sizing:border-box}
-body{margin:0;background:radial-gradient(1200px 700px at 50% -10%,#111a30 0%,#0b0e17 60%);color:var(--ink);
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif}
-a{color:inherit;text-decoration:none}
-.topbar{position:sticky;top:0;z-index:10;background:rgba(11,14,23,.85);backdrop-filter:blur(6px);
-  border-bottom:1px solid var(--line)}
-.container{width:min(980px,94vw);margin:0 auto;padding:14px 0 80px}
-.brand{display:flex;align-items:center;gap:10px;font-weight:900;padding:8px 0}
-.badge{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:conic-gradient(from 140deg,#ffd966,#ff6b4a);color:#0e0b07}
-.ghost{margin-left:auto;padding:8px 12px;border:1px solid var(--line);border-radius:10px;color:var(--muted)}
-.panel{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:16px}
-.p16{padding:16px}
-.h1{font-size:clamp(22px,4.6vw,34px);font-weight:900;margin:0 0 8px}
-.lead{color:var(--muted);margin:0 0 14px}
-.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-.btn{appearance:none;border:1px solid var(--line);background:#141b31;color:var(--ink);padding:12px 16px;border-radius:12px;font-weight:800;cursor:pointer}
-.btn.primary{background:linear-gradient(180deg,#ffd166,#f9c23c);color:#332100;border:none}
-.btn.slim{padding:8px 12px}
-.grid12{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-@media(min-width:800px){.grid12{grid-template-columns:repeat(4,1fr)}}
-.card{background:#0f1527;border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;gap:10px}
-.card img{width:60px;height:60px;object-fit:contain;border-radius:12px;background:#0c1325;border:1px solid var(--line)}
-.card b{display:block}
-.small{font-size:12px;color:#a9b5cc}
+  :root{
+    --bg:#0a0b10; --panel:#0f1219; --ink:#f7f9ff; --muted:#b9c6db; --bd:#1c2333;
+    --acc:#ff715b; --acc2:#ffd166; --shadow:0 12px 30px rgba(0,0,0,.35);
+  }
+  html,body{height:100%}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;
+    letter-spacing:.02em; line-height:1.65;
+  }
+  .app{width:min(980px,94vw);margin:0 auto;padding:16px 0 24px}
 
-/* HERO（追加） */
-.hero-wrap{width:min(980px,94vw);margin:12px auto 18px;border-radius:18px;overflow:hidden;
-  border:1px solid var(--line);background:#000;box-shadow:0 16px 36px rgba(0,0,0,.35)}
-.hero-wrap img{display:block;width:100%;height:auto;object-fit:cover;object-position:center}
-@media(max-width:600px){.hero-wrap img{aspect-ratio:16/9}}
+  /* ==== HERO IMAGE（本文幅に合わせて、診断中も常時表示） ==== */
+  .hero-wrap{position:sticky;top:0;z-index:5;padding:10px 0 0;}
+  .hero{
+    width:min(980px,94vw); margin:0 auto;
+    border-radius:18px; overflow:hidden; border:1px solid var(--bd); background:#000;
+    box-shadow:0 16px 36px rgba(0,0,0,.35);
+  }
+  .hero img{display:block; width:100%; height:auto; object-fit:cover; object-position:center;}
+  @media (max-width: 600px){ .hero img{ aspect-ratio: 16 / 9; } }
 
-/* Quiz */
-.step{display:none}
-.step.active{display:block}
-.progress{height:8px;background:#0e1426;border:1px solid var(--line);border-radius:999px;overflow:hidden}
-.progress .fill{height:100%;background:linear-gradient(90deg,#66d2ff,#7aa2ff,#9b87f5);width:0%}
-.qgrid{display:grid;grid-template-columns:1fr;gap:12px}
-@media(min-width:860px){.qgrid{grid-template-columns:1fr 1fr}}
-.qbox{background:#0f1527;border:1px solid var(--line);border-radius:14px;padding:14px}
-.qtitle{font-weight:900;margin:0 0 10px}
-.scale{display:flex;gap:8px;flex-wrap:wrap}
-.opt{flex:1 1 60px;min-width:60px;display:grid;place-items:center;padding:8px;border-radius:12px;
-  border:1px solid #2a3a64;background:#101938;cursor:pointer;user-select:none}
-.opt.mid{border-color:#5b4b12;background:#1b1a0b;color:#ffe28a}
-.opt.sel{outline:2px solid var(--acc);background:#142245}
-.opt.mid.sel{outline:2px solid var(--mid);background:#2a2209}
-.kbd{font-size:11px;color:#93a3c8;margin-left:8px}
+  /* ==== Header ==== */
+  .headbar{
+    width:min(980px,94vw); margin:10px auto 14px;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-weight:900}
+  .logo{width:32px;height:32px;border-radius:10px;background:conic-gradient(from 140deg,var(--acc),var(--acc2));display:grid;place-items:center;color:#111}
 
-/* Result */
-.row{display:grid;grid-template-columns:1fr;gap:14px}
-@media(min-width:880px){.row{grid-template-columns:1.2fr .8fr}}
-.hero{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center}
-.hero img{width:120px;height:120px;border-radius:20px;background:#0d1324;object-fit:contain;border:1px solid var(--line)}
-.badge2{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:#151c32;color:#cbd5e1;font-weight:700}
-.bars{display:grid;gap:10px}
-.bar{display:grid;grid-template-columns:140px 1fr;gap:10px;align-items:center}
-.track{height:10px;background:#0e1426;border:1px solid var(--line);border-radius:999px;overflow:hidden}
-.fill{height:100%;background:linear-gradient(90deg,#66d2ff,#7aa2ff,#9b87f5);width:0%}
-.pair{display:flex;gap:12px;align-items:center}
-.pair img{width:72px;height:72px;object-fit:contain;border-radius:14px;border:1px solid var(--line);background:#0d1324}
-.warn{color:#ffb4a2}
-footer{border-top:1px solid var(--line);color:var(--muted);text-align:center;padding:22px 0;margin-top:28px}
+  .btn{
+    appearance:none;border:1px solid var(--bd);background:#151a23;color:var(--ink);
+    padding:11px 14px;border-radius:12px;font-weight:800;cursor:pointer;transition:transform .06s ease
+  }
+  .btn:hover{transform:translateY(-1px)}
+  .btn.primary{background:linear-gradient(180deg,var(--acc),#ff4e36);color:#111;border:none;box-shadow:0 12px 26px rgba(255,113,91,.35)}
+  .btn.ghost{background:#121722;border-color:#2a3446}
+
+  /* ==== Card & Sections ==== */
+  .card{
+    width:min(980px,94vw); margin:0 auto; background:var(--panel);border:1px solid var(--bd);
+    border-radius:20px;box-shadow:var(--shadow);overflow:hidden
+  }
+  .section{padding:16px}
+
+  /* ==== Intro ==== */
+  .intro{padding:16px}
+  .badges{display:flex;gap:8px;flex-wrap:wrap}
+  .badge{background:#121829;border:1px solid #2a3245;color:#dfe7f5;border-radius:999px;padding:6px 10px;font-size:12px}
+  .muted{color:var(--muted);font-size:14px}
+
+  /* ==== Type Gallery（新規追加） ==== */
+  .gallery{padding:14px}
+  .g-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+  .grid12{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  @media(min-width:700px){.grid12{grid-template-columns:repeat(4,1fr)}}
+  .tcard{display:flex;gap:10px;align-items:center;background:#101528;border:1px solid #27314a;border-radius:12px;padding:10px}
+  .tcard img{width:56px;height:56px;border-radius:12px;object-fit:contain;background:#0c1325;border:1px solid #2a334e}
+  .tcard b{display:block}
+  .t-small{font-size:12px;color:var(--muted)}
+
+  /* ==== Quiz ==== */
+  .q-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .q-index{font-weight:900}
+  .bar{height:6px;background:#141721;border:1px solid var(--bd);border-radius:999px;overflow:hidden;width:240px}
+  .bar>div{height:100%;width:0%;background:linear-gradient(90deg,var(--acc),var(--acc2))}
+  .qgrid{display:grid;gap:12px}
+  .qitem{background:#101528;border:1px solid #27314a;border-radius:14px;padding:14px}
+  .ctx{color:#e7ecf8;font-weight:700;font-size:clamp(14px,2.8vw,16px);margin:-2px 0 8px}
+  .lr{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:stretch;pointer-events:none}
+  .side{background:#0f1524;border:1px solid #2a334e;border-radius:12px;padding:10px;min-height:66px;display:flex;align-items:center;justify-content:center;text-align:center}
+  .side b{font-size:clamp(14px,2.6vw,17px)}
+  .scale{display:flex;gap:10px;justify-content:center;align-items:center;margin-top:10px}
+  .dot{width:28px;height:28px;border-radius:999px;border:2px solid #39435a;background:#161b27;cursor:pointer;display:grid;place-items:center}
+  .dot.small{width:22px;height:22px}
+  .dot.big{width:32px;height:32px}
+  .dot[data-side="L"].active{background:linear-gradient(180deg,#3aa1ff,#2677c8);border-color:#2b6fb6;box-shadow:0 0 0 4px rgba(63,155,255,.18)}
+  .dot[data-side="R"].active{background:linear-gradient(180deg,#ff7a63,#ff5039);border-color:#e6422e;box-shadow:0 0 0 4px rgba(255,104,84,.18)}
+  .q-foot{display:flex;justify-content:space-between;align-items:center;margin-top:8px;color:var(--muted);font-size:12px}
+  .disabled{opacity:.55;pointer-events:none}
+  .progress-note{color:var(--muted);font-size:12px;text-align:center;margin-top:8px}
+
+  /* ==== Result ==== */
+  .result{display:grid;gap:16px}
+  .grid{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:720px){.grid{grid-template-columns:1fr 1fr}}
+  .r-card{background:#0f1219;border:1px solid var(--bd);border-radius:14px;padding:14px}
+  .big{font-size:clamp(26px,6vw,34px);font-weight:900}
+  .desc{margin-top:10px;line-height:1.9}
+  .mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+  footer{padding:10px 16px 16px;color:var(--muted);font-size:12px;text-align:center}
 </style>
 </head>
 <body>
-<div class="topbar">
-  <div class="container" style="display:flex;align-items:center;gap:12px">
-    <div class="brand"><div class="badge">🥩</div><div>Meat BTI</div></div>
-    <a class="ghost" href="../">← LPへ戻る</a>
+
+<!-- 常時表示のヒーロー（テキスト重ねなし） -->
+<div class="hero-wrap">
+  <figure class="hero">
+    <img src="mbti.jpg" alt="MEAT-BTI ヒーロー画像">
+  </figure>
+</div>
+
+<!-- 12タイプ ギャラリー（★新規。ヒーロー直下） -->
+<div class="card" style="margin-top:12px">
+  <section class="gallery">
+    <div class="g-head">
+      <h2 style="margin:0;font-size:clamp(18px,4.6vw,24px);font-weight:900">12タイプ一覧</h2>
+      <button class="btn primary" data-action="start">診断する</button>
+    </div>
+    <div id="typeGrid" class="grid12"><!-- JSで挿入 --></div>
+  </section>
+</div>
+
+<!-- ヘッダー（開始ボタンあり） -->
+<div class="headbar">
+  <div class="brand"><div class="logo">🥩</div><div>MEAT-BTI テスト</div></div>
+  <button class="btn primary" data-action="start">診断をはじめる</button>
+</div>
+
+<main class="app">
+  <div class="card">
+    <!-- Intro -->
+    <section class="intro">
+      <h1 style="margin:0 0 6px;font-size:clamp(22px,5.4vw,30px);font-weight:900">肉好きのための “部位タイプ” 診断</h1>
+      <p class="muted" style="margin:0 0 8px">20問・6段階（中立なし）。直感でOK。回答後は「あなたのタイプ」と「相性No.1」を表示します。</p>
+      <div class="badges" style="margin-bottom:6px">
+        <span class="badge">並び固定</span>
+        <span class="badge">6択 × 20問</span>
+        <span class="badge">相性No.1のみ表示</span>
+      </div>
+      <button class="btn ghost" data-action="start">診断する</button>
+    </section>
+
+    <!-- QUIZ -->
+    <section id="screen-quiz" class="section" hidden>
+      <div class="q-head">
+        <div class="q-index"><span id="page-now">1</span>/4ページ（<span id="q-answered">0</span>/20）</div>
+        <div class="bar"><div id="bar"></div></div>
+      </div>
+
+      <div id="qgrid" class="qgrid"><!-- 5問がここに出る --></div>
+
+      <div class="q-foot">
+        <div>左右の説明を読んで、中央の丸で“どちら寄りか”を選択</div>
+        <div><button id="btn-next" class="btn primary disabled">次の5問へ</button></div>
+      </div>
+      <div class="progress-note">左（青）⇔右（赤）ほど強い。 キーボード <b>1–6</b> でも選べます。</div>
+    </section>
+
+    <!-- RESULT -->
+    <section id="screen-result" class="section" hidden>
+      <div class="result">
+        <div class="big">診断結果</div>
+        <div class="grid">
+          <div class="r-card">
+            <div><strong>あなたの部位タイプ</strong></div>
+            <div style="margin-top:6px;font-size:22px;font-weight:900" id="r-type-name">—</div>
+            <div class="mono" id="r-type-code" style="opacity:.8">—</div>
+            <p class="desc" id="r-desc"></p>
+          </div>
+          <div class="r-card">
+            <div><strong>相性No.1</strong></div>
+            <div id="r-best" class="mono" style="margin-top:6px"></div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;gap:10px;margin-top:6px">
+          <button class="btn" id="btn-retry">最初から</button>
+          <a class="btn primary" href="#" id="btn-export" download>結果をJSONで保存</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>© KU-DETA / ニクパーティ — Test Build</footer>
   </div>
-</div>
-
-<!-- HERO（./hero_meatbti.png を表示） -->
-<figure class="hero-wrap">
-  <img src="./hero_meatbti.png" alt="Meat BTI ヒーロー">
-</figure>
-
-<div class="container">
-
-  <!-- STEP 0: タイプ紹介 -->
-  <section id="step0" class="step active panel p16">
-    <h1 class="h1">あなたはどの“部位タイプ”？</h1>
-    <p class="lead">12のキャラクターから、一番近いタイプと相性No.1を判定します（20問・所要1〜2分）。</p>
-    <div id="typeGrid" class="grid12"></div>
-    <div class="btns">
-      <button class="btn primary" id="startBtn">診断をはじめる</button>
-    </div>
-  </section>
-
-  <!-- STEP 1: クイズ（5問×4ページ） -->
-  <section id="step1" class="step panel p16">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-      <b id="pp">Q1–5 / 20</b>
-      <div class="progress" style="flex:1"><div id="progFill" class="fill" style="width:0%"></div></div>
-      <span class="kbd">ショートカット：1〜5</span>
-    </div>
-    <div id="qgrid" class="qgrid"></div>
-    <div class="btns" style="justify-content:space-between">
-      <button class="btn slim" id="prevBtn">← 前の5問</button>
-      <button class="btn primary" id="nextBtn">次の5問 →</button>
-    </div>
-  </section>
-
-  <!-- STEP 2: 結果 -->
-  <section id="step2" class="step">
-    <div class="row">
-      <section class="panel p16">
-        <div class="hero">
-          <img id="heroImg" alt="">
-          <div>
-            <div class="badge2">あなたのタイプ</div>
-            <h2 id="typeName" class="h1" style="margin-top:6px"></h2>
-            <p id="typeCatch" class="lead"></p>
-            <div id="tips" class="btns" style="margin-top:0"></div>
-            <div class="btns">
-              <button class="btn primary" id="againBtn">もう一度診断</button>
-              <a class="btn" href="../">LPへ戻る</a>
-            </div>
-          </div>
-        </div>
-        <hr style="border:none;border-top:1px solid var(--line);margin:16px 0">
-        <h3>あなたの味覚・スタイル傾向</h3>
-        <div id="bars" class="bars"></div>
-        <p class="small">尺度：0（左寄り）〜 100（右寄り）。<br>
-          風味A：赤身寄り ↔︎ 濃厚寄り／量B：軽め ↔︎ ボリューム／テンポC：静か ↔︎ にぎやか／演出D：素朴 ↔︎ 映え。</p>
-      </section>
-
-      <aside class="panel p16">
-        <h3>相性 No.1</h3>
-        <div class="pair">
-          <img id="pairImg" alt="">
-          <div>
-            <b id="pairName">-</b>
-            <div id="pairWhy" class="small" style="margin-top:4px">-</div>
-          </div>
-        </div>
-        <hr style="border:none;border-top:1px solid var(--line);margin:16px 0">
-        <h3>近いタイプ（次点）</h3>
-        <div class="pair">
-          <img id="secondImg" alt="">
-          <div>
-            <b id="secondName">-</b>
-            <div id="secondWhy" class="small" style="margin-top:4px">味覚・スタイルが近い“似てる相手”。</div>
-          </div>
-        </div>
-      </aside>
-    </div>
-  </section>
-
-  <!-- エラー -->
-  <section id="err" class="panel p16" style="display:none">
-    <b class="warn">診断データが見つかりませんでした。</b>
-    <p class="small">この画面が出る場合は、ページを再読み込みしてやり直してください。</p>
-    <div class="btns"><button class="btn primary" onclick="go(0)">診断をはじめる</button></div>
-  </section>
-</div>
-
-<footer>© 2025 Meat BTI</footer>
+</main>
 
 <script>
-/* ====== データ定義 ====== */
-const IMGS = {
-  "ヒレ男爵":"hire.png","タン隊長":"tan.png","イチボママ":"ichibo.png","ランプ博士":"ranpu.png",
-  "リブロースボス":"riburo-su.png","サーロイン王":"sa-roin.png","美食家ザブトン":"zabuton.png",
-  "ギャルカルビ":"karubi.png","やり手の営業マンハラミ":"harami.png","カイノミ舞妓はん":"kainomi.png",
-  "書道家ミスジ":"misuji.png","シャトーブリアン女王":"shato-.png"
+/* ========= タイプ表示テキスト ========= */
+const MEAT_TYPE_TEXT = {
+  "ヒレ":{ nick:"静かな主役", catch:"無駄なく上品、芯が強い赤身派。" },
+  "タン":{ nick:"場をほぐすムードメーカー", catch:"キレよく軽快、会話をほどく。" },
+  "イチボ":{ nick:"寄り添う仲介役", catch:"穏やかに合わせ、赤身を丁寧に。" },
+  "ランプ":{ nick:"一歩先を照らす案内役", catch:"王道に“ひと匙の新しさ”を添える。" },
+  "リブロース":{ nick:"安心感のリーダー", catch:"王道と段取りで、満足を約束。" },
+  "サーロイン":{ nick:"主役感のある演出家", catch:"コクと見せ場で“華やか”に牽引。" },
+  "ザブトン":{ nick:"じっくり語る相棒", catch:"濃厚を少し、静かにゆっくり。" },
+  "カルビ":{ nick:"親しみ満点の盛り上げ役", catch:"甘めの満足感で“みんなを一つに”。" },
+  "ハラミ":{ nick:"回転上手の進行役", catch:"赤身でテンポよく、気持ちよく回す。" },
+  "カイノミ":{ nick:"軽め贅沢のまとめ役", catch:"重すぎない満足。塩でも映える。" },
+  "ミスジ":{ nick:"繊細な職人", catch:"口どけ上品、所作と気配り。" },
+  "シャトーブリアン":{ nick:"静かにこだわる達人", catch:"量より質。落ち着いて深く味わう。" }
 };
 
-const TYPES = {
-  "ヒレ男爵":      {v:[-1.5,-1.0,-0.5,-0.5], one:"静かな主役の赤身派", catch:"無駄なく上品、芯が強い赤身派。",
-                    tips:["最初は“名物の塩”で会話を整える","相手の好みを1つ拾って次の一皿に反映","乾杯はハイボール/スパークリングで軽やかに"]},
-  "タン隊長":      {v:[-1.0,-0.5, 0.6,-0.2], one:"場をほぐすムードメーカー", catch:"空気をほぐす切り込み隊長。",
-                    tips:["“タン塩→赤身”の黄金ルート","小皿シェアで会話を回す","一言コメントで盛り上げ"]},
-  "イチボママ":    {v:[-0.5,-0.2, 0.0,-0.2], one:"安心の調和役", catch:"通好みの調和役。",
-                    tips:["“比較食べ”で会話を作る","火入れは相手に寄り添う","締めは軽めで余白を残す"]},
-  "ランプ博士":    {v:[-0.8,-0.5, 0.0, 0.2], one:"小さな冒険家", catch:"定番を更新する工夫好き。",
-                    tips:["“少量×多皿”でミニ実験","創作系を一皿まぜる","焼き担当で観察＆話題"]},
-  "リブロースボス":{v:[ 0.8, 0.6, 0.2, 0.2], one:"安心感のリーダー", catch:"王道リッチで満足度重視。",
-                    tips:["“名物→名物”で段取り良く","会計/席替えを主導","写真は少なめ体験濃く"]},
-  "サーロイン王":  {v:[ 1.3, 0.8, 0.5, 0.8], one:"華やぎの演出家", catch:"華やか演出で場の中心に。",
-                    tips:["フランベ/香り演出で拍手","乾杯の音頭で明るく開始","隣席とも軽く乾杯"]},
-  "美食家ザブトン":{v:[ 1.0, 0.2,-0.3, 0.2], one:"しっとり濃厚派", catch:"しっとり濃厚、少量高満足。",
-                    tips:["“少量高満足”を提案","休ませ時間を大切に","深めの質問を1つ"]},
-  "ギャルカルビ":  {v:[ 1.2, 0.7, 0.9, 0.9], one:"巻き込み型エンタメ", catch:"甘濃エンタメで巻き込み型。",
-                    tips:["“みんなの一口カルビ”手配","自分が撮ってシェア","満足派の希望を拾う"]},
-  "やり手の営業マンハラミ":{v:[ 0.2, 0.4, 0.8, 0.3], one:"テンポの司令塔", catch:"テンポ良く結果を出す実利派。",
-                    tips:["回転を上げて間を作らない","焼き台管理役で活躍","飲みすぎ注意で笑顔キープ"]},
-  "カイノミ舞妓はん":{v:[ 0.5,-0.2, 0.2, 0.2], one:"軽リッチのコーデ", catch:"軽やか派の橋渡し。",
-                    tips:["“塩→タレ”でメリハリ","軽い締めで余白を残す","相手の得意トークを振る"]},
-  "書道家ミスジ":  {v:[ 0.4,-0.4,-0.5, 0.2], one:"繊細さの職人", catch:"口どけ上品、所作で魅せる。",
-                    tips:["火入れは控えめで共有","小声のツッコミで距離縮め","甘めは量を絞って提案"]},
-  "シャトーブリアン女王":{v:[-1.3,-0.2,-0.6, 0.4], one:"寡黙な審美家", catch:"特選一点主義。静かに深く。",
-                    tips:["“量より質”で軸を見せる","静かな席を選ぶ","デザート前に次回の約束"]},
+/* ========= 12タイプ画像（ファイル名対応） ========= */
+const TYPE_IMAGES = {
+  "ヒレ":"hire.png","タン":"tan.png","イチボ":"ichibo.png","ランプ":"ranpu.png",
+  "リブロース":"riburo-su.png","サーロイン":"sa-roin.png","ザブトン":"zabuton.png",
+  "カルビ":"karubi.png","ハラミ":"harami.png","カイノミ":"kainomi.png",
+  "ミスジ":"misuji.png","シャトーブリアン":"shato-.png"
 };
 
-// 20問
-const Q = [
-  {t:"同じ価格ならどちらを選ぶ？", a:"キレ重視（さっぱり）", b:"コク重視（濃厚）", ax:"A"},
-  {t:"満足度重視なら？", a:"ヒレ・ランプなど赤身", b:"リブロース・サーロイン", ax:"A"},
-  {t:"脂の重さの好みは？", a:"軽めの赤身寄り", b:"脂の濃厚さも欲しい", ax:"A"},
-  {t:"“量をしっかり”食べるなら？", a:"軽めの赤身中心で進めたい", b:"満足感の高い部位で押したい", ax:"B"},
-  {t:"ボリューム感の理想は？", a:"少量×多皿で色々", b:"量感あってOK", ax:"B"},
-  {t:"最初の一皿は？", a:"軽やかに塩で", b:"最初から名物リッチ", ax:"D"},
-  {t:"追加の一皿なら？", a:"赤身系でもう一皿", b:"リッチ系でもう一皿", ax:"B"},
-  {t:"演出の好みは？", a:"素朴・素材推し", b:"映え・ソース推し", ax:"D"},
-  {t:"テーブルの雰囲気は？", a:"静かに味わうのが好き", b:"賑やかに楽しみたい", ax:"C"},
-  {t:"初めましての席での立ち回りは？", a:"まず相手に合わせる", b:"明るく主導していく", ax:"C"},
-  {t:"焼き方の傾向は？", a:"控えめレア寄り", b:"香ばしめが好み", ax:"A"},
-  {t:"乾杯ドリンクは？", a:"軽やか/スパークリング", b:"濃いめ/カクテル", ax:"D"},
-  {t:"皿数の志向は？", a:"少量多皿で変化を楽しむ", b:"主役をがっつり", ax:"B"},
-  {t:"写真の扱いは？", a:"少なめで体験重視", b:"しっかり撮ってシェア", ax:"D"},
-  {t:"会話テンポは？", a:"ゆっくり丁寧に深く", b:"テンポ良く明るく", ax:"C"},
-  {t:"香りの好みは？", a:"素材の香りが立つ方", b:"香り演出も好き", ax:"D"},
-  {t:"締めの選び方は？", a:"軽く余白を残す", b:"満足優先でしっかり", ax:"B"},
-  {t:"名物と言われたら？", a:"気になるが様子見", b:"まずは名物でいく", ax:"C"},
-  {t:"好みの味幅は？", a:"赤身〜軽リッチ", b:"濃厚〜甘めもOK", ax:"A"},
-  {t:"席替えの理想は？", a:"少なめでじっくり", b:"多めで広く交流", ax:"C"},
+/* ========= ギャラリー描画 ========= */
+(function renderGallery(){
+  const grid=document.getElementById('typeGrid');
+  const order=["ヒレ","タン","イチボ","ランプ","リブロース","サーロイン","ザブトン","カルビ","ハラミ","カイノミ","ミスジ","シャトーブリアン"];
+  grid.innerHTML = order.map(name=>{
+    const meta=MEAT_TYPE_TEXT[name]; const img=TYPE_IMAGES[name]||"";
+    return `
+      <div class="tcard">
+        <img src="${img}" alt="${name}">
+        <div><b>${name}</b><div class="t-small">${meta?.nick||""}</div></div>
+      </div>`;
+  }).join('');
+})();
+
+/* ========= 以降は元の診断ロジック ========= */
+/* ========= 質問（20問・並び固定） ========= */
+const BANK = [
+  {id:1, axis:"RL", text:"最初の一皿、どちらに惹かれる？", A:"脂少なめで赤身の旨みを味わう", B:"サシのコクと満足感を重視"},
+  {id:2, axis:"RL", text:"同じ価格の赤身と霜降り、今の気分は？", A:"キレ重視（さっぱり）", B:"コク重視（濃厚）"},
+  {id:3, axis:"RL", text:"“量をしっかり”食べるなら？", A:"軽めの赤身中心で進めたい", B:"満足感の高い部位で押したい"},
+  {id:4, axis:"RL", text:"名物から選ぶなら？", A:"ヒレ／タンなど“赤身寄り”", B:"サーロイン／カルビなど“コク寄り”"},
+  {id:5, axis:"RL", text:"1皿だけ追加。迷ったらどっち？", A:"赤身系でもう一皿", B:"リッチ系でもう一皿"},
+  {id:6, axis:"TX", text:"ステーキの食感、どちらが好き？", A:"噛んだ時の歯切れ・肉感を楽しむ", B:"口の中でとろける柔らかさ"},
+  {id:7, axis:"TX", text:"焼き加減の希望は？（ステーキ想定）", A:"レア〜ミディアムレア寄り", B:"ミディアム〜ウェルダン寄り"},
+  {id:8, axis:"TX", text:"焼き担当になったら？", A:"短時間でサッと仕上げる", B:"火入れを入念にして柔らかく"},
+  {id:9, axis:"FL", text:"味付けの第一選択は？", A:"塩・レモンなどシンプル", B:"特製ソースで仕上げたい"},
+  {id:10, axis:"KC", text:"演出ありの一皿なら、どっちがうれしい？", A:"シンプルに焼いて“素材そのまま”で味わう", B:"フランベや“特製ソースのかけ仕上げ”など見せ場"},
+  {id:11, axis:"KC", text:"最初の注文の組み立ては？", A:"定番から入り、様子を見て変化を足す", B:"限定や創作を早めに混ぜる"},
+  {id:12, axis:"KC", text:"初めての店。未知の部位や仕上げは？", A:"まずは定番・名物を優先", B:"気になる新顔を試してみたい"},
+  {id:13, axis:"FS", text:"注文は？", A:"一皿ずつ様子を見て追加", B:"まとめて頼んでテンポよく回す"},
+  {id:14, axis:"FS", text:"コースかアラカルトか", A:"テンポよくアラカルトで色々", B:"ゆっくりコースで流れに乗る"},
+  {id:15, axis:"FS", text:"週末。気に入ったお店だったら？", A:"次のお店にも行って“軽くはしご”", B:"そのお店に“とどまってゆっくり”"},
+  {id:16, axis:"AF", text:"締めの考え方", A:"軽めでOK／締めなしでも良い", B:"ご飯・麺・デザートまで満足したい"},
+  {id:17, axis:"AF", text:"最初の一杯", A:"ハイボールやすっきり寄り", B:"甘めや濃い系もいきたい"},
+  {id:18, axis:"AF", text:"今日はここで終える？", A:"余白を残して軽めに締める", B:"ここで完結。しっかり食べ切る"},
+  {id:19, axis:"KC", text:"写真や見せ場について", A:"見た目はほどほど、中身重視", B:"“仕上げ”や映える見せ場が好き"},
+  {id:20, axis:"RL", text:"赤身vsコク、最後にもう一度。直感で。", A:"赤身寄り", B:"コク寄り"}
 ];
 
-/* ====== ヘルパ ====== */
-const qs = s=>document.querySelector(s);
-const el = (t,attrs={},html="")=>{const e=document.createElement(t);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));e.innerHTML=html;return e;}
-const clamp = (x,a,b)=>Math.max(a,Math.min(b,x));
-const to01 = n => Math.min(1, Math.max(0, (n + 2) / 4)); // -2..+2 → 0..1
-function v5to2(x){ return ((x||3)-3)/2*2 } // 1..5 → -2..+2
+/* ========= 内部集計（元の処理） ========= */
+const PAGE_SIZE=5, TOTAL_PAGES=4;
+let page=0, responses={}, answeredCount=0, pageStartAt=0;
+let answers=[], rtimes=[];
+const counts={R:0,L:0,F:0,S:0,K:0,C:0,Q:0,M:0,Salt:0,Sauce:0,Light:0,Hearty:0};
 
-/* ====== 画面遷移 ====== */
-function go(n){
-  ["#step0","#step1","#step2","#err"].forEach(sel=>qs(sel).classList.remove("active"));
-  if(n===0) qs("#step0").classList.add("active");
-  if(n===1) qs("#step1").classList.add("active");
-  if(n===2) qs("#step2").classList.add("active");
+const el2=id=>document.getElementById(id);
+const screenQuiz=el2('screen-quiz'), screenResult=el2('screen-result');
+function showScreen(which){ screenQuiz.hidden = which!=='quiz'; screenResult.hidden = which!=='result'; }
+
+/* ========= フロー ========= */
+function start(){
+  for(const k of Object.keys(counts)) counts[k]=0;
+  responses={}; answeredCount=0; page=0; answers=[]; rtimes=[];
+  showScreen('quiz'); renderPage(); window.scrollTo({top:0, behavior:'smooth'});
 }
-
-/* ====== タイプ一覧（Step0） ====== */
-function renderTypeGrid(){
-  const g = qs("#typeGrid"); g.innerHTML="";
-  Object.entries(TYPES).forEach(([name,obj])=>{
-    const c = el("div",{class:"card"});
-    c.innerHTML = `<img src="${IMGS[name]||''}" alt="${name}">
-      <div><b>${name}</b><div class="small">${obj.one}</div></div>`;
-    g.appendChild(c);
-  });
-}
-
-/* ====== クイズ描画（Step1） ====== */
-let page=0;        // 0..3
-let answers=Array(Q.length).fill(0); // 1..5
-
 function renderPage(){
-  const from=page*5, to=from+5;
-  qs("#pp").textContent = `Q${from+1}–${to} / 20`;
-  qs("#progFill").style.width = `${Math.round((answers.filter(Boolean).length/20)*100)}%`;
+  el2('page-now').textContent=page+1;
+  el2('q-answered').textContent=answeredCount;
+  el2('bar').style.width=((page)/TOTAL_PAGES*100)+'%';
 
-  const wrap = qs("#qgrid"); wrap.innerHTML="";
-  Q.slice(from,to).forEach((q,i)=>{
-    const idx = from+i;
-    const box = el("div",{class:"qbox"});
-    const html = `
-      <div class="qtitle">${q.t}</div>
-      <div class="small" style="margin-bottom:8px">A：${q.a}　/　B：${q.b}</div>
-      <div class="scale">
-        ${[1,2,3,4,5].map(v=>{
-          const mid = v===3?' mid':''; const sel = answers[idx]===v?' sel':'';
-          const label = v===1?'Aにとても近い':v===2?'Aに近い':v===3?'中立':v===4?'Bに近い':'Bにとても近い';
-          return `<div class="opt${mid}${sel}" data-idx="${idx}" data-val="${v}" title="${label}">${v}</div>`;
-        }).join('')}
+  const startIdx=page*PAGE_SIZE;
+  const slice=BANK.slice(startIdx, startIdx+PAGE_SIZE);
+
+  const grid=el2('qgrid'); grid.innerHTML='';
+  slice.forEach(q=>{
+    const wrap=document.createElement('div'); wrap.className='qitem'; wrap.dataset.qid=q.id;
+    wrap.innerHTML=`
+      <div class="ctx">${q.text}</div>
+      <div class="lr" aria-label="左右の比較文">
+        <div class="side"><b>${q.A}</b></div>
+        <div class="side"><b>${q.B}</b></div>
+      </div>
+      <div class="scale" role="radiogroup" aria-label="6段階選択">
+        ${renderDots(q.id).join('')}
       </div>`;
-    box.innerHTML = html;
-    wrap.appendChild(box);
+    grid.appendChild(wrap);
   });
 
-  qs("#prevBtn").disabled = (page===0);
-  qs("#nextBtn").textContent = (page===3?'結果を見る →':'次の5問 →');
-}
+  setNextEnabled(slice.every(q=>responses[q.id]));
+  grid.querySelectorAll('.dot').forEach(dot=>{
+    dot.addEventListener('click', e=>{
+      const qid = Number(e.currentTarget.closest('.qitem').dataset.qid);
+      const uiVal = Number(e.currentTarget.dataset.val);
+      selectDot(qid, uiVal, e.currentTarget);
+    });
+  });
 
-function clickScale(e){
-  const t = e.target.closest(".opt"); if(!t) return;
-  const idx = +t.dataset.idx, val = +t.dataset.val;
-  answers[idx]=val;
-  renderPage();
-
-  const from=page*5, done = answers.slice(from,from+5).every(v=>v>0);
-  if(done){
-    setTimeout(()=>{ if(page<3){page++; renderPage(); go(1);} else {showResult();} }, 400);
-  }
-}
-
-function nextPage(){
-  const from=page*5;
-  if(!answers.slice(from,from+5).every(v=>v>0)){
-    alert("未回答があります（この5問をすべて選んでください）");
-    return;
-  }
-  if(page<3){ page++; renderPage(); }
-  else { showResult(); }
-}
-function prevPage(){ if(page>0){ page--; renderPage(); } }
-
-// キーボード 1..5
-window.addEventListener('keydown',e=>{
-  const n = +e.key;
-  if(n>=1 && n<=5 && qs('#step1').classList.contains('active')){
-    const from=page*5, to=from+5;
-    let idx = answers.findIndex((v,i)=> i>=from && i<to && v===0);
-    if(idx<0) idx=from;
-    answers[idx]=n;
-    renderPage();
-    const done = answers.slice(from,to).every(v=>v>0);
-    if(done){
-      setTimeout(()=>{ if(page<3){page++; renderPage();} else {showResult();} }, 150);
+  window.onkeydown=(e)=>{
+    const map={'1':3,'2':2,'3':1,'4':-1,'5':-2,'6':-3};
+    if(!(e.key in map)) return;
+    for(const q of slice){
+      if(!responses[q.id]){
+        const qwrap=grid.querySelector(`[data-qid="${q.id}"]`);
+        const target=qwrap.querySelector(`.dot[data-val="${map[e.key]}"]`);
+        target && target.click(); break;
+      }
     }
-  }
-});
-
-/* ====== 結果（Step2） ====== */
-const AXIS_MAP = Q.map(q=>q.ax);
-
-function buildAxis(){
-  const acc={A:[],B:[],C:[],D:[]};
-  answers.forEach((v,i)=>{ acc[AXIS_MAP[i]].push( v5to2(v) ); });
-  const avg = k => acc[k].length ? (acc[k].reduce((s,x)=>s+x,0)/acc[k].length) : 0;
-  return {A:avg('A'),B:avg('B'),C:avg('C'),D:avg('D')};
+  };
+  pageStartAt=performance.now();
 }
-function decideType(axis){
-  const w={A:1.2,B:1.0,C:0.9,D:0.8};
-  let best=null,bestDist=1e9;
-  for(const [name,o] of Object.entries(TYPES)){
-    const [a,b,c,d]=o.v;
-    const dist=w.A*(axis.A-a)**2+w.B*(axis.B-b)**2+w.C*(axis.C-c)**2+w.D*(axis.D-d)**2;
-    if(dist<bestDist){bestDist=dist;best=name;}
+function renderDots(qid){
+  const tipsL=["左：とても近い","左：かなり近い","左：やや近い"];
+  const tipsR=["右：やや近い","右：かなり近い","右：とても近い"];
+  const valsL=[3,2,1], valsR=[-1,-2,-3];
+  const cur=responses[qid]?.uiVal;
+  const left=valsL.map((v,i)=>`<button class="dot ${i===0?'big':i===1?'':'small'} ${cur===v?'active':''}" data-side="L" data-val="${v}" title="${tipsL[i]}"></button>`);
+  const right=valsR.map((v,i)=>`<button class="dot ${i===2?'big':i===1?'':'small'} ${cur===v?'active':''}" data-side="R" data-val="${v}" title="${tipsR[i]}"></button>`);
+  return [...left, ...right];
+}
+function selectDot(qid, uiVal, btn){
+  responses[qid] = responses[qid] || {};
+  const firstTime = (responses[qid].uiVal === undefined);
+  responses[qid].uiVal = uiVal;
+  if(firstTime){
+    responses[qid].ts = performance.now() - pageStartAt;
+    answeredCount++; el2('q-answered').textContent = answeredCount;
+  }
+  const wrap=btn.closest('.qitem');
+  wrap.querySelectorAll('.dot').forEach(d=>d.classList.remove('active'));
+  wrap.querySelector(`.dot[data-val="${uiVal}"]`).classList.add('active');
+
+  const startIdx=page*PAGE_SIZE; const slice=BANK.slice(startIdx, startIdx+PAGE_SIZE);
+  setNextEnabled(slice.every(q=>responses[q.id]));
+}
+function setNextEnabled(ok){ el2('btn-next').classList.toggle('disabled', !ok); }
+function applyPage(){
+  const startIdx=page*PAGE_SIZE; const slice=BANK.slice(startIdx, startIdx+PAGE_SIZE);
+  for(const q of slice){
+    const r=responses[q.id]; if(!r) continue;
+    const valForA=r.uiVal; const towardA=Math.sign(valForA);
+    const abs=Math.abs(valForA); const w=abs>=3?1.0:abs===2?0.7:0.4;
+    answers.push({id:q.id,axis:q.axis,uiVal:r.uiVal,valForA,ms:r.ts,text:q.text}); rtimes.push(r.ts);
+    const add=k=>counts[k]=(counts[k]||0)+w;
+    if(q.axis==='RL'){ towardA>0 ? add('R') : add('L'); }
+    if(q.axis==='FS'){ towardA>0 ? add('F') : add('S'); }
+    if(q.axis==='KC'){ towardA>0 ? add('K') : add('C'); }
+    if(q.axis==='TX'){ towardA>0 ? add('Q') : add('M'); }
+    if(q.axis==='FL'){ towardA>0 ? add('Salt') : add('Sauce'); }
+    if(q.axis==='AF'){ towardA>0 ? add('Light') : add('Hearty'); }
+  }
+}
+
+/* ========= 判定 ========= */
+const OPP={R:"L",L:"R",F:"S",S:"F",K:"C",C:"K"};
+function decideAxis(A,B,AL,BL,relA=0,relB=0){
+  if(A>B) return AL;
+  if(B>A) return BL;
+  const wA=A+relA, wB=B+relB;
+  if(wA>wB) return AL;
+  if(wB>wA) return BL;
+  return AL;
+}
+function pickSubtype(code,c){
+  switch(code){
+    case 'R-F-K': return (c.Q>=2 && c.Salt>=2 && c.Light>=2) ? 'シャトーブリアン' : 'ヒレ';
+    case 'R-F-C': return (c.Sauce>=c.Salt || c.Hearty>c.Light) ? 'ハラミ' : 'タン';
+    case 'R-S-K': return (c.M>c.Q) ? 'ミスジ' : 'イチボ';
+    case 'R-S-C': return 'ランプ';
+    case 'L-F-K': return 'リブロース';
+    case 'L-F-C': return 'サーロイン';
+    case 'L-S-K': return 'ザブトン';
+    case 'L-S-C': return (c.Light>c.Hearty && c.Salt>=c.Sauce) ? 'カイノミ' : 'カルビ';
+    default: return 'ヒレ';
+  }
+}
+function parseCode(code){const [a,b,c]=code.split('-');return {RL:a,FS:b,KC:c};}
+function allBaseCodes(){ return ['R-F-K','R-F-C','R-S-K','R-S-C','L-F-K','L-F-C','L-S-K','L-S-C']; }
+function bestMatch(code){
+  const mine=parseCode(code);let best=null,bestScore=-1;
+  for(const t of allBaseCodes()){
+    if(t===code) continue;
+    const other=parseCode(t);
+    let opp=0,same=0;
+    if(other.RL===OPP[mine.RL])opp++;
+    if(other.FS===OPP[mine.FS])opp++;
+    if(other.KC===OPP[mine.KC])opp++;
+    if(other.RL===mine.RL)same++;
+    if(other.FS===mine.FS)same++;
+    if(other.KC===mine.KC)same++;
+    const score=(opp>=2)?opp*10:(opp*10+same);
+    if(score>bestScore){bestScore=score;best=t;}
   }
   return best;
 }
-function bestPartner(selfName, axis){
-  const w={A:0.8,B:1.0,C:1.2,D:0.9};
-  let best=null,score=1e9;
-  for(const [name,o] of Object.entries(TYPES)){
-    if(name===selfName) continue;
-    const [a,b,c,d]=o.v;
-    const s = w.A*(axis.A-(-0.4*a))**2 + w.B*(axis.B-b)**2 + w.C*(axis.C-c)**2 + w.D*(axis.D-(-0.3*d))**2;
-    if(s<score){score=s;best={name,why:explainPair(axis,o.v)};}
-  }
-  return best;
+function computeResult(){
+  const c=counts;
+  const RL = decideAxis(c.R,c.L,'R','L', 0.60*c.Q + 0.25*c.Salt + 0.15*c.Light,
+                                   0.60*c.M + 0.25*c.Sauce + 0.15*c.Hearty);
+  const FS = decideAxis(c.F,c.S,'F','S', 0.50*c.Light + 0.25*c.Salt,
+                                   0.50*c.Hearty + 0.25*c.Sauce);
+  const KC = decideAxis(c.K,c.C,'K','C', 0.30*c.Salt + 0.20*c.Light,
+                                   0.30*c.Sauce + 0.20*c.Hearty);
+  const code=`${RL}-${FS}-${KC}`;
+  const name=pickSubtype(code, c);
+  return {code,name};
 }
-function explainPair(ax,v){
-  const labsC = Math.abs(ax.C - v[2])<0.5 ? "テンポ感が近い" : "テンポを補完し合う";
-  const labsB = Math.abs(ax.B - v[1])<0.5 ? "量感の好みが近い" : "量感のバランスが取れる";
-  const labsA = ax.A>0 ? "濃厚寄り" : "赤身寄り";
-  return `${labsC}＋${labsB}。好みは${labsA}を補完。`;
-}
-
 function showResult(){
-  if(answers.filter(Boolean).length<20){ qs("#err").style.display='block'; return; }
-  const axis = buildAxis();
-  const you  = decideType(axis);
-  const t    = TYPES[you];
-
-  qs("#typeName").textContent  = you;
-  qs("#typeCatch").textContent = t.catch;
-  qs("#heroImg").src           = IMGS[you]||"";
-  qs("#heroImg").alt           = you;
-
-  const tips = qs("#tips"); tips.innerHTML="";
-  (t.tips||[]).forEach(s=>tips.appendChild(el("span",{class:"btn slim"},s)));
-
-  const bars = qs("#bars"); bars.innerHTML="";
-  [["風味 A（赤身↔濃厚）",to01(axis.A)],
-   ["量 B（軽め↔ボリューム）",to01(axis.B)],
-   ["テンポ C（静か↔にぎやか）",to01(axis.C)],
-   ["演出 D（素朴↔映え）",to01(axis.D)]]
-  .forEach(([label,ratio])=>{
-    const row = el("div",{class:"bar"});
-    row.innerHTML = `<div class="small">${label}</div>
-      <div class="track"><div class="fill" style="width:${Math.round(ratio*100)}%"></div></div>`;
-    bars.appendChild(row);
-  });
-
-  const pair = bestPartner(you, axis);
-  if(pair){
-    qs("#pairName").textContent = pair.name;
-    qs("#pairImg").src = IMGS[pair.name]||"";
-    qs("#pairImg").alt = pair.name;
-    qs("#pairWhy").textContent = pair.why;
-  }
-
-  const distances = Object.entries(TYPES).map(([name,o])=>{
-    const [a,b,c,d]=o.v;
-    const dist=(axis.A-a)**2+(axis.B-b)**2+(axis.C-c)**2+(axis.D-d)**2;
-    return {name,dist};
-  }).sort((x,y)=>x.dist-y.dist);
-  const second = distances.find(x=>x.name!==you);
-  if(second){
-    qs("#secondName").textContent = second.name;
-    qs("#secondImg").src = IMGS[second.name]||"";
-    qs("#secondImg").alt = second.name;
-  }
-
-  go(2);
+  document.getElementById('bar').style.width='100%';
+  const r=computeResult(); showScreen('result');
+  const meta=MEAT_TYPE_TEXT[r.name]||{nick:r.name,catch:''};
+  document.getElementById('r-type-name').textContent = `${r.name}（${meta.nick}）`;
+  document.getElementById('r-type-code').textContent = r.code;
+  document.getElementById('r-desc').textContent = meta.catch;
+  const bm=bestMatch(r.code);
+  const bmName = pickSubtype(bm, counts);
+  const bmMeta = MEAT_TYPE_TEXT[bmName] || {nick:b mName};
+  document.getElementById('r-best').textContent = `${bmName}（${bmMeta.nick}）`;
+  const payload={ type:{code:r.code,name:r.name,nick:meta.nick,catch:meta.catch},
+                  counts, answers, generatedAt:new Date().toISOString() };
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob); const a=document.getElementById('btn-export');
+  a.href=url; a.download=`MEAT-BTI_${r.code}.json`;
 }
 
-/* ====== 初期化 ====== */
-renderTypeGrid();
-qs("#startBtn").onclick = ()=>{ page=0; answers=Array(Q.length).fill(0); renderPage(); go(1); }
-qs("#qgrid").addEventListener("click", clickScale);
-qs("#nextBtn").onclick = nextPage;
-qs("#prevBtn").onclick = prevPage;
-qs("#againBtn").onclick = ()=>{ page=0; answers=Array(Q.length).fill(0); renderPage(); go(1); };
+/* ========= イベント ========= */
+document.addEventListener('click',(ev)=>{
+  const t=ev.target.closest('[data-action="start"]');
+  if(t){ ev.preventDefault(); start(); }
+});
+document.getElementById('btn-next').addEventListener('click', ()=>{
+  const btn = document.getElementById('btn-next');
+  if(btn.classList.contains('disabled')) return;
+  applyPage();
+  if(page < TOTAL_PAGES-1){ page++; renderPage(); }
+  else{ showResult(); }
+});
+document.getElementById('btn-retry').addEventListener('click',()=>{
+  screenResult.hidden = true;
+  screenQuiz.hidden = true;
+  window.scrollTo({top:0, behavior:'smooth'});
+});
 </script>
 </body>
 </html>
