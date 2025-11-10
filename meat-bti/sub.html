@@ -3,83 +3,301 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Meat BTI｜12タイプ診断（ランディング）</title>
-<meta name="description" content="20問で“肉タイプ”を診断。12キャラクターと相性No.1・要注意タイプを表示。">
-<!-- GA4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-V39MNGQD5H"></script>
-<script>
-window.dataLayer = window.dataLayer || [];
-function gtag(){ dataLayer.push(arguments); }
-gtag('js', new Date()); gtag('config', 'G-V39MNGQD5H');
-</script>
+<title>Meat BTI 診断結果</title>
+<meta name="theme-color" content="#0b0a0a">
 <style>
-  :root{--bg:#0b0d13;--panel:#111522;--ink:#f7faff;--muted:#b9c2d3;--bd:#1b2334;--cheese:#ffd966;--tomato:#ff6b4a;--shadow:0 14px 32px rgba(0,0,0,.35)}
-  *{box-sizing:border-box} html,body{height:100%}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;letter-spacing:.02em;line-height:1.7}
-  a{color:inherit;text-decoration:none} img{max-width:100%;display:block}
-  .container{width:min(1040px,92vw);margin:0 auto;padding:18px}
-  .card{background:var(--panel);border:1px solid var(--bd);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
-  header.top{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--bd)}
-  .brand{display:flex;align-items:center;gap:10px}
-  .logo{width:34px;height:34px;border-radius:10px;background:conic-gradient(from 140deg,var(--cheese),var(--tomato));display:grid;place-items:center;color:#111;font-weight:900}
-  .title{font-weight:900}
-  .btn{appearance:none;border:1px solid var(--bd);background:#152037;color:var(--ink);padding:12px 16px;border-radius:12px;font-weight:800;cursor:pointer;transition:transform .06s ease}
-  .btn:hover{transform:translateY(-1px)} .btn.primary{background:linear-gradient(180deg,var(--tomato),#ff4e2f);color:#111;border:none}
-  .hero{display:grid;gap:12px;padding:16px}
-  .h1{margin:0;font-weight:900;font-size:clamp(22px,4.8vw,30px);line-height:1.25}
-  .lead{margin:0;color:var(--muted)}
-  .hero-img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:14px;border:1px solid #1b2334}
-  .gallery{padding:0 16px 16px}
-  .h2{font-weight:900;font-size:clamp(18px,4.6vw,22px);margin:0 0 8px}
-  .grid-12{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
-  @media(max-width:980px){.grid-12{grid-template-columns:repeat(4,1fr)}}
-  @media(max-width:680px){.grid-12{grid-template-columns:repeat(3,1fr)}}
-  .ch{background:#0f1525;border:1px solid #1f2a43;border-radius:14px;overflow:hidden}
-  .ch .ph{aspect-ratio:1/1;background:#0b1222} .ch img{width:100%;height:100%;object-fit:cover}
-  .ch .meta{padding:8px 10px}.name{font-weight:900;font-size:14px}.mini{color:#9fb0cc;font-size:12px}
-  footer{color:#9fb0cc;font-size:12px;padding:14px 16px;border-top:1px solid var(--bd)}
-  .cta{display:flex;gap:10px;flex-wrap:wrap}
+  :root{
+    --bg:#0b0a0a; --panel:#131723; --ink:#f7f7fb; --muted:#c5c9d3; --bd:#232a3a;
+    --brand:#ffd966; --accent:#ff6b4a;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;letter-spacing:.02em;line-height:1.65}
+  a{color:inherit;text-decoration:none}
+
+  .wrap{width:min(1040px,92vw);margin:0 auto}
+  header{padding:14px 0;border-bottom:1px solid var(--bd);position:sticky;top:0;background:#0b0a0ad0;backdrop-filter:saturate(120%) blur(8px);z-index:10}
+  h1{font-size:clamp(22px,5.4vw,34px);margin:0}
+  .lead{color:var(--muted);margin:4px 0 0}
+
+  .grid{display:grid;gap:18px;grid-template-columns:1fr}
+  @media(min-width:920px){.grid{grid-template-columns:1fr 1fr}}
+
+  .card{background:var(--panel);border:1px solid var(--bd);border-radius:16px;padding:16px}
+  .h2{font-weight:900;font-size:clamp(18px,4.6vw,26px);margin:0 0 8px}
+  .big{font-size:clamp(22px,5.4vw,32px);font-weight:900;margin:2px 0}
+  .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#161c2b;border:1px solid #2c3650;margin:2px 6px 0 0;font-size:12px;color:#e5e9f3}
+  .imgbox{border:1px solid #2a3146;border-radius:14px;overflow:hidden;background:#0e1424}
+  .imgbox img{width:100%;display:block;object-fit:cover;aspect-ratio:1/1}
+  .desc{color:#e7ebf6;line-height:1.9;margin-top:8px}
+  ul{margin:0 0 0 18px}
+  .meta{color:var(--muted);font-size:12px;margin-top:10px}
+  .btn{appearance:none;border:1px solid var(--bd);background:#151b2a;color:var(--ink);
+       padding:12px 14px;border-radius:12px;font-weight:900;cursor:pointer}
+  .btn.primary{background:linear-gradient(180deg,var(--brand),#f7c84a);color:#2a1e0b;border:none}
+  .row{display:flex;flex-wrap:wrap;gap:10px}
 </style>
 </head>
 <body>
-<main class="container">
-  <div class="card">
-    <header class="top">
-      <div class="brand"><div class="logo">🥩</div><div class="title">Meat BTI 診断</div></div>
-      <a class="btn primary" href="quiz.html">診断をはじめる</a>
-    </header>
-
-    <section class="hero">
-      <h1 class="h1">20問であなたの“肉タイプ”を診断。相性No.1・要注意タイプも表示</h1>
-      <p class="lead">A/Bに加えA/B/C（B＝中立）設問で、5つの嗜好軸から12タイプへ一意にマッピングします。</p>
-      <!-- 任意：説明用のイメージ（不要なら削除OK） -->
-      <img class="hero-img" src="mbti.jpg" alt="Meat BTI イメージ">
-      <div class="cta">
-        <a class="btn primary" href="quiz.html">今すぐ診断（1〜2分）</a>
-      </div>
-    </section>
-
-    <section class="gallery">
-      <h2 class="h2">キャラクター図鑑（12タイプ）</h2>
-      <div class="grid-12">
-        <div class="ch"><div class="ph"><img src="hire.png" alt="ヒレ男爵"></div><div class="meta"><div class="name">ヒレ男爵</div><div class="mini">静かな主役。無駄なく上品。</div></div></div>
-        <div class="ch"><div class="ph"><img src="tan.png" alt="タン隊長"></div><div class="meta"><div class="name">タン隊長</div><div class="mini">合図と段取りで場を回す。</div></div></div>
-        <div class="ch"><div class="ph"><img src="ichibo.png" alt="イチボママ"></div><div class="meta"><div class="name">イチボママ</div><div class="mini">面倒見◎。安心感で包む。</div></div></div>
-        <div class="ch"><div class="ph"><img src="ranpu.png" alt="ランプ博士"></div><div class="meta"><div class="name">ランプ博士</div><div class="mini">小さな実験で会話を広げる。</div></div></div>
-        <div class="ch"><div class="ph"><img src="riburo-su.png" alt="リブロースボス"></div><div class="meta"><div class="name">リブロースボス</div><div class="mini">満足度重視。頼れる統率。</div></div></div>
-        <div class="ch"><div class="ph"><img src="sa-roin.png" alt="サーロイン王"></div><div class="meta"><div class="name">サーロイン王</div><div class="mini">華やかな演出、サービス精神。</div></div></div>
-        <div class="ch"><div class="ph"><img src="zabuton.png" alt="美食家ザブトン"></div><div class="meta"><div class="name">美食家ザブトン</div><div class="mini">しっとり濃厚、所作は丁寧。</div></div></div>
-        <div class="ch"><div class="ph"><img src="karubi.png" alt="ギャルカルビ"></div><div class="meta"><div class="name">ギャルカルビ</div><div class="mini">ご褒美感で場を爆上げ。</div></div></div>
-        <div class="ch"><div class="ph"><img src="harami.png" alt="やり手の営業マンハラミ"></div><div class="meta"><div class="name">やり手の営業マンハラミ</div><div class="mini">テンポ良く実務も会話も。</div></div></div>
-        <div class="ch"><div class="ph"><img src="kainomi.png" alt="カイノミ舞妓はん"></div><div class="meta"><div class="name">カイノミ舞妓はん</div><div class="mini">軽やか上品、橋渡し上手。</div></div></div>
-        <div class="ch"><div class="ph"><img src="misuji.png" alt="書道家ミスジ"></div><div class="meta"><div class="name">書道家ミスジ</div><div class="mini">繊細美意識、静かに深く。</div></div></div>
-        <div class="ch"><div class="ph"><img src="shato-.png" alt="シャトーブリアン女王"></div><div class="meta"><div class="name">シャトーブリアン女王</div><div class="mini">量より質、静かな格上。</div></div></div>
-      </div>
-    </section>
-
-    <footer>© <span id="y"></span> Meat BTI</footer>
+<header>
+  <div class="wrap">
+    <h1>Meat BTI 診断結果</h1>
+    <p class="lead">あなたの“部位キャラ”と相性No.1を表示します。</p>
   </div>
+</header>
+
+<main class="wrap" id="app">
+  <section id="warn" class="card" style="display:none">
+    <p>診断データが見つかりませんでした。<br>
+      <a class="btn primary" href="quiz.html">診断をはじめる</a></p>
+  </section>
+
+  <section id="result" class="grid" style="display:none">
+    <article class="card">
+      <div class="h2">あなたのタイプ</div>
+      <div id="typeJp" class="big">—</div>
+      <div id="code" class="pill">—</div>
+      <div class="row" style="margin-top:6px">
+        <span id="tagTexture" class="pill"></span>
+        <span id="tagFlavor" class="pill"></span>
+        <span id="tagAfter" class="pill"></span>
+      </div>
+      <p id="catch" class="desc"></p>
+      <ul id="tips"></ul>
+      <div class="meta" id="meta"></div>
+    </article>
+
+    <aside class="card">
+      <div class="imgbox"><img id="charImg" alt=""></div>
+      <div style="margin-top:10px">
+        <div class="h2">相性 No.1</div>
+        <div id="bestJp" class="big">—</div>
+        <div id="bestCode" class="pill">—</div>
+      </div>
+      <div style="margin-top:10px" class="row">
+        <a class="btn" href="../index1.html">LPに戻る</a>
+        <a class="btn" href="quiz.html">もう一度診断</a>
+      </div>
+    </aside>
+  </section>
 </main>
-<script>document.getElementById('y').textContent=new Date().getFullYear();</script>
+
+<script>
+(function(){
+  const KEY = 'MEATBTI_V1';
+  const store = sessionStorage.getItem(KEY);
+  if(!store){
+    document.getElementById('warn').style.display = 'block';
+    return;
+  }
+  const data = JSON.parse(store||'{}');
+  const answers = data.answers || {};
+  const get = q => Number(answers[q] || 3); // 未定義は中立
+
+  // --- 質問→軸マッピング ---
+  // A側 = 左寄り（1〜2）、B側 = 右寄り（4〜5）、中立=3
+  const AX = {
+    RL: [1,2,3,4,16,13,14,19,20],     // A=R(赤身/軽快), B=L(霜降り/華やか)
+    FS: [11,18],                      // A=F(テンポ),    B=S(ゆっくり)
+    KC: [5,12,17,7],                  // A=K(定番),      B=C(変化・演出)
+    TX: [6,15],                       // A=Q(歯切れ),    B=M(とろけ)
+    FL: [8],                          // A=塩,           B=ソース
+    AF: [10],                         // A=軽め,         B=しっかり
+  };
+
+  function sumAxis(keys, AisNeg=true){
+    // val = answer-3 => -2..+2 （負= A寄り / 正= B寄り）
+    return keys.reduce((s,q)=> s + (get(q)-3), 0);
+  }
+
+  const RLv = sumAxis(AX.RL); // <0 = R、>0 = L
+  const FSv = sumAxis(AX.FS); // <0 = F、>0 = S
+  const KCv = sumAxis(AX.KC); // <0 = K、>0 = C
+  const TXv = sumAxis(AX.TX); // <0 = Q、>0 = M
+  const FLv = sumAxis(AX.FL); // <0 = 塩、>0 = ソース
+  const AFv = sumAxis(AX.AF); // <0 = 軽め、>0 = しっかり
+
+  function pick(v, neg, pos){
+    if(v<0) return neg;
+    if(v>0) return pos;
+    return Math.random()<0.5?neg:pos; // 同点はランダムでブレイク
+  }
+
+  const RL = pick(RLv,'R','L');
+  const FS = pick(FSv,'F','S');
+  const KC = pick(KCv,'K','C');
+  const code = `${RL}-${FS}-${KC}`;
+
+  // --- 8ベース → 12タイプ（サブタイプ条件） ---
+  const BASE_TO_NAME = {
+    'R-F-K':'ヒレ男爵',
+    'R-F-C':'タン隊長',
+    'R-S-K':'イチボママ',
+    'R-S-C':'ランプ博士',
+    'L-F-K':'リブロースボス',
+    'L-F-C':'サーロイン王',
+    'L-S-K':'美食家ザブトン',
+    'L-S-C':'ギャルカルビ',
+  };
+
+  function refine(code){
+    // TXv(食感) / FLv(味つけ) / AFv(ボリューム)
+    if(code==='R-F-C'){
+      // タン or ハラミ
+      if(FLv>0 || AFv>0) return 'やり手の営業マンハラミ';
+      return 'タン隊長';
+    }
+    if(code==='L-S-C'){
+      // カルビ or カイノミ（軽やか）
+      if(FLv<=0 || AFv<=0 || TXv<0) return 'カイノミ舞妓はん';
+      return 'ギャルカルビ';
+    }
+    if(code==='R-S-K'){
+      // イチボ or ミスジ（繊細サシ）
+      if(TXv>0 || FLv>0) return '書道家ミスジ';
+      return 'イチボママ';
+    }
+    if(code==='R-F-K'){
+      // ヒレ or シャトーブリアン（質集中・軽やか）
+      const strongLean = Math.abs(RLv) >= 4;
+      if(TXv<0 && FLv<=0 && AFv<=0 && strongLean) return 'シャトーブリアン女王';
+      return 'ヒレ男爵';
+    }
+    // その他はベース固定
+    return BASE_TO_NAME[code] || 'ヒレ男爵';
+  }
+
+  const displayName = refine(code);
+
+  // --- 相性 No.1（単一） ---
+  const BEST = {
+    'ヒレ男爵':'サーロイン王',
+    'タン隊長':'リブロースボス',
+    'イチボママ':'ギャルカルビ',
+    'ランプ博士':'美食家ザブトン',
+    'リブロースボス':'タン隊長',
+    'サーロイン王':'ヒレ男爵',
+    '美食家ザブトン':'ランプ博士',
+    'ギャルカルビ':'イチボママ',
+    'やり手の営業マンハラミ':'美食家ザブトン',
+    'カイノミ舞妓はん':'リブロースボス',
+    '書道家ミスジ':'サーロイン王',
+    'シャトーブリアン女王':'タン隊長',
+  };
+
+  // --- キャッチ / Tips ---
+  const COPY = {
+    'ヒレ男爵':{
+      catch:'静かな主役。無駄なく上品、芯の強さで魅せる赤身派。',
+      tips:['最初は「名物の塩」で軸を示す','相手の好みを1つ拾って次の一皿へ','乾杯はハイボール/スパークリングで軽やかに'],
+      img:'hire.png'
+    },
+    'タン隊長':{
+      catch:'場をほぐすムードメーカー。テンポ良く明るく回す。',
+      tips:['「タン塩→赤身」の黄金ルート提案','小皿シェアで会話を回す','写真はほどほど、コメントで盛り上げ'],
+      img:'tan.png'
+    },
+    'イチボママ':{
+      catch:'やさしく頼れる赤身の母性。控えめでも芯は強い。',
+      tips:['似た好みで食べ比べを提案','ペースに合わせて火入れ調整','締めは軽めで余白を残す'],
+      img:'ichibo.png'
+    },
+    'ランプ博士':{
+      catch:'小さな冒険家。定番を少し更新する工夫が好き。',
+      tips:['少量×多皿でミニ実験','創作系を一皿混ぜて話題作り','焼き担当で観察しつつ合図'],
+      img:'ranpu.png'
+    },
+    'リブロースボス':{
+      catch:'安心感のリーダー。王道リッチで満足度重視。',
+      tips:['「名物→名物」で段取り良く','会計や席替えをスムーズに','写真少なめ、体験を濃く'],
+      img:'riburo-su.png'
+    },
+    'サーロイン王':{
+      catch:'華やぎの演出家。濃厚と映えで場を明るくする。',
+      tips:['フランベなど演出皿をコール','乾杯の音頭でスタート','隣席とも軽く乾杯して輪を広げる'],
+      img:'sa-roin.png'
+    },
+    '美食家ザブトン':{
+      catch:'寡黙な審美家。しっとり濃厚、少人数でじっくり。',
+      tips:['「少量高満足」で共感を得る','休ませ時間を大切に','深めの質問をひとつだけ'],
+      img:'zabuton.png'
+    },
+    'ギャルカルビ':{
+      catch:'ご褒美エンタメ。甘やかに濃厚、みんなを巻き込む。',
+      tips:['序盤で「みんなの一口カルビ」','自分が撮ってシェアで牽引','満足派の声を拾ってリード'],
+      img:'karubi.png'
+    },
+    'やり手の営業マンハラミ':{
+      catch:'実利派スプリンター。躍動感ある赤身でテンポ勝負。',
+      tips:['回転を上げて間を作らない','焼き台の管理役で活躍','飲み過ぎず笑顔キープ'],
+      img:'harami.png'
+    },
+    'カイノミ舞妓はん':{
+      catch:'軽やか派の橋渡し。カルビ系でもキレ良く上品。',
+      tips:['「塩→ソース」でメリハリ','軽い締めで余白を残す','相手の得意トークを振る'],
+      img:'kainomi.png'
+    },
+    '書道家ミスジ':{
+      catch:'繊細なサシ。口どけ上品、所作と気配りが魅力。',
+      tips:['火入れ控えめで温度と香りを共有','小声のツッコミで距離を縮める','甘めは量を絞って提案'],
+      img:'misuji.png'
+    },
+    'シャトーブリアン女王':{
+      catch:'特選の一点集中。量より質、静かに深く味わう。',
+      tips:['「量より質」の提案で軸を見せる','静かな席を選ぶ','デザート前に次回の約束を軽く'],
+      img:'shato-.png'
+    },
+  };
+
+  // タグ表示（食感/味付/後味）
+  const tagTexture = (TXv<0)?'食感：歯切れ派':'食感：とろけ派';
+  const tagFlavor  = (FLv<0)?'味付：塩派':'味付：特製ソース派';
+  const tagAfter   = (AFv<0)?'後味：軽め':'後味：しっかり';
+
+  // 表示反映
+  const typeJp = document.getElementById('typeJp');
+  const codeEl = document.getElementById('code');
+  const tagT = document.getElementById('tagTexture');
+  const tagF = document.getElementById('tagFlavor');
+  const tagA = document.getElementById('tagAfter');
+  const catchEl = document.getElementById('catch');
+  const tipsEl = document.getElementById('tips');
+  const imgEl = document.getElementById('charImg');
+  const bestJp = document.getElementById('bestJp');
+  const bestCode = document.getElementById('bestCode');
+  const meta = document.getElementById('meta');
+
+  const copy = COPY[displayName] || COPY['ヒレ男爵'];
+  typeJp.textContent = displayName;
+  codeEl.textContent = code;
+  tagT.textContent = tagTexture;
+  tagF.textContent = tagFlavor;
+  tagA.textContent = tagAfter;
+  catchEl.textContent = copy.catch;
+  tipsEl.innerHTML = copy.tips.map(t=>`<li>${t}</li>`).join('');
+  imgEl.src = copy.img;
+  imgEl.alt = displayName;
+
+  const best = BEST[displayName];
+  bestJp.textContent = best || '—';
+  // 相手の3文字コード（代表）簡易表示
+  const REV = {'R':'L','L':'R','F':'S','S':'F','K':'C','C':'K'};
+  function bestCodeOf(name){
+    // 代表 8タイプのみ推定
+    const MAP = {
+      'ヒレ男爵':'R-F-K','タン隊長':'R-F-C','イチボママ':'R-S-K','ランプ博士':'R-S-C',
+      'リブロースボス':'L-F-K','サーロイン王':'L-F-C','美食家ザブトン':'L-S-K','ギャルカルビ':'L-S-C',
+      'やり手の営業マンハラミ':'R-F-C','カイノミ舞妓はん':'L-S-C','書道家ミスジ':'R-S-K','シャトーブリアン女王':'R-F-K'
+    };
+    return MAP[name] || '—';
+  }
+  bestCode.textContent = best ? bestCodeOf(best) : '—';
+
+  meta.textContent = `食感:${(TXv<0?'Q':'M')} / 味付:${(FLv<0?'塩':'ソース')} / 後味:${(AFv<0?'軽':'重')} ／ 回答日時：${new Date(data.finishedAt||Date.now()).toLocaleString()}`;
+
+  document.getElementById('result').style.display = 'grid';
+})();
+</script>
 </body>
 </html>
