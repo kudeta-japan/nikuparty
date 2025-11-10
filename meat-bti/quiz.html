@@ -1,362 +1,291 @@
 <!doctype html>
 <html lang="ja">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Meat BTI 診断｜5段階×20問</title>
-<meta name="theme-color" content="#0b0a0a">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Meat BTI 診断｜質問</title>
+<meta name="theme-color" content="#0b0e17">
 <style>
   :root{
-    --bg:#0b0a0a; --panel:#131723; --ink:#f7f7fb; --muted:#c5c9d3; --bd:#232a3a;
-    --brand:#ffd966; --accent:#ff6b4a; --pill:#151b2a; --pillbd:#2b344a;
-    --a:#7bc3ff; --b:#ff9bb3;
+    --bg:#0b0e17; --panel:#121828; --panel-2:#0f1524; --ink:#e9eef8; --muted:#98a2b3; --accent:#7aa2ff;
+    --red:#ff6b6b; --green:#22c55e; --amber:#facc15; --line:#1f2a44; --brand:#9b87f5;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
-  body{margin:0;background:var(--bg);color:var(--ink);
-    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;letter-spacing:.02em;line-height:1.65}
+  body{margin:0;background:radial-gradient(1200px 700px at 50% -10%,#111a30 0%,#0b0e17 60%);color:var(--ink);
+    font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif; letter-spacing:.02em}
   a{color:inherit;text-decoration:none}
+  .container{width:min(1100px,94vw);margin:0 auto;padding:18px 0 80px}
 
-  header{position:sticky;top:0;z-index:20;background:rgba(11,12,16,.75);
-    backdrop-filter:saturate(120%) blur(8px);border-bottom:1px solid var(--bd)}
-  .wrap{width:min(1080px,92vw);margin:0 auto}
-  .nav{height:56px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-  .logo{width:28px;height:28px;border-radius:8px;background:conic-gradient(from 140deg,var(--brand),var(--accent));display:grid;place-items:center}
-  .back{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--bd);border-radius:10px;background:#121726}
-  .prog{height:6px;background:#0e1322;border-radius:999px;overflow:hidden;margin:8px 0 6px;border:1px solid var(--bd)}
-  .bar{height:100%;width:0%;background:linear-gradient(90deg,var(--brand),#ffc64a);transition:width .25s ease}
-  .meta{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin:0 0 14px}
+  /* Header */
+  .topbar{display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10;
+    background:linear-gradient(180deg,rgba(11,14,23,.95),rgba(11,14,23,.75));backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);padding:10px 0}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:900}
+  .badge{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:8px;
+    background:conic-gradient(from 140deg,#ffd966,#ff6b4a);color:#0e0b07}
+  .ghost{margin-left:auto;display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;color:var(--muted)}
+  .ghost:hover{border-color:#2a3a60}
 
-  h1{font-size:clamp(18px,4.6vw,26px);margin:8px 0 4px}
-  .note{color:var(--muted);margin:0 0 12px}
+  /* Progress */
+  .progress{margin:14px 0 8px;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .bar{height:8px;background:linear-gradient(90deg,#66d2ff,#7aa2ff,#9b87f5);width:0%}
+  .meta{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin-top:6px}
 
-  .grid{display:grid;gap:14px;grid-template-columns:1fr}
-  @media(min-width:920px){.grid{grid-template-columns:1fr 1fr}}
-  .card{background:var(--panel);border:1px solid var(--bd);border-radius:16px;padding:14px}
-  .qno{font-weight:900;color:#9fb0d6}
-  .qtitle{margin:6px 0 8px;font-size:clamp(16px,2.6vw,18px);font-weight:800}
-  .anchors{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted)}
-  .anchors .a{color:var(--a);font-weight:700}
-  .anchors .b{color:var(--b);font-weight:700}
+  /* Grid of 5 cards */
+  .grid{display:grid;grid-template-columns:1fr;gap:14px}
+  @media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1px solid var(--line);border-radius:14px; padding:14px 14px 12px}
+  .qhead{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted);font-size:12px}
+  .title{font-weight:800;margin:2px 0 4px}
+  .labels{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin:6px 0 8px}
+  .dots{display:flex;gap:8px;justify-content:center}
+  .dot{width:36px;height:36px;border-radius:999px;border:2px solid #2a3860;background:#0d1324;cursor:pointer;
+    transition:transform .06s ease, box-shadow .12s ease, background .12s ease}
+  .dot:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,0,0,.25)}
+  .dot[data-v="1"],.dot[data-v="2"]{border-color:#3a78ff}
+  .dot[data-v="4"],.dot[data-v="5"]{border-color:#ff6b6b}
+  .dot.active[data-v="1"],.dot.active[data-v="2"]{background:#204a9e}
+  .dot.active[data-v="4"],.dot.active[data-v="5"]{background:#7a2930}
+  .dot[data-v="3"]{border-color:#b08900}
+  .dot.active[data-v="3"]{background:var(--amber);box-shadow:0 0 0 3px rgba(250,204,21,.2) inset}
+  .scale-help{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:6px}
+  .hint{color:#9fb2d6;font-size:12px;margin-top:6px}
 
-  .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
-  .opt{appearance:none;border:1px solid var(--pillbd);background:var(--pill);color:var(--ink);
-       padding:12px 8px;border-radius:12px;font-weight:900;cursor:pointer;text-align:center;
-       transition:transform .05s ease,border-color .15s ease,background .15s ease;user-select:none}
-  .opt small{display:block;font-weight:700;color:var(--muted)}
-  .opt[data-val="1"] small{color:var(--a)}
-  .opt[data-val="5"] small{color:var(--b)}
-  .opt:active{transform:translateY(1px)}
-  .opt.active{border-color:#ffcf66;box-shadow:0 0 0 1px #ffcf66 inset}
+  /* Nav */
+  .nav{display:flex;justify-content:flex-end;gap:10px;margin-top:14px}
+  .btn{appearance:none;border:1px solid var(--line);background:#141b31;color:var(--ink);padding:10px 16px;border-radius:12px;cursor:pointer;font-weight:800}
+  .btn[disabled]{opacity:.45;cursor:not-allowed}
+  .btn.primary{background:linear-gradient(180deg,#ffd166,#f9c23c);color:#332100;border:none}
+  .btn.secondary{background:#192443}
+  .center{display:flex;justify-content:center;margin-top:14px}
+  .note{color:var(--muted);font-size:12px;margin-top:8px}
 
-  .pager{display:flex;justify-content:space-between;gap:10px;margin:16px 0 8px}
-  .btn{appearance:none;border:1px solid var(--bd);background:#151b2a;color:var(--ink);
-       padding:12px 14px;border-radius:12px;font-weight:900;cursor:pointer}
-  .btn.primary{background:linear-gradient(180deg,var(--brand),#f7c84a);color:#2a1e0b;border:none}
-  .btn.ghost{background:#121726}
-  .btn:disabled{opacity:.5;cursor:not-allowed}
+  /* Page dots */
+  .steps{display:flex;gap:8px;justify-content:center;margin:10px 0 2px}
+  .steps span{width:8px;height:8px;border-radius:50%;background:#2a365a}
+  .steps span.active{background:#7aa2ff}
 
-  .floating{position:fixed;right:18px;bottom:18px;z-index:30;display:none}
-  .floating .btn{box-shadow:0 12px 26px rgba(247,200,74,.28)}
+  /* keyboard helper */
+  .kbd{border:1px solid var(--line);border-bottom-width:2px;border-right-width:2px;border-radius:6px;padding:2px 6px;font-size:12px;color:#b8c1d9}
+
 </style>
 </head>
 <body>
-<header>
-  <div class="wrap">
-    <div class="nav">
-      <div style="display:flex;gap:10px;align-items:center">
-        <div class="logo">🥩</div>
-        <a class="back" href="../index1.html" title="LPへ戻る">← LPへ戻る</a>
-      </div>
-      <div style="font-weight:900">Meat BTI 診断</div>
+  <div class="topbar">
+    <div class="container" style="display:flex;align-items:center;gap:12px">
+      <div class="brand"><div class="badge">🥩</div><div>Meat BTI 診断</div></div>
+      <a class="ghost" href="../">← LPへ戻る</a>
     </div>
-    <div class="prog"><div class="bar" id="bar"></div></div>
-    <div class="meta"><span id="count">0 / 20 回答</span><span>1=かなりA寄り ／ 5=かなりB寄り（タップで自動進行）</span></div>
   </div>
-</header>
 
-<main class="wrap" id="app">
-  <h1>好みの“傾き”を 5 段階でさくっと選ぶだけ。</h1>
-  <p class="note">各設問：<b>1=かなりA寄り</b> ～ <b>5=かなりB寄り</b>。キーボード <b>1〜5</b> でも回答できます。</p>
+  <div class="container">
+    <div class="progress" aria-hidden="true"><div class="bar" id="bar"></div></div>
+    <div class="meta"><div id="progressLabel">0 / 20</div><div>選択ショートカット：<span class="kbd">1</span> … <span class="kbd">5</span></div></div>
+    <div class="steps" id="steps"></div>
 
-  <!-- ===== Page 1 (1-5) ===== -->
-  <section class="page" data-page="1">
-    <div class="grid">
-      <article class="card" data-q="1"><div class="qno">Q1/20</div><div class="qtitle">最初の一皿は？</div>
-        <div class="anchors"><span class="a">A：タン塩など軽快に</span><span class="b">B：リブロース/サーロインで華やかに</span></div>
-        <div class="scale" role="group" aria-label="Q1">
-          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
-        </div>
-      </article>
+    <div id="grid" class="grid" aria-live="polite"></div>
 
-      <article class="card" data-q="2"><div class="qno">Q2/20</div><div class="qtitle">メインの一皿を優先するなら？</div>
-        <div class="anchors"><span class="a">A：ヒレ/ランプ/赤身</span><span class="b">B：リブロース/サーロイン</span></div>
-        <div class="scale" role="group" aria-label="Q2">
-          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
-        </div>
-      </article>
-
-      <article class="card" data-q="3"><div class="qno">Q3/20</div><div class="qtitle">脂の重さはどちらが心地よい？</div>
-        <div class="anchors"><span class="a">A：軽め・キレ重視</span><span class="b">B：濃厚でも満足</span></div>
-        <div class="scale" role="group" aria-label="Q3">
-          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
-        </div>
-      </article>
-
-      <article class="card" data-q="4"><div class="qno">Q4/20</div><div class="qtitle">量と赤身のバランスは？</div>
-        <div class="anchors"><span class="a">A：赤身多めで満足</span><span class="b">B：ボリューム優先もOK</span></div>
-        <div class="scale" role="group" aria-label="Q4">
-          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
-        </div>
-      </article>
-
-      <article class="card" data-q="5"><div class="qno">Q5/20</div><div class="qtitle">オーダー方針は？</div>
-        <div class="anchors"><span class="a">A：定番中心で確実に</span><span class="b">B：新作・変化球も攻める</span></div>
-        <div class="scale" role="group" aria-label="Q5">
-          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
-        </div>
-      </article>
+    <div class="nav">
+      <button id="prev" class="btn secondary">前の5問</button>
+      <button id="next" class="btn">次の5問へ</button>
+      <button id="result" class="btn primary" style="display:none">結果を見る</button>
     </div>
-    <div class="pager"><button class="btn ghost" disabled>前の5問</button><button class="btn primary next">次の5問へ</button></div>
-  </section>
-
-  <!-- ===== Page 2 (6-10) ===== -->
-  <section class="page" data-page="2" hidden>
-    <div class="grid">
-      <article class="card" data-q="6"><div class="qno">Q6/20</div><div class="qtitle">焼き加減の好みは？</div>
-        <div class="anchors"><span class="a">A：レア寄り</span><span class="b">B：ミディアム〜ウェル</span></div>
-        <div class="scale" role="group" aria-label="Q6">
-          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
-        </div>
-      </article>
-
-      <article class="card" data-q="7"><div class="qno">Q7/20</div><div class="qtitle">香りの演出は？</div>
-        <div class="anchors"><span class="a">A：炭火や焼き目の香ばしさ</span><span class="b">B：フランベなど香り立ち</span></div>
-        <div class="scale" role="group" aria-label="Q7">
-          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
-        </div>
-      </article>
-
-      <article class="card" data-q="8"><div class="qno">Q8/20</div><div class="qtitle">味つけは？</div>
-        <div class="anchors"><span class="a">A：塩で旨みを際立てる</span><span class="b">B：特製ソースで華やかに</span></div>
-        <div class="scale" role="group" aria-label="Q8">
-          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
-        </div>
-      </article>
-
-      <article class="card" data-q="9"><div class="qno">Q9/20</div><div class="qtitle">シェアのスタイルは？</div>
-        <div class="anchors"><span class="a">A：少量×多皿で比較</span><span class="b">B：大皿でどーんと満足</span></div>
-        <div class="scale" role="group" aria-label="Q9">
-          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
-        </div>
-      </article>
-
-      <article class="card" data-q="10"><div class="qno">Q10/20</div><div class="qtitle">締め（〆）は？</div>
-        <div class="anchors"><span class="a">A：軽め（サラダ/スープ）</span><span class="b">B：しっかり（ご飯/麺）</span></div>
-        <div class="scale" role="group" aria-label="Q10">
-          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
-        </div>
-      </article>
-    </div>
-    <div class="pager"><button class="btn ghost prev">前の5問</button><button class="btn primary next">次の5問へ</button></div>
-  </section>
-
-  <!-- ===== Page 3 (11-15) ===== -->
-  <section class="page" data-page="3" hidden>
-    <div class="grid">
-      <article class="card" data-q="11"><div class="qno">Q11/20</div><div class="qtitle">食事のテンポは？</div>
-        <div class="anchors"><span class="a">A：テンポ良く回す</span><span class="b">B：ゆっくり会話を楽しむ</span></div>
-        <div class="scale" role="group" aria-label="Q11">
-          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
-        </div>
-      </article>
-
-      <article class="card" data-q="12"><div class="qno">Q12/20</div><div class="qtitle">写真・映えは？</div>
-        <div class="anchors"><span class="a">A：ほどほどでOK</span><span class="b">B：しっかり撮って楽しむ</span></div>
-        <div class="scale" role="group" aria-label="Q12">
-          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
-        </div>
-      </article>
-
-      <article class="card" data-q="13"><div class="qno">Q13/20</div><div class="qtitle">席の雰囲気は？</div>
-        <div class="anchors"><span class="a">A：静かめ・落ち着き</span><span class="b">B：賑やか・活気</span></div>
-        <div class="scale" role="group" aria-label="Q13">
-          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
-        </div>
-      </article>
-
-      <article class="card" data-q="14"><div class="qno">Q14/20</div><div class="qtitle">乾杯ドリンクは？</div>
-        <div class="anchors"><span class="a">A：ハイボール/スパークリング</span><span class="b">B：ワイン/カクテル系</span></div>
-        <div class="scale" role="group" aria-label="Q14">
-          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
-        </div>
-      </article>
-
-      <article class="card" data-q="15"><div class="qno">Q15/20</div><div class="qtitle">食感の魅力は？</div>
-        <div class="anchors"><span class="a">A：歯切れ・噛み心地</span><span class="b">B：とろける口どけ</span></div>
-        <div class="scale" role="group" aria-label="Q15">
-          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
-        </div>
-      </article>
-    </div>
-    <div class="pager"><button class="btn ghost prev">前の5問</button><button class="btn primary next">次の5問へ</button></div>
-  </section>
-
-  <!-- ===== Page 4 (16-20) ===== -->
-  <section class="page" data-page="4" hidden>
-    <div class="grid">
-      <article class="card" data-q="16"><div class="qno">Q16/20</div><div class="qtitle">種類の組み方は？</div>
-        <div class="anchors"><span class="a">A：赤身の比較中心</span><span class="b">B：霜降り・リッチ中心</span></div>
-        <div class="scale" role="group" aria-label="Q16">
-          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt class="opt" data-val="5"><small>B寄り</small>5</button>
-        </div>
-      </article>
-
-      <article class="card" data-q="17"><div class="qno">Q17/20</div><div class="qtitle">チャレンジ度合いは？</div>
-        <div class="anchors"><span class="a">A：定番を極めたい</span><span class="b">B：変わり種も積極的に</span></div>
-        <div class="scale" role="group" aria-label="Q17">
-          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
-        </div>
-      </article>
-
-      <article class="card" data-q="18"><div class="qno">Q18/20</div><div class="qtitle">焼き台の役割は？</div>
-        <div class="anchors"><span class="a">A：自分でじっくり管理</span><span class="b">B：お店に任せテンポ良く</span></div>
-        <div class="scale" role="group" aria-label="Q18">
-          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
-        </div>
-      </article>
-
-      <article class="card" data-q="19"><div class="qno">Q19/20</div><div class="qtitle">食後の流れは？</div>
-        <div class="anchors"><span class="a">A：少人数で深話</span><span class="b">B：大人数でワイワイ</span></div>
-        <div class="scale" role="group" aria-label="Q19">
-          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
-        </div>
-      </article>
-
-      <article class="card" data-q="20"><div class="qno">Q20/20</div><div class="qtitle">会話のスタイルは？</div>
-        <div class="anchors"><span class="a">A：落ち着いて相手を見る</span><span class="b">B：ノリ良く盛り上げる</span></div>
-        <div class="scale" role="group" aria-label="Q20">
-          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
-        </div>
-      </article>
-    </div>
-    <div class="pager">
-      <button class="btn ghost prev">前の5問</button>
-      <button class="btn primary" id="toResult" disabled>結果を見る</button>
-    </div>
-  </section>
-</main>
-
-<!-- 全問回答時に表示（モバイル補助） -->
-<div class="floating" id="floatWrap">
-  <button class="btn primary" id="floatSubmit">結果を見る</button>
-</div>
+    <div class="center"><div class="note">各設問は左「A寄り」↔ 右「B寄り」。<b>中央（3）は中立</b>で、<b style="color:#facc15">黄色ボタン</b>です。</div></div>
+  </div>
 
 <script>
-(function(){
-  const TOTAL = 20;
-  const answers = {}; // 途中保存なし
+/* -------------------------
+  設問データ（20問 / 5問×4ページ）
+  text: タイトル
+  a: 左側（A寄り）ラベル
+  b: 右側（B寄り）ラベル
+-------------------------- */
+const QUESTIONS = [
+  {text:"同じ価格の赤身と霜降り、今の気分は？", a:"キレ重視（さっぱり）", b:"コク重視（濃厚）"},
+  {text:"“量をしっかり”食べるなら？", a:"軽めの赤身中心で進めたい", b:"満足感の高い部位で押したい"},
+  {text:"名物から選ぶなら？", a:"ヒレ／タンなど“赤身寄り”", b:"サーロイン／カルビなど“コク寄り”"},
+  {text:"1皿だけ追加。迷ったらどっち？", a:"赤身系でもう一皿", b:"リッチ系でもう一皿"},
+  {text:"初めての店のオーダー方針", a:"定番メニュー中心", b:"限定・創作も少し"},
+  {text:"メインの一皿、満足度優先なら", a:"ヒレ・ランプなど赤身", b:"リブロース・サーロイン"},
+  {text:"ボリューム感、理想は", a:"控えめ多品目", b:"量感でOK"},
+  {text:"焼きの好み", a:"レア寄りで香りを生かす", b:"しっかり火入れで甘みを出す"},
+  {text:"味付けの初手", a:"塩で素材推し", b:"特製ソースで高揚感"},
+  {text:"香りの演出", a:"炭・香ばしさで引き締め", b:"バターで香りリッチに"},
+  {text:"席の雰囲気", a:"落ち着いて会話を整理したい", b:"賑やかにテンポ良く"},
+  {text:"写真 or 会話", a:"写真は控えめ、体験重視", b:"写真や動画も楽しむ"},
+  {text:"シェアの仕方", a:"少量×多種類で比較食べ", b:"少量高満足で厳選"},
+  {text:"役回り", a:"焼き担当で見守る", b:"乾杯や音頭で盛り上げる"},
+  {text:"締めは", a:"軽く余白を残す", b:"しっかり満腹で締める"},
+  {text:"初対面の会話", a:"1つ深い話を丁寧に", b:"テンポ良く広く浅く"},
+  {text:"店からの提案", a:"塩→タレのメリハリ重視", b:"映えのある演出も歓迎"},
+  {text:"他卓との関わり", a:"静かに自分たちの世界で", b:"さりげなく輪を広げたい"},
+  {text:"テーブル運用", a:"段取りよりもゆったり", b:"会計や席替えなど主導"},
+  {text:"おかわりの判断", a:"様子を見て控えめに", b:"勢いのままいきたい"},
+];
 
-  const $ = s=>document.querySelector(s);
-  const $$ = s=>document.querySelectorAll(s);
-  const bar = $('#bar');
-  const count = $('#count');
-  const floatWrap = $('#floatWrap');
-  const floatSubmit = $('#floatSubmit');
-  const toResult = $('#toResult');
+const PAGE_SIZE = 5;
+const TOTAL = QUESTIONS.length;
 
-  function answeredCount(){ return Object.keys(answers).length; }
-  function allAnswered(){ return answeredCount() === TOTAL; }
+let page = 0;                      // 0..3
+const answers = Array(TOTAL).fill(0); // 0=未回答, 1..5=選択
+let focusQ = 0;                    // キーボードで選ぶ対象
 
-  function updateProgress(){
-    const n = answeredCount();
-    bar.style.width = (n/TOTAL*100)+'%';
-    count.textContent = `${n} / ${TOTAL} 回答`;
-    if(allAnswered()){
-      toResult?.removeAttribute('disabled');
-      floatWrap.style.display = 'block';
-    }else{
-      toResult?.setAttribute('disabled','true');
-      floatWrap.style.display = 'none';
-    }
+const $grid = document.getElementById('grid');
+const $bar  = document.getElementById('bar');
+const $label= document.getElementById('progressLabel');
+const $steps= document.getElementById('steps');
+const $prev = document.getElementById('prev');
+const $next = document.getElementById('next');
+const $result = document.getElementById('result');
+
+/* ---------- レンダリング ---------- */
+function renderSteps(){
+  $steps.innerHTML = '';
+  const pages = Math.ceil(TOTAL/PAGE_SIZE);
+  for(let i=0;i<pages;i++){
+    const s=document.createElement('span');
+    if(i===page) s.classList.add('active');
+    $steps.appendChild(s);
   }
+}
+function render(){
+  // 進捗
+  const answered = answers.filter(v=>v>0).length;
+  $bar.style.width = (answered/TOTAL*100)+'%';
+  $label.textContent = `${answered} / ${TOTAL}`;
 
-  function showPage(n){
-    $$('.page').forEach(p=>p.hidden = (p.dataset.page != n));
-    window.scrollTo({top:0,behavior:'smooth'});
-    updateProgress();
+  // ページコントロール
+  $prev.disabled = page===0;
+  const allAnsweredThisPage = answers
+    .slice(page*PAGE_SIZE, page*PAGE_SIZE+PAGE_SIZE)
+    .every(v=>v>0);
+  const lastPage = page === Math.floor((TOTAL-1)/PAGE_SIZE);
+  $next.style.display   = lastPage ? 'none' : 'inline-flex';
+  $result.style.display = lastPage ? 'inline-flex' : 'none';
+  $next.disabled   = !allAnsweredThisPage;
+  $result.disabled = answered<TOTAL;
+
+  // グリッド
+  $grid.innerHTML='';
+  const start = page*PAGE_SIZE;
+  const end   = Math.min(start+PAGE_SIZE, TOTAL);
+  for(let i=start;i<end;i++){
+    $grid.appendChild(renderCard(i));
   }
+  renderSteps();
+}
+function renderCard(i){
+  const q = QUESTIONS[i];
+  const wrap = document.createElement('section');
+  wrap.className = 'card';
 
-  $$('.page .next').forEach(b=>b.addEventListener('click',()=>{
-    const cur = Number(b.closest('.page').dataset.page);
-    showPage(cur+1);
-  }));
-  $$('.page .prev').forEach(b=>b.addEventListener('click',()=>{
-    const cur = Number(b.closest('.page').dataset.page);
-    showPage(cur-1);
-  }));
+  const head = document.createElement('div');
+  head.className = 'qhead';
+  head.innerHTML = `<span class="pill">Q${i+1} / ${TOTAL}</span>`;
+  wrap.appendChild(head);
 
-  $$('.card .opt').forEach(opt=>{
-    opt.addEventListener('click', e=>{
-      const card = e.target.closest('.card');
-      const q = card.dataset.q;
-      card.querySelectorAll('.opt').forEach(x=>x.classList.remove('active'));
-      opt.classList.add('active');
-      answers[q] = Number(opt.dataset.val);
-      updateProgress();
+  const title = document.createElement('div');
+  title.className = 'title';
+  title.textContent = q.text;
+  wrap.appendChild(title);
 
-      const cards = [...card.parentElement.querySelectorAll('.card')];
-      const idx = cards.indexOf(card);
-      const next = cards.slice(idx+1).find(c=>!answers[c.dataset.q]);
-      if(next){
-        next.scrollIntoView({behavior:'smooth',block:'center'});
-      }else{
-        const page = card.closest('.page');
-        const remain = [...page.querySelectorAll('.card')].some(c=>!answers[c.dataset.q]);
-        if(!remain){
-          const nextPage = Number(page.dataset.page) + 1;
-          if(document.querySelector(`.page[data-page="${nextPage}"]`)){
-            showPage(nextPage);
-          }
-        }
-      }
+  const labels = document.createElement('div');
+  labels.className='labels';
+  labels.innerHTML = `<span>🅰️ ${q.a}</span><span>🅱️ ${q.b}</span>`;
+  wrap.appendChild(labels);
+
+  const dots = document.createElement('div');
+  dots.className='dots';
+  for(let v=1; v<=5; v++){
+    const b = document.createElement('button');
+    b.className = 'dot';
+    b.setAttribute('data-v', v);
+    b.setAttribute('aria-label', `Q${i+1}: ${v} を選ぶ`);
+    if(answers[i]===v) b.classList.add('active');
+    b.addEventListener('click', ()=>{
+      answers[i]=v;
+      focusQ=i;
+      // 選んだら自動的に次の未回答へ視線移動
+      render();
+      autoAdvanceFrom(i);
     });
-  });
-
-  let focusCard = null;
-  $$('.card').forEach(c=>{
-    c.addEventListener('pointerenter',()=>focusCard=c);
-    c.addEventListener('focusin',()=>focusCard=c);
-  });
-  window.addEventListener('keydown',e=>{
-    if(e.key<'1'||e.key>'5') return;
-    const card = focusCard || document.querySelector('.page:not([hidden]) .card');
-    if(!card) return;
-    const btn = card.querySelector(`.opt[data-val="${e.key}"]`);
-    btn?.click();
-  });
-
-  function goResult(){
-    if(!allAnswered()){
-      for(let i=1;i<=TOTAL;i++){
-        if(!(i in answers)){
-          const target = document.querySelector(`.card[data-q="${i}"]`);
-          const pageNo = target.closest('.page').dataset.page;
-          showPage(Number(pageNo));
-          target.scrollIntoView({behavior:'smooth',block:'center'});
-          break;
-        }
-      }
-      return;
-    }
-    location.href = 'sub.html';
+    dots.appendChild(b);
   }
-  toResult?.addEventListener('click', goResult);
-  floatSubmit?.addEventListener('click', goResult);
+  wrap.appendChild(dots);
 
-  updateProgress();
-  showPage(1);
-})();
+  const scale = document.createElement('div');
+  scale.className='scale-help';
+  scale.innerHTML = `<span>A寄り</span><span>中立</span><span>B寄り</span>`;
+  wrap.appendChild(scale);
+
+  return wrap;
+}
+function autoAdvanceFrom(i){
+  // 今のページ内で未回答があればそこまでスクロール
+  const start = page*PAGE_SIZE, end=Math.min(start+PAGE_SIZE, TOTAL);
+  let nextIndex = -1;
+  for(let k=i+1; k<end; k++){ if(answers[k]===0){ nextIndex=k; break; } }
+  if(nextIndex===-1){
+    for(let k=start; k<i; k++){ if(answers[k]===0){ nextIndex=k; break; } }
+  }
+  if(nextIndex>-1){
+    const idxOnPage = nextIndex - start;
+    const sec = $grid.children[idxOnPage];
+    sec?.scrollIntoView({behavior:'smooth', block:'nearest'});
+    focusQ = nextIndex;
+  }else{
+    // すべて回答済みなら次へボタンを点灯
+    if(page < Math.floor((TOTAL-1)/PAGE_SIZE)){
+      $next.focus();
+    }else{
+      $result.focus();
+    }
+  }
+}
+
+/* ---------- ナビゲーション ---------- */
+$prev.addEventListener('click', ()=>{ if(page>0){ page--; render(); window.scrollTo({top:0,behavior:'smooth'}); }});
+$next.addEventListener('click', ()=>{ const maxPage=Math.floor((TOTAL-1)/PAGE_SIZE); if(page<maxPage){ page++; render(); window.scrollTo({top:0,behavior:'smooth'});} });
+
+/* ---------- キーボード選択 (1..5) ---------- */
+document.addEventListener('keydown', (e)=>{
+  if(e.key<'1'||e.key>'5') return;
+  const val = parseInt(e.key,10);
+  // 未回答の最初をフォーカス対象に
+  if(answers[focusQ] && answers[focusQ]>0){
+    const firstUnanswered = answers.findIndex(v=>v===0);
+    if(firstUnanswered>=0) focusQ = firstUnanswered;
+  }
+  answers[focusQ]=val;
+  render();
+  autoAdvanceFrom(focusQ);
+});
+
+/* ---------- 結果保存→遷移 ---------- */
+function saveAndGo(){
+  const payload = {
+    version: 'v3',
+    created_at: Date.now(),
+    answers: answers.slice(0, TOTAL),
+    // ここでは集計は行わず、結果ページで計算する想定
+  };
+  // 互換のため複数キーへ保存
+  const json = JSON.stringify(payload);
+  localStorage.setItem('meatbti_answers', json);
+  localStorage.setItem('meatbti_v2_answers', json);
+  localStorage.setItem('meatbti_payload', json);
+  // リダイレクト（既存構成に合わせて sub.html に）
+  location.href = 'sub.html';
+}
+$result.addEventListener('click', ()=>{
+  if(answers.some(v=>v===0)){ alert('未回答があります。'); return; }
+  saveAndGo();
+});
+
+/* 初期表示 */
+render();
 </script>
 </body>
 </html>
