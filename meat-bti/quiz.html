@@ -35,6 +35,12 @@ a{color:inherit;text-decoration:none}
 .card b{display:block}
 .small{font-size:12px;color:#a9b5cc}
 
+/* HERO（追加） */
+.hero-wrap{width:min(980px,94vw);margin:12px auto 18px;border-radius:18px;overflow:hidden;
+  border:1px solid var(--line);background:#000;box-shadow:0 16px 36px rgba(0,0,0,.35)}
+.hero-wrap img{display:block;width:100%;height:auto;object-fit:cover;object-position:center}
+@media(max-width:600px){.hero-wrap img{aspect-ratio:16/9}}
+
 /* Quiz */
 .step{display:none}
 .step.active{display:block}
@@ -75,6 +81,11 @@ footer{border-top:1px solid var(--line);color:var(--muted);text-align:center;pad
     <a class="ghost" href="../">← LPへ戻る</a>
   </div>
 </div>
+
+<!-- HERO（./hero_meatbti.png を表示） -->
+<figure class="hero-wrap">
+  <img src="./hero_meatbti.png" alt="Meat BTI ヒーロー">
+</figure>
 
 <div class="container">
 
@@ -194,7 +205,7 @@ const TYPES = {
                     tips:["“量より質”で軸を見せる","静かな席を選ぶ","デザート前に次回の約束"]},
 };
 
-// 20問（A/B/C/D 軸に寄与）
+// 20問
 const Q = [
   {t:"同じ価格ならどちらを選ぶ？", a:"キレ重視（さっぱり）", b:"コク重視（濃厚）", ax:"A"},
   {t:"満足度重視なら？", a:"ヒレ・ランプなど赤身", b:"リブロース・サーロイン", ax:"A"},
@@ -271,7 +282,6 @@ function renderPage(){
     wrap.appendChild(box);
   });
 
-  // prev/next有効化
   qs("#prevBtn").disabled = (page===0);
   qs("#nextBtn").textContent = (page===3?'結果を見る →':'次の5問 →');
 }
@@ -280,10 +290,8 @@ function clickScale(e){
   const t = e.target.closest(".opt"); if(!t) return;
   const idx = +t.dataset.idx, val = +t.dataset.val;
   answers[idx]=val;
-  // 再描画（選択反映）
   renderPage();
 
-  // このページの5問が埋まったら自動で次へ/結果へ（0.4秒後）
   const from=page*5, done = answers.slice(from,from+5).every(v=>v>0);
   if(done){
     setTimeout(()=>{ if(page<3){page++; renderPage(); go(1);} else {showResult();} }, 400);
@@ -305,10 +313,9 @@ function prevPage(){ if(page>0){ page--; renderPage(); } }
 window.addEventListener('keydown',e=>{
   const n = +e.key;
   if(n>=1 && n<=5 && qs('#step1').classList.contains('active')){
-    // 最初の未回答に入れる
     const from=page*5, to=from+5;
     let idx = answers.findIndex((v,i)=> i>=from && i<to && v===0);
-    if(idx<0) idx=from; // すでに埋まっていたら最初の質問を上書き
+    if(idx<0) idx=from;
     answers[idx]=n;
     renderPage();
     const done = answers.slice(from,to).every(v=>v>0);
@@ -319,7 +326,7 @@ window.addEventListener('keydown',e=>{
 });
 
 /* ====== 結果（Step2） ====== */
-const AXIS_MAP = Q.map(q=>q.ax); // 20個の A/B/C/D
+const AXIS_MAP = Q.map(q=>q.ax);
 
 function buildAxis(){
   const acc={A:[],B:[],C:[],D:[]};
@@ -361,7 +368,6 @@ function showResult(){
   const you  = decideType(axis);
   const t    = TYPES[you];
 
-  // メイン
   qs("#typeName").textContent  = you;
   qs("#typeCatch").textContent = t.catch;
   qs("#heroImg").src           = IMGS[you]||"";
@@ -370,7 +376,6 @@ function showResult(){
   const tips = qs("#tips"); tips.innerHTML="";
   (t.tips||[]).forEach(s=>tips.appendChild(el("span",{class:"btn slim"},s)));
 
-  // 軸バー
   const bars = qs("#bars"); bars.innerHTML="";
   [["風味 A（赤身↔濃厚）",to01(axis.A)],
    ["量 B（軽め↔ボリューム）",to01(axis.B)],
@@ -383,7 +388,6 @@ function showResult(){
     bars.appendChild(row);
   });
 
-  // 相性No.1 と 近いタイプ
   const pair = bestPartner(you, axis);
   if(pair){
     qs("#pairName").textContent = pair.name;
@@ -391,7 +395,7 @@ function showResult(){
     qs("#pairImg").alt = pair.name;
     qs("#pairWhy").textContent = pair.why;
   }
-  // 近いタイプ＝距離2位
+
   const distances = Object.entries(TYPES).map(([name,o])=>{
     const [a,b,c,d]=o.v;
     const dist=(axis.A-a)**2+(axis.B-b)**2+(axis.C-c)**2+(axis.D-d)**2;
