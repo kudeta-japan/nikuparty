@@ -14,20 +14,29 @@
 body{margin:0;background:radial-gradient(1200px 700px at 50% -10%,#111a30 0%,#0b0e17 60%);color:var(--ink);
   font-family:system-ui,-apple-system,Segoe UI,Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif}
 a{color:inherit;text-decoration:none}
+
+/* Top bar & hero */
 .topbar{position:sticky;top:0;z-index:10;background:rgba(11,14,23,.85);backdrop-filter:blur(6px);
   border-bottom:1px solid var(--line)}
-.container{width:min(980px,94vw);margin:0 auto;padding:14px 0 80px}
-.brand{display:flex;align-items:center;gap:10px;font-weight:900;padding:8px 0}
+.topbar-inner{width:min(980px,94vw);margin:0 auto;display:flex;align-items:center;gap:12px;padding:10px 0}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900}
 .badge{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:conic-gradient(from 140deg,#ffd966,#ff6b4a);color:#0e0b07}
 .ghost{margin-left:auto;padding:8px 12px;border:1px solid var(--line);border-radius:10px;color:var(--muted)}
+
+.hero-wrap{width:min(980px,94vw);margin:12px auto 0;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:#000}
+.hero-wrap img{display:block;width:100%;height:auto;object-fit:cover}
+
+/* common blocks */
+.container{width:min(980px,94vw);margin:0 auto;padding:14px 0 80px}
 .panel{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:16px}
 .p16{padding:16px}
-.h1{font-size:clamp(22px,4.6vw,34px);font-weight:900;margin:0 0 8px}
+.h1{font-size:clamp(22px,4.8vw,34px);font-weight:900;margin:0 0 8px}
 .lead{color:var(--muted);margin:0 0 14px}
 .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
 .btn{appearance:none;border:1px solid var(--line);background:#141b31;color:var(--ink);padding:12px 16px;border-radius:12px;font-weight:800;cursor:pointer}
 .btn.primary{background:linear-gradient(180deg,#ffd166,#f9c23c);color:#332100;border:none}
 .btn.slim{padding:8px 12px}
+
 .grid12{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 @media(min-width:800px){.grid12{grid-template-columns:repeat(4,1fr)}}
 .card{background:#0f1527;border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;gap:10px}
@@ -35,15 +44,11 @@ a{color:inherit;text-decoration:none}
 .card b{display:block}
 .small{font-size:12px;color:#a9b5cc}
 
-/* HERO（追加） */
-.hero-wrap{width:min(980px,94vw);margin:12px auto 18px;border-radius:18px;overflow:hidden;
-  border:1px solid var(--line);background:#000;box-shadow:0 16px 36px rgba(0,0,0,.35)}
-.hero-wrap img{display:block;width:100%;height:auto;object-fit:cover;object-position:center}
-@media(max-width:600px){.hero-wrap img{aspect-ratio:16/9}}
-
-/* Quiz */
+/* steps */
 .step{display:none}
 .step.active{display:block}
+
+/* Quiz */
 .progress{height:8px;background:#0e1426;border:1px solid var(--line);border-radius:999px;overflow:hidden}
 .progress .fill{height:100%;background:linear-gradient(90deg,#66d2ff,#7aa2ff,#9b87f5);width:0%}
 .qgrid{display:grid;grid-template-columns:1fr;gap:12px}
@@ -53,7 +58,7 @@ a{color:inherit;text-decoration:none}
 .scale{display:flex;gap:8px;flex-wrap:wrap}
 .opt{flex:1 1 60px;min-width:60px;display:grid;place-items:center;padding:8px;border-radius:12px;
   border:1px solid #2a3a64;background:#101938;cursor:pointer;user-select:none}
-.opt.mid{border-color:#5b4b12;background:#1b1a0b;color:#ffe28a}
+.opt.mid{border-color:#5b4b12;background:#1b1a0b;color:#ffe28a}     /* 中立＝黄色 */
 .opt.sel{outline:2px solid var(--acc);background:#142245}
 .opt.mid.sel{outline:2px solid var(--mid);background:#2a2209}
 .kbd{font-size:11px;color:#93a3c8;margin-left:8px}
@@ -75,102 +80,101 @@ footer{border-top:1px solid var(--line);color:var(--muted);text-align:center;pad
 </style>
 </head>
 <body>
-<div class="topbar">
-  <div class="container" style="display:flex;align-items:center;gap:12px">
-    <div class="brand"><div class="badge">🥩</div><div>Meat BTI</div></div>
-    <a class="ghost" href="../">← LPへ戻る</a>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><div class="badge">🥩</div><div>Meat BTI</div></div>
+      <a class="ghost" href="../">← LPへ戻る</a>
+    </div>
   </div>
-</div>
 
-<!-- HERO（./hero_meatbti.png を表示） -->
-<figure class="hero-wrap">
-  <img src="./hero_meatbti.png" alt="Meat BTI ヒーロー">
-</figure>
+  <!-- HERO -->
+  <figure class="hero-wrap">
+    <!-- 同じフォルダにある hero_meatbti.png を使用 -->
+    <img src="hero_meatbti.png" alt="Meat BTI ヒーロー">
+  </figure>
 
-<div class="container">
+  <div class="container">
 
-  <!-- STEP 0: タイプ紹介 -->
-  <section id="step0" class="step active panel p16">
-    <h1 class="h1">あなたはどの“部位タイプ”？</h1>
-    <p class="lead">12のキャラクターから、一番近いタイプと相性No.1を判定します（20問・所要1〜2分）。</p>
-    <div id="typeGrid" class="grid12"></div>
-    <div class="btns">
-      <button class="btn primary" id="startBtn">診断をはじめる</button>
-    </div>
-  </section>
+    <!-- STEP0: タイプ紹介＋スタート -->
+    <section id="step0" class="step active panel p16">
+      <h1 class="h1">あなたはどの“部位タイプ”？</h1>
+      <p class="lead">12のキャラクターから、一番近いタイプと<strong>相性No.1</strong>（動的計算）を判定します。20問・所要1〜2分。</p>
+      <div id="typeGrid" class="grid12"></div>
+      <div class="btns"><button class="btn primary" id="startBtn">診断をはじめる</button></div>
+    </section>
 
-  <!-- STEP 1: クイズ（5問×4ページ） -->
-  <section id="step1" class="step panel p16">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-      <b id="pp">Q1–5 / 20</b>
-      <div class="progress" style="flex:1"><div id="progFill" class="fill" style="width:0%"></div></div>
-      <span class="kbd">ショートカット：1〜5</span>
-    </div>
-    <div id="qgrid" class="qgrid"></div>
-    <div class="btns" style="justify-content:space-between">
-      <button class="btn slim" id="prevBtn">← 前の5問</button>
-      <button class="btn primary" id="nextBtn">次の5問 →</button>
-    </div>
-  </section>
+    <!-- STEP1: クイズ（5問×4ページ） -->
+    <section id="step1" class="step panel p16">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <b id="pp">Q1–5 / 20</b>
+        <div class="progress" style="flex:1"><div id="progFill" class="fill" style="width:0%"></div></div>
+        <span class="kbd">ショートカット：1〜5</span>
+      </div>
+      <div id="qgrid" class="qgrid"></div>
+      <div class="btns" style="justify-content:space-between">
+        <button class="btn slim" id="prevBtn">← 前の5問</button>
+        <button class="btn primary" id="nextBtn">次の5問 →</button>
+      </div>
+    </section>
 
-  <!-- STEP 2: 結果 -->
-  <section id="step2" class="step">
-    <div class="row">
-      <section class="panel p16">
-        <div class="hero">
-          <img id="heroImg" alt="">
-          <div>
-            <div class="badge2">あなたのタイプ</div>
-            <h2 id="typeName" class="h1" style="margin-top:6px"></h2>
-            <p id="typeCatch" class="lead"></p>
-            <div id="tips" class="btns" style="margin-top:0"></div>
-            <div class="btns">
-              <button class="btn primary" id="againBtn">もう一度診断</button>
-              <a class="btn" href="../">LPへ戻る</a>
+    <!-- STEP2: 結果 -->
+    <section id="step2" class="step">
+      <div class="row">
+        <section class="panel p16">
+          <div class="hero">
+            <img id="heroImg" alt="">
+            <div>
+              <div class="badge2">あなたのタイプ</div>
+              <h2 id="typeName" class="h1" style="margin-top:6px"></h2>
+              <p id="typeCatch" class="lead"></p>
+              <div id="tips" class="btns" style="margin-top:0"></div>
+              <div class="btns">
+                <button class="btn primary" id="againBtn">もう一度診断</button>
+                <a class="btn" href="../">最初のページへ戻る</a>
+              </div>
             </div>
           </div>
-        </div>
-        <hr style="border:none;border-top:1px solid var(--line);margin:16px 0">
-        <h3>あなたの味覚・スタイル傾向</h3>
-        <div id="bars" class="bars"></div>
-        <p class="small">尺度：0（左寄り）〜 100（右寄り）。<br>
-          風味A：赤身寄り ↔︎ 濃厚寄り／量B：軽め ↔︎ ボリューム／テンポC：静か ↔︎ にぎやか／演出D：素朴 ↔︎ 映え。</p>
-      </section>
+          <hr style="border:none;border-top:1px solid var(--line);margin:16px 0">
+          <h3>あなたの味覚・スタイル傾向</h3>
+          <div id="bars" class="bars"></div>
+          <p class="small">尺度：0（左寄り）〜 100（右寄り）。<br>
+            風味A：赤身寄り ↔︎ 濃厚寄り／量B：軽め ↔︎ ボリューム／テンポC：静か ↔︎ にぎやか／演出D：素朴 ↔︎ 映え。</p>
+        </section>
 
-      <aside class="panel p16">
-        <h3>相性 No.1</h3>
-        <div class="pair">
-          <img id="pairImg" alt="">
-          <div>
-            <b id="pairName">-</b>
-            <div id="pairWhy" class="small" style="margin-top:4px">-</div>
+        <aside class="panel p16">
+          <h3>相性 No.1</h3>
+          <div class="pair">
+            <img id="pairImg" alt="">
+            <div>
+              <b id="pairName">-</b>
+              <div id="pairWhy" class="small" style="margin-top:4px">-</div>
+            </div>
           </div>
-        </div>
-        <hr style="border:none;border-top:1px solid var(--line);margin:16px 0">
-        <h3>近いタイプ（次点）</h3>
-        <div class="pair">
-          <img id="secondImg" alt="">
-          <div>
-            <b id="secondName">-</b>
-            <div id="secondWhy" class="small" style="margin-top:4px">味覚・スタイルが近い“似てる相手”。</div>
+          <hr style="border:none;border-top:1px solid var(--line);margin:16px 0">
+          <h3>近いタイプ（次点）</h3>
+          <div class="pair">
+            <img id="secondImg" alt="">
+            <div>
+              <b id="secondName">-</b>
+              <div id="secondWhy" class="small" style="margin-top:4px">味覚・スタイルが近い“似てる相手”。</div>
+            </div>
           </div>
-        </div>
-      </aside>
-    </div>
-  </section>
+        </aside>
+      </div>
+    </section>
 
-  <!-- エラー -->
-  <section id="err" class="panel p16" style="display:none">
-    <b class="warn">診断データが見つかりませんでした。</b>
-    <p class="small">この画面が出る場合は、ページを再読み込みしてやり直してください。</p>
-    <div class="btns"><button class="btn primary" onclick="go(0)">診断をはじめる</button></div>
-  </section>
-</div>
+    <!-- エラー（フェイルセーフ） -->
+    <section id="err" class="panel p16" style="display:none">
+      <b class="warn">診断データが見つかりませんでした。</b>
+      <p class="small">ページを再読み込みしてやり直してください。</p>
+      <div class="btns"><button class="btn primary" onclick="go(0)">診断をはじめる</button></div>
+    </section>
+  </div>
 
-<footer>© 2025 Meat BTI</footer>
+  <footer>© 2025 Meat BTI</footer>
 
 <script>
-/* ====== データ定義 ====== */
+/* ========= 画像パス ========= */
 const IMGS = {
   "ヒレ男爵":"hire.png","タン隊長":"tan.png","イチボママ":"ichibo.png","ランプ博士":"ranpu.png",
   "リブロースボス":"riburo-su.png","サーロイン王":"sa-roin.png","美食家ザブトン":"zabuton.png",
@@ -178,12 +182,13 @@ const IMGS = {
   "書道家ミスジ":"misuji.png","シャトーブリアン女王":"shato-.png"
 };
 
+/* ========= 12タイプ定義（座標 v=[A,B,C,D]） ========= */
 const TYPES = {
   "ヒレ男爵":      {v:[-1.5,-1.0,-0.5,-0.5], one:"静かな主役の赤身派", catch:"無駄なく上品、芯が強い赤身派。",
-                    tips:["最初は“名物の塩”で会話を整える","相手の好みを1つ拾って次の一皿に反映","乾杯はハイボール/スパークリングで軽やかに"]},
+                    tips:["最初は“名物の塩”で会話を整える","相手の好みを1つ拾って次の一皿に反映","乾杯はハイボール/スパークリング"]},
   "タン隊長":      {v:[-1.0,-0.5, 0.6,-0.2], one:"場をほぐすムードメーカー", catch:"空気をほぐす切り込み隊長。",
                     tips:["“タン塩→赤身”の黄金ルート","小皿シェアで会話を回す","一言コメントで盛り上げ"]},
-  "イチボママ":    {v:[-0.5,-0.2, 0.0,-0.2], one:"安心の調和役", catch:"通好みの調和役。",
+  "イチボママ":    {v:[-0.5,-0.2, 0.0,-0.2], one:"通好みの調和役", catch:"通好みの調和役。",
                     tips:["“比較食べ”で会話を作る","火入れは相手に寄り添う","締めは軽めで余白を残す"]},
   "ランプ博士":    {v:[-0.8,-0.5, 0.0, 0.2], one:"小さな冒険家", catch:"定番を更新する工夫好き。",
                     tips:["“少量×多皿”でミニ実験","創作系を一皿まぜる","焼き担当で観察＆話題"]},
@@ -202,10 +207,10 @@ const TYPES = {
   "書道家ミスジ":  {v:[ 0.4,-0.4,-0.5, 0.2], one:"繊細さの職人", catch:"口どけ上品、所作で魅せる。",
                     tips:["火入れは控えめで共有","小声のツッコミで距離縮め","甘めは量を絞って提案"]},
   "シャトーブリアン女王":{v:[-1.3,-0.2,-0.6, 0.4], one:"寡黙な審美家", catch:"特選一点主義。静かに深く。",
-                    tips:["“量より質”で軸を見せる","静かな席を選ぶ","デザート前に次回の約束"]},
+                    tips:["“量より質”で軸を見せる","静かな席を選ぶ","デザート前に次回の約束"]}
 };
 
-// 20問
+/* ========= 質問（20問・左右5段階） ========= */
 const Q = [
   {t:"同じ価格ならどちらを選ぶ？", a:"キレ重視（さっぱり）", b:"コク重視（濃厚）", ax:"A"},
   {t:"満足度重視なら？", a:"ヒレ・ランプなど赤身", b:"リブロース・サーロイン", ax:"A"},
@@ -229,56 +234,53 @@ const Q = [
   {t:"席替えの理想は？", a:"少なめでじっくり", b:"多めで広く交流", ax:"C"},
 ];
 
-/* ====== ヘルパ ====== */
+/* ========= ユーティリティ ========= */
 const qs = s=>document.querySelector(s);
 const el = (t,attrs={},html="")=>{const e=document.createElement(t);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));e.innerHTML=html;return e;}
-const clamp = (x,a,b)=>Math.max(a,Math.min(b,x));
-const to01 = n => Math.min(1, Math.max(0, (n + 2) / 4)); // -2..+2 → 0..1
-function v5to2(x){ return ((x||3)-3)/2*2 } // 1..5 → -2..+2
+const to01 = n => Math.min(1, Math.max(0, (n + 2) / 4));     // -2..+2 → 0..1
+function v5to2(x){return ((x||3)-3)/2*2}                     // 1..5 → -2..+2
 
-/* ====== 画面遷移 ====== */
-function go(n){
-  ["#step0","#step1","#step2","#err"].forEach(sel=>qs(sel).classList.remove("active"));
-  if(n===0) qs("#step0").classList.add("active");
-  if(n===1) qs("#step1").classList.add("active");
-  if(n===2) qs("#step2").classList.add("active");
+/* ========= 画面遷移 ========= */
+function go(n){["#step0","#step1","#step2","#err"].forEach(s=>qs(s).classList.remove("active"));
+  if(n===0)qs("#step0").classList.add("active");
+  if(n===1)qs("#step1").classList.add("active");
+  if(n===2)qs("#step2").classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 
-/* ====== タイプ一覧（Step0） ====== */
+/* ========= STEP0：タイプ一覧 ========= */
 function renderTypeGrid(){
-  const g = qs("#typeGrid"); g.innerHTML="";
-  Object.entries(TYPES).forEach(([name,obj])=>{
-    const c = el("div",{class:"card"});
-    c.innerHTML = `<img src="${IMGS[name]||''}" alt="${name}">
-      <div><b>${name}</b><div class="small">${obj.one}</div></div>`;
+  const g=qs("#typeGrid"); g.innerHTML="";
+  Object.entries(TYPES).forEach(([name,o])=>{
+    const c=el("div",{class:"card"});
+    c.innerHTML=`<img src="${IMGS[name]||''}" alt="${name}"><div><b>${name}</b><div class="small">${o.one}</div></div>`;
     g.appendChild(c);
   });
 }
 
-/* ====== クイズ描画（Step1） ====== */
-let page=0;        // 0..3
-let answers=Array(Q.length).fill(0); // 1..5
+/* ========= STEP1：クイズ描画 ========= */
+let page=0;                        // 0..3
+let answers=Array(Q.length).fill(0);
 
 function renderPage(){
-  const from=page*5, to=from+5;
-  qs("#pp").textContent = `Q${from+1}–${to} / 20`;
-  qs("#progFill").style.width = `${Math.round((answers.filter(Boolean).length/20)*100)}%`;
+  const from=page*5,to=from+5;
+  qs("#pp").textContent=`Q${from+1}–${to} / 20`;
+  qs("#progFill").style.width=`${Math.round((answers.filter(Boolean).length/20)*100)}%`;
 
-  const wrap = qs("#qgrid"); wrap.innerHTML="";
+  const wrap=qs("#qgrid"); wrap.innerHTML="";
   Q.slice(from,to).forEach((q,i)=>{
-    const idx = from+i;
-    const box = el("div",{class:"qbox"});
-    const html = `
+    const idx=from+i;
+    const box=el("div",{class:"qbox"});
+    box.innerHTML=`
       <div class="qtitle">${q.t}</div>
       <div class="small" style="margin-bottom:8px">A：${q.a}　/　B：${q.b}</div>
       <div class="scale">
         ${[1,2,3,4,5].map(v=>{
-          const mid = v===3?' mid':''; const sel = answers[idx]===v?' sel':'';
-          const label = v===1?'Aにとても近い':v===2?'Aに近い':v===3?'中立':v===4?'Bに近い':'Bにとても近い';
+          const mid=v===3?' mid':''; const sel=answers[idx]===v?' sel':'';
+          const label=v===1?'Aにとても近い':v===2?'Aに近い':v===3?'中立':v===4?'Bに近い':'Bにとても近い';
           return `<div class="opt${mid}${sel}" data-idx="${idx}" data-val="${v}" title="${label}">${v}</div>`;
         }).join('')}
       </div>`;
-    box.innerHTML = html;
     wrap.appendChild(box);
   });
 
@@ -287,46 +289,37 @@ function renderPage(){
 }
 
 function clickScale(e){
-  const t = e.target.closest(".opt"); if(!t) return;
-  const idx = +t.dataset.idx, val = +t.dataset.val;
+  const t=e.target.closest(".opt"); if(!t) return;
+  const idx=+t.dataset.idx, val=+t.dataset.val;
   answers[idx]=val;
   renderPage();
 
-  const from=page*5, done = answers.slice(from,from+5).every(v=>v>0);
-  if(done){
-    setTimeout(()=>{ if(page<3){page++; renderPage(); go(1);} else {showResult();} }, 400);
-  }
+  const from=page*5, done=answers.slice(from,from+5).every(v=>v>0);
+  if(done){ setTimeout(()=>{ if(page<3){page++; renderPage();} else {showResult();} }, 350); }
 }
-
 function nextPage(){
   const from=page*5;
-  if(!answers.slice(from,from+5).every(v=>v>0)){
-    alert("未回答があります（この5問をすべて選んでください）");
-    return;
-  }
-  if(page<3){ page++; renderPage(); }
-  else { showResult(); }
+  if(!answers.slice(from,from+5).every(v=>v>0)){ alert("未回答があります（この5問をすべて選んでください）"); return; }
+  if(page<3){page++; renderPage();} else {showResult();}
 }
-function prevPage(){ if(page>0){ page--; renderPage(); } }
+function prevPage(){ if(page>0){page--; renderPage();} }
 
-// キーボード 1..5
+// キーボードショートカット 1..5
 window.addEventListener('keydown',e=>{
-  const n = +e.key;
+  const n=+e.key;
   if(n>=1 && n<=5 && qs('#step1').classList.contains('active')){
-    const from=page*5, to=from+5;
-    let idx = answers.findIndex((v,i)=> i>=from && i<to && v===0);
-    if(idx<0) idx=from;
+    const from=page*5,to=from+5;
+    let idx=answers.findIndex((v,i)=>i>=from && i<to && v===0);
+    if(idx<0) idx=from;  // 埋まっている場合は先頭に上書き
     answers[idx]=n;
     renderPage();
-    const done = answers.slice(from,to).every(v=>v>0);
-    if(done){
-      setTimeout(()=>{ if(page<3){page++; renderPage();} else {showResult();} }, 150);
-    }
+    const done=answers.slice(from,to).every(v=>v>0);
+    if(done){ setTimeout(()=>{ if(page<3){page++; renderPage();} else {showResult();} }, 150); }
   }
 });
 
-/* ====== 結果（Step2） ====== */
-const AXIS_MAP = Q.map(q=>q.ax);
+/* ========= STEP2：結果計算 ========= */
+const AXIS_MAP = Q.map(q=>q.ax); // 20個の A/B/C/D
 
 function buildAxis(){
   const acc={A:[],B:[],C:[],D:[]};
@@ -335,7 +328,7 @@ function buildAxis(){
   return {A:avg('A'),B:avg('B'),C:avg('C'),D:avg('D')};
 }
 function decideType(axis){
-  const w={A:1.2,B:1.0,C:0.9,D:0.8};
+  const w={A:1.2,B:1.0,C:0.9,D:0.8};               // Aの重み高め
   let best=null,bestDist=1e9;
   for(const [name,o] of Object.entries(TYPES)){
     const [a,b,c,d]=o.v;
@@ -344,76 +337,78 @@ function decideType(axis){
   }
   return best;
 }
+// 回答に応じて動的に“補完スコア”で相性No.1を決定（自分は除外）
 function bestPartner(selfName, axis){
-  const w={A:0.8,B:1.0,C:1.2,D:0.9};
+  const w={A:0.8,B:1.0,C:1.2,D:0.9};                // Cは補完/近似の影響強め
   let best=null,score=1e9;
   for(const [name,o] of Object.entries(TYPES)){
     if(name===selfName) continue;
     const [a,b,c,d]=o.v;
+    // A,D は軽く反転寄与（補完）、B,C は近似寄与を重視
     const s = w.A*(axis.A-(-0.4*a))**2 + w.B*(axis.B-b)**2 + w.C*(axis.C-c)**2 + w.D*(axis.D-(-0.3*d))**2;
     if(s<score){score=s;best={name,why:explainPair(axis,o.v)};}
   }
   return best;
 }
 function explainPair(ax,v){
-  const labsC = Math.abs(ax.C - v[2])<0.5 ? "テンポ感が近い" : "テンポを補完し合う";
-  const labsB = Math.abs(ax.B - v[1])<0.5 ? "量感の好みが近い" : "量感のバランスが取れる";
+  const labsC = Math.abs(ax.C - v[2])<0.5 ? "テンポ感が近い" : "テンポが補完関係";
+  const labsB = Math.abs(ax.B - v[1])<0.5 ? "量感の好みが近い" : "量感バランスが良い";
   const labsA = ax.A>0 ? "濃厚寄り" : "赤身寄り";
   return `${labsC}＋${labsB}。好みは${labsA}を補完。`;
 }
 
 function showResult(){
   if(answers.filter(Boolean).length<20){ qs("#err").style.display='block'; return; }
-  const axis = buildAxis();
-  const you  = decideType(axis);
-  const t    = TYPES[you];
+  const axis=buildAxis();
+  const you =decideType(axis);
+  const t   =TYPES[you];
 
+  // メイン
   qs("#typeName").textContent  = you;
   qs("#typeCatch").textContent = t.catch;
   qs("#heroImg").src           = IMGS[you]||"";
   qs("#heroImg").alt           = you;
+  const tips=qs("#tips"); tips.innerHTML=""; (t.tips||[]).forEach(s=>tips.appendChild(el("span",{class:"btn slim"},s)));
 
-  const tips = qs("#tips"); tips.innerHTML="";
-  (t.tips||[]).forEach(s=>tips.appendChild(el("span",{class:"btn slim"},s)));
+  // 軸の可視化
+  const bars=qs("#bars"); bars.innerHTML="";
+  [["風味 A（赤身↔濃厚）",to01(axis.A)],["量 B（軽め↔ボリューム）",to01(axis.B)],
+   ["テンポ C（静か↔にぎやか）",to01(axis.C)],["演出 D（素朴↔映え）",to01(axis.D)]]
+   .forEach(([label,ratio])=>{
+      const row=el("div",{class:"bar"});
+      row.innerHTML=`<div class="small">${label}</div><div class="track"><div class="fill" style="width:${Math.round(ratio*100)}%"></div></div>`;
+      bars.appendChild(row);
+   });
 
-  const bars = qs("#bars"); bars.innerHTML="";
-  [["風味 A（赤身↔濃厚）",to01(axis.A)],
-   ["量 B（軽め↔ボリューム）",to01(axis.B)],
-   ["テンポ C（静か↔にぎやか）",to01(axis.C)],
-   ["演出 D（素朴↔映え）",to01(axis.D)]]
-  .forEach(([label,ratio])=>{
-    const row = el("div",{class:"bar"});
-    row.innerHTML = `<div class="small">${label}</div>
-      <div class="track"><div class="fill" style="width:${Math.round(ratio*100)}%"></div></div>`;
-    bars.appendChild(row);
-  });
-
+  // 相性No.1（動的）
   const pair = bestPartner(you, axis);
   if(pair){
     qs("#pairName").textContent = pair.name;
-    qs("#pairImg").src = IMGS[pair.name]||"";
-    qs("#pairImg").alt = pair.name;
-    qs("#pairWhy").textContent = pair.why;
+    qs("#pairImg").src          = IMGS[pair.name]||"";
+    qs("#pairImg").alt          = pair.name;
+    qs("#pairWhy").textContent  = pair.why;
   }
 
+  // 近いタイプ（次点）：自分＆相性No.1を除外して距離2位を選ぶ
   const distances = Object.entries(TYPES).map(([name,o])=>{
     const [a,b,c,d]=o.v;
     const dist=(axis.A-a)**2+(axis.B-b)**2+(axis.C-c)**2+(axis.D-d)**2;
     return {name,dist};
-  }).sort((x,y)=>x.dist-y.dist);
-  const second = distances.find(x=>x.name!==you);
+  }).filter(x=>x.name!==you && (!pair || x.name!==pair.name))
+    .sort((x,y)=>x.dist-y.dist);
+  const second = distances[0];
   if(second){
     qs("#secondName").textContent = second.name;
-    qs("#secondImg").src = IMGS[second.name]||"";
-    qs("#secondImg").alt = second.name;
+    qs("#secondImg").src          = IMGS[second.name]||"";
+    qs("#secondImg").alt          = second.name;
   }
 
   go(2);
 }
 
-/* ====== 初期化 ====== */
+/* ========= 初期化 ========= */
 renderTypeGrid();
-qs("#startBtn").onclick = ()=>{ page=0; answers=Array(Q.length).fill(0); renderPage(); go(1); }
+qs("#startBtn").onclick = ()=>{ page=0; answers=Array(Q.length).fill(0); renderPage(); go(1); };
 qs("#qgrid").addEventListener("click", clickScale);
 qs("#nextBtn").onclick = nextPage;
 qs("#prevBtn").onclick = prevPage;
