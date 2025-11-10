@@ -3,289 +3,417 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Meat BTI 診断｜質問</title>
+<title>Meat BTI 診断｜自己完結版</title>
 <meta name="theme-color" content="#0b0e17">
 <style>
-  :root{
-    --bg:#0b0e17; --panel:#121828; --panel-2:#0f1524; --ink:#e9eef8; --muted:#98a2b3; --accent:#7aa2ff;
-    --red:#ff6b6b; --green:#22c55e; --amber:#facc15; --line:#1f2a44; --brand:#9b87f5;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{margin:0;background:radial-gradient(1200px 700px at 50% -10%,#111a30 0%,#0b0e17 60%);color:var(--ink);
-    font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif; letter-spacing:.02em}
-  a{color:inherit;text-decoration:none}
-  .container{width:min(1100px,94vw);margin:0 auto;padding:18px 0 80px}
+:root{
+  --bg:#0b0e17; --panel:#121828; --panel2:#0f1524; --ink:#e9eef8; --muted:#98a2b3; --line:#203054;
+  --acc:#7aa2ff; --mid:#facc15; --good:#22c55e; --warn:#ff8a65;
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(1200px 700px at 50% -10%,#111a30 0%,#0b0e17 60%);color:var(--ink);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif}
+a{color:inherit;text-decoration:none}
+.topbar{position:sticky;top:0;z-index:10;background:rgba(11,14,23,.85);backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--line)}
+.container{width:min(980px,94vw);margin:0 auto;padding:14px 0 80px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;padding:8px 0}
+.badge{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:conic-gradient(from 140deg,#ffd966,#ff6b4a);color:#0e0b07}
+.ghost{margin-left:auto;padding:8px 12px;border:1px solid var(--line);border-radius:10px;color:var(--muted)}
+.panel{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:16px}
+.p16{padding:16px}
+.h1{font-size:clamp(22px,4.6vw,34px);font-weight:900;margin:0 0 8px}
+.lead{color:var(--muted);margin:0 0 14px}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.btn{appearance:none;border:1px solid var(--line);background:#141b31;color:var(--ink);padding:12px 16px;border-radius:12px;font-weight:800;cursor:pointer}
+.btn.primary{background:linear-gradient(180deg,#ffd166,#f9c23c);color:#332100;border:none}
+.btn.slim{padding:8px 12px}
+.grid12{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(min-width:800px){.grid12{grid-template-columns:repeat(4,1fr)}}
+.card{background:#0f1527;border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;gap:10px}
+.card img{width:60px;height:60px;object-fit:contain;border-radius:12px;background:#0c1325;border:1px solid var(--line)}
+.card b{display:block}
+.small{font-size:12px;color:#a9b5cc}
 
-  /* Header */
-  .topbar{display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10;
-    background:linear-gradient(180deg,rgba(11,14,23,.95),rgba(11,14,23,.75));backdrop-filter:blur(6px);
-    border-bottom:1px solid var(--line);padding:10px 0}
-  .brand{display:flex;align-items:center;gap:10px;font-weight:900}
-  .badge{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:8px;
-    background:conic-gradient(from 140deg,#ffd966,#ff6b4a);color:#0e0b07}
-  .ghost{margin-left:auto;display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;color:var(--muted)}
-  .ghost:hover{border-color:#2a3a60}
+/* Quiz */
+.step{display:none}
+.step.active{display:block}
+.progress{height:8px;background:#0e1426;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.progress .fill{height:100%;background:linear-gradient(90deg,#66d2ff,#7aa2ff,#9b87f5);width:0%}
+.qgrid{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:860px){.qgrid{grid-template-columns:1fr 1fr}}
+.qbox{background:#0f1527;border:1px solid var(--line);border-radius:14px;padding:14px}
+.qtitle{font-weight:900;margin:0 0 10px}
+.scale{display:flex;gap:8px;flex-wrap:wrap}
+.opt{flex:1 1 60px;min-width:60px;display:grid;place-items:center;padding:8px;border-radius:12px;
+  border:1px solid #2a3a64;background:#101938;cursor:pointer;user-select:none}
+.opt.mid{border-color:#5b4b12;background:#1b1a0b;color:#ffe28a}
+.opt.sel{outline:2px solid var(--acc);background:#142245}
+.opt.mid.sel{outline:2px solid var(--mid);background:#2a2209}
+.kbd{font-size:11px;color:#93a3c8;margin-left:8px}
 
-  /* Progress */
-  .progress{margin:14px 0 8px;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
-  .bar{height:8px;background:linear-gradient(90deg,#66d2ff,#7aa2ff,#9b87f5);width:0%}
-  .meta{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin-top:6px}
-
-  /* Grid of 5 cards */
-  .grid{display:grid;grid-template-columns:1fr;gap:14px}
-  @media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
-  .card{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1px solid var(--line);border-radius:14px; padding:14px 14px 12px}
-  .qhead{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-  .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted);font-size:12px}
-  .title{font-weight:800;margin:2px 0 4px}
-  .labels{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin:6px 0 8px}
-  .dots{display:flex;gap:8px;justify-content:center}
-  .dot{width:36px;height:36px;border-radius:999px;border:2px solid #2a3860;background:#0d1324;cursor:pointer;
-    transition:transform .06s ease, box-shadow .12s ease, background .12s ease}
-  .dot:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,0,0,.25)}
-  .dot[data-v="1"],.dot[data-v="2"]{border-color:#3a78ff}
-  .dot[data-v="4"],.dot[data-v="5"]{border-color:#ff6b6b}
-  .dot.active[data-v="1"],.dot.active[data-v="2"]{background:#204a9e}
-  .dot.active[data-v="4"],.dot.active[data-v="5"]{background:#7a2930}
-  .dot[data-v="3"]{border-color:#b08900}
-  .dot.active[data-v="3"]{background:var(--amber);box-shadow:0 0 0 3px rgba(250,204,21,.2) inset}
-  .scale-help{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:6px}
-  .hint{color:#9fb2d6;font-size:12px;margin-top:6px}
-
-  /* Nav */
-  .nav{display:flex;justify-content:flex-end;gap:10px;margin-top:14px}
-  .btn{appearance:none;border:1px solid var(--line);background:#141b31;color:var(--ink);padding:10px 16px;border-radius:12px;cursor:pointer;font-weight:800}
-  .btn[disabled]{opacity:.45;cursor:not-allowed}
-  .btn.primary{background:linear-gradient(180deg,#ffd166,#f9c23c);color:#332100;border:none}
-  .btn.secondary{background:#192443}
-  .center{display:flex;justify-content:center;margin-top:14px}
-  .note{color:var(--muted);font-size:12px;margin-top:8px}
-
-  /* Page dots */
-  .steps{display:flex;gap:8px;justify-content:center;margin:10px 0 2px}
-  .steps span{width:8px;height:8px;border-radius:50%;background:#2a365a}
-  .steps span.active{background:#7aa2ff}
-
-  /* keyboard helper */
-  .kbd{border:1px solid var(--line);border-bottom-width:2px;border-right-width:2px;border-radius:6px;padding:2px 6px;font-size:12px;color:#b8c1d9}
-
+/* Result */
+.row{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:880px){.row{grid-template-columns:1.2fr .8fr}}
+.hero{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center}
+.hero img{width:120px;height:120px;border-radius:20px;background:#0d1324;object-fit:contain;border:1px solid var(--line)}
+.badge2{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:#151c32;color:#cbd5e1;font-weight:700}
+.bars{display:grid;gap:10px}
+.bar{display:grid;grid-template-columns:140px 1fr;gap:10px;align-items:center}
+.track{height:10px;background:#0e1426;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.fill{height:100%;background:linear-gradient(90deg,#66d2ff,#7aa2ff,#9b87f5);width:0%}
+.pair{display:flex;gap:12px;align-items:center}
+.pair img{width:72px;height:72px;object-fit:contain;border-radius:14px;border:1px solid var(--line);background:#0d1324}
+.warn{color:#ffb4a2}
+footer{border-top:1px solid var(--line);color:var(--muted);text-align:center;padding:22px 0;margin-top:28px}
 </style>
 </head>
 <body>
-  <div class="topbar">
-    <div class="container" style="display:flex;align-items:center;gap:12px">
-      <div class="brand"><div class="badge">🥩</div><div>Meat BTI 診断</div></div>
-      <a class="ghost" href="../">← LPへ戻る</a>
-    </div>
+<div class="topbar">
+  <div class="container" style="display:flex;align-items:center;gap:12px">
+    <div class="brand"><div class="badge">🥩</div><div>Meat BTI</div></div>
+    <a class="ghost" href="../">← LPへ戻る</a>
   </div>
+</div>
 
-  <div class="container">
-    <div class="progress" aria-hidden="true"><div class="bar" id="bar"></div></div>
-    <div class="meta"><div id="progressLabel">0 / 20</div><div>選択ショートカット：<span class="kbd">1</span> … <span class="kbd">5</span></div></div>
-    <div class="steps" id="steps"></div>
+<div class="container">
 
-    <div id="grid" class="grid" aria-live="polite"></div>
-
-    <div class="nav">
-      <button id="prev" class="btn secondary">前の5問</button>
-      <button id="next" class="btn">次の5問へ</button>
-      <button id="result" class="btn primary" style="display:none">結果を見る</button>
+  <!-- STEP 0: タイプ紹介 -->
+  <section id="step0" class="step active panel p16">
+    <h1 class="h1">あなたはどの“部位タイプ”？</h1>
+    <p class="lead">12のキャラクターから、一番近いタイプと相性No.1を判定します（20問・所要1〜2分）。</p>
+    <div id="typeGrid" class="grid12"></div>
+    <div class="btns">
+      <button class="btn primary" id="startBtn">診断をはじめる</button>
     </div>
-    <div class="center"><div class="note">各設問は左「A寄り」↔ 右「B寄り」。<b>中央（3）は中立</b>で、<b style="color:#facc15">黄色ボタン</b>です。</div></div>
-  </div>
+  </section>
+
+  <!-- STEP 1: クイズ（5問×4ページ） -->
+  <section id="step1" class="step panel p16">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <b id="pp">Q1–5 / 20</b>
+      <div class="progress" style="flex:1"><div id="progFill" class="fill" style="width:0%"></div></div>
+      <span class="kbd">ショートカット：1〜5</span>
+    </div>
+    <div id="qgrid" class="qgrid"></div>
+    <div class="btns" style="justify-content:space-between">
+      <button class="btn slim" id="prevBtn">← 前の5問</button>
+      <button class="btn primary" id="nextBtn">次の5問 →</button>
+    </div>
+  </section>
+
+  <!-- STEP 2: 結果 -->
+  <section id="step2" class="step">
+    <div class="row">
+      <section class="panel p16">
+        <div class="hero">
+          <img id="heroImg" alt="">
+          <div>
+            <div class="badge2">あなたのタイプ</div>
+            <h2 id="typeName" class="h1" style="margin-top:6px"></h2>
+            <p id="typeCatch" class="lead"></p>
+            <div id="tips" class="btns" style="margin-top:0"></div>
+            <div class="btns">
+              <button class="btn primary" id="againBtn">もう一度診断</button>
+              <a class="btn" href="../">LPへ戻る</a>
+            </div>
+          </div>
+        </div>
+        <hr style="border:none;border-top:1px solid var(--line);margin:16px 0">
+        <h3>あなたの味覚・スタイル傾向</h3>
+        <div id="bars" class="bars"></div>
+        <p class="small">尺度：0（左寄り）〜 100（右寄り）。<br>
+          風味A：赤身寄り ↔︎ 濃厚寄り／量B：軽め ↔︎ ボリューム／テンポC：静か ↔︎ にぎやか／演出D：素朴 ↔︎ 映え。</p>
+      </section>
+
+      <aside class="panel p16">
+        <h3>相性 No.1</h3>
+        <div class="pair">
+          <img id="pairImg" alt="">
+          <div>
+            <b id="pairName">-</b>
+            <div id="pairWhy" class="small" style="margin-top:4px">-</div>
+          </div>
+        </div>
+        <hr style="border:none;border-top:1px solid var(--line);margin:16px 0">
+        <h3>近いタイプ（次点）</h3>
+        <div class="pair">
+          <img id="secondImg" alt="">
+          <div>
+            <b id="secondName">-</b>
+            <div id="secondWhy" class="small" style="margin-top:4px">味覚・スタイルが近い“似てる相手”。</div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- エラー -->
+  <section id="err" class="panel p16" style="display:none">
+    <b class="warn">診断データが見つかりませんでした。</b>
+    <p class="small">この画面が出る場合は、ページを再読み込みしてやり直してください。</p>
+    <div class="btns"><button class="btn primary" onclick="go(0)">診断をはじめる</button></div>
+  </section>
+</div>
+
+<footer>© 2025 Meat BTI</footer>
 
 <script>
-/* -------------------------
-  設問データ（20問 / 5問×4ページ）
-  text: タイトル
-  a: 左側（A寄り）ラベル
-  b: 右側（B寄り）ラベル
--------------------------- */
-const QUESTIONS = [
-  {text:"同じ価格の赤身と霜降り、今の気分は？", a:"キレ重視（さっぱり）", b:"コク重視（濃厚）"},
-  {text:"“量をしっかり”食べるなら？", a:"軽めの赤身中心で進めたい", b:"満足感の高い部位で押したい"},
-  {text:"名物から選ぶなら？", a:"ヒレ／タンなど“赤身寄り”", b:"サーロイン／カルビなど“コク寄り”"},
-  {text:"1皿だけ追加。迷ったらどっち？", a:"赤身系でもう一皿", b:"リッチ系でもう一皿"},
-  {text:"初めての店のオーダー方針", a:"定番メニュー中心", b:"限定・創作も少し"},
-  {text:"メインの一皿、満足度優先なら", a:"ヒレ・ランプなど赤身", b:"リブロース・サーロイン"},
-  {text:"ボリューム感、理想は", a:"控えめ多品目", b:"量感でOK"},
-  {text:"焼きの好み", a:"レア寄りで香りを生かす", b:"しっかり火入れで甘みを出す"},
-  {text:"味付けの初手", a:"塩で素材推し", b:"特製ソースで高揚感"},
-  {text:"香りの演出", a:"炭・香ばしさで引き締め", b:"バターで香りリッチに"},
-  {text:"席の雰囲気", a:"落ち着いて会話を整理したい", b:"賑やかにテンポ良く"},
-  {text:"写真 or 会話", a:"写真は控えめ、体験重視", b:"写真や動画も楽しむ"},
-  {text:"シェアの仕方", a:"少量×多種類で比較食べ", b:"少量高満足で厳選"},
-  {text:"役回り", a:"焼き担当で見守る", b:"乾杯や音頭で盛り上げる"},
-  {text:"締めは", a:"軽く余白を残す", b:"しっかり満腹で締める"},
-  {text:"初対面の会話", a:"1つ深い話を丁寧に", b:"テンポ良く広く浅く"},
-  {text:"店からの提案", a:"塩→タレのメリハリ重視", b:"映えのある演出も歓迎"},
-  {text:"他卓との関わり", a:"静かに自分たちの世界で", b:"さりげなく輪を広げたい"},
-  {text:"テーブル運用", a:"段取りよりもゆったり", b:"会計や席替えなど主導"},
-  {text:"おかわりの判断", a:"様子を見て控えめに", b:"勢いのままいきたい"},
+/* ====== データ定義 ====== */
+const IMGS = {
+  "ヒレ男爵":"hire.png","タン隊長":"tan.png","イチボママ":"ichibo.png","ランプ博士":"ranpu.png",
+  "リブロースボス":"riburo-su.png","サーロイン王":"sa-roin.png","美食家ザブトン":"zabuton.png",
+  "ギャルカルビ":"karubi.png","やり手の営業マンハラミ":"harami.png","カイノミ舞妓はん":"kainomi.png",
+  "書道家ミスジ":"misuji.png","シャトーブリアン女王":"shato-.png"
+};
+
+const TYPES = {
+  "ヒレ男爵":      {v:[-1.5,-1.0,-0.5,-0.5], one:"静かな主役の赤身派", catch:"無駄なく上品、芯が強い赤身派。",
+                    tips:["最初は“名物の塩”で会話を整える","相手の好みを1つ拾って次の一皿に反映","乾杯はハイボール/スパークリングで軽やかに"]},
+  "タン隊長":      {v:[-1.0,-0.5, 0.6,-0.2], one:"場をほぐすムードメーカー", catch:"空気をほぐす切り込み隊長。",
+                    tips:["“タン塩→赤身”の黄金ルート","小皿シェアで会話を回す","一言コメントで盛り上げ"]},
+  "イチボママ":    {v:[-0.5,-0.2, 0.0,-0.2], one:"安心の調和役", catch:"通好みの調和役。",
+                    tips:["“比較食べ”で会話を作る","火入れは相手に寄り添う","締めは軽めで余白を残す"]},
+  "ランプ博士":    {v:[-0.8,-0.5, 0.0, 0.2], one:"小さな冒険家", catch:"定番を更新する工夫好き。",
+                    tips:["“少量×多皿”でミニ実験","創作系を一皿まぜる","焼き担当で観察＆話題"]},
+  "リブロースボス":{v:[ 0.8, 0.6, 0.2, 0.2], one:"安心感のリーダー", catch:"王道リッチで満足度重視。",
+                    tips:["“名物→名物”で段取り良く","会計/席替えを主導","写真は少なめ体験濃く"]},
+  "サーロイン王":  {v:[ 1.3, 0.8, 0.5, 0.8], one:"華やぎの演出家", catch:"華やか演出で場の中心に。",
+                    tips:["フランベ/香り演出で拍手","乾杯の音頭で明るく開始","隣席とも軽く乾杯"]},
+  "美食家ザブトン":{v:[ 1.0, 0.2,-0.3, 0.2], one:"しっとり濃厚派", catch:"しっとり濃厚、少量高満足。",
+                    tips:["“少量高満足”を提案","休ませ時間を大切に","深めの質問を1つ"]},
+  "ギャルカルビ":  {v:[ 1.2, 0.7, 0.9, 0.9], one:"巻き込み型エンタメ", catch:"甘濃エンタメで巻き込み型。",
+                    tips:["“みんなの一口カルビ”手配","自分が撮ってシェア","満足派の希望を拾う"]},
+  "やり手の営業マンハラミ":{v:[ 0.2, 0.4, 0.8, 0.3], one:"テンポの司令塔", catch:"テンポ良く結果を出す実利派。",
+                    tips:["回転を上げて間を作らない","焼き台管理役で活躍","飲みすぎ注意で笑顔キープ"]},
+  "カイノミ舞妓はん":{v:[ 0.5,-0.2, 0.2, 0.2], one:"軽リッチのコーデ", catch:"軽やか派の橋渡し。",
+                    tips:["“塩→タレ”でメリハリ","軽い締めで余白を残す","相手の得意トークを振る"]},
+  "書道家ミスジ":  {v:[ 0.4,-0.4,-0.5, 0.2], one:"繊細さの職人", catch:"口どけ上品、所作で魅せる。",
+                    tips:["火入れは控えめで共有","小声のツッコミで距離縮め","甘めは量を絞って提案"]},
+  "シャトーブリアン女王":{v:[-1.3,-0.2,-0.6, 0.4], one:"寡黙な審美家", catch:"特選一点主義。静かに深く。",
+                    tips:["“量より質”で軸を見せる","静かな席を選ぶ","デザート前に次回の約束"]},
+};
+
+// 20問（A/B/C/D 軸に寄与）
+const Q = [
+  {t:"同じ価格ならどちらを選ぶ？", a:"キレ重視（さっぱり）", b:"コク重視（濃厚）", ax:"A"},
+  {t:"満足度重視なら？", a:"ヒレ・ランプなど赤身", b:"リブロース・サーロイン", ax:"A"},
+  {t:"脂の重さの好みは？", a:"軽めの赤身寄り", b:"脂の濃厚さも欲しい", ax:"A"},
+  {t:"“量をしっかり”食べるなら？", a:"軽めの赤身中心で進めたい", b:"満足感の高い部位で押したい", ax:"B"},
+  {t:"ボリューム感の理想は？", a:"少量×多皿で色々", b:"量感あってOK", ax:"B"},
+  {t:"最初の一皿は？", a:"軽やかに塩で", b:"最初から名物リッチ", ax:"D"},
+  {t:"追加の一皿なら？", a:"赤身系でもう一皿", b:"リッチ系でもう一皿", ax:"B"},
+  {t:"演出の好みは？", a:"素朴・素材推し", b:"映え・ソース推し", ax:"D"},
+  {t:"テーブルの雰囲気は？", a:"静かに味わうのが好き", b:"賑やかに楽しみたい", ax:"C"},
+  {t:"初めましての席での立ち回りは？", a:"まず相手に合わせる", b:"明るく主導していく", ax:"C"},
+  {t:"焼き方の傾向は？", a:"控えめレア寄り", b:"香ばしめが好み", ax:"A"},
+  {t:"乾杯ドリンクは？", a:"軽やか/スパークリング", b:"濃いめ/カクテル", ax:"D"},
+  {t:"皿数の志向は？", a:"少量多皿で変化を楽しむ", b:"主役をがっつり", ax:"B"},
+  {t:"写真の扱いは？", a:"少なめで体験重視", b:"しっかり撮ってシェア", ax:"D"},
+  {t:"会話テンポは？", a:"ゆっくり丁寧に深く", b:"テンポ良く明るく", ax:"C"},
+  {t:"香りの好みは？", a:"素材の香りが立つ方", b:"香り演出も好き", ax:"D"},
+  {t:"締めの選び方は？", a:"軽く余白を残す", b:"満足優先でしっかり", ax:"B"},
+  {t:"名物と言われたら？", a:"気になるが様子見", b:"まずは名物でいく", ax:"C"},
+  {t:"好みの味幅は？", a:"赤身〜軽リッチ", b:"濃厚〜甘めもOK", ax:"A"},
+  {t:"席替えの理想は？", a:"少なめでじっくり", b:"多めで広く交流", ax:"C"},
 ];
 
-const PAGE_SIZE = 5;
-const TOTAL = QUESTIONS.length;
+/* ====== ヘルパ ====== */
+const qs = s=>document.querySelector(s);
+const el = (t,attrs={},html="")=>{const e=document.createElement(t);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));e.innerHTML=html;return e;}
+const clamp = (x,a,b)=>Math.max(a,Math.min(b,x));
+const to01 = n => Math.min(1, Math.max(0, (n + 2) / 4)); // -2..+2 → 0..1
+function v5to2(x){ return ((x||3)-3)/2*2 } // 1..5 → -2..+2
 
-let page = 0;                      // 0..3
-const answers = Array(TOTAL).fill(0); // 0=未回答, 1..5=選択
-let focusQ = 0;                    // キーボードで選ぶ対象
+/* ====== 画面遷移 ====== */
+function go(n){
+  ["#step0","#step1","#step2","#err"].forEach(sel=>qs(sel).classList.remove("active"));
+  if(n===0) qs("#step0").classList.add("active");
+  if(n===1) qs("#step1").classList.add("active");
+  if(n===2) qs("#step2").classList.add("active");
+}
 
-const $grid = document.getElementById('grid');
-const $bar  = document.getElementById('bar');
-const $label= document.getElementById('progressLabel');
-const $steps= document.getElementById('steps');
-const $prev = document.getElementById('prev');
-const $next = document.getElementById('next');
-const $result = document.getElementById('result');
+/* ====== タイプ一覧（Step0） ====== */
+function renderTypeGrid(){
+  const g = qs("#typeGrid"); g.innerHTML="";
+  Object.entries(TYPES).forEach(([name,obj])=>{
+    const c = el("div",{class:"card"});
+    c.innerHTML = `<img src="${IMGS[name]||''}" alt="${name}">
+      <div><b>${name}</b><div class="small">${obj.one}</div></div>`;
+    g.appendChild(c);
+  });
+}
 
-/* ---------- レンダリング ---------- */
-function renderSteps(){
-  $steps.innerHTML = '';
-  const pages = Math.ceil(TOTAL/PAGE_SIZE);
-  for(let i=0;i<pages;i++){
-    const s=document.createElement('span');
-    if(i===page) s.classList.add('active');
-    $steps.appendChild(s);
+/* ====== クイズ描画（Step1） ====== */
+let page=0;        // 0..3
+let answers=Array(Q.length).fill(0); // 1..5
+
+function renderPage(){
+  const from=page*5, to=from+5;
+  qs("#pp").textContent = `Q${from+1}–${to} / 20`;
+  qs("#progFill").style.width = `${Math.round((answers.filter(Boolean).length/20)*100)}%`;
+
+  const wrap = qs("#qgrid"); wrap.innerHTML="";
+  Q.slice(from,to).forEach((q,i)=>{
+    const idx = from+i;
+    const box = el("div",{class:"qbox"});
+    const html = `
+      <div class="qtitle">${q.t}</div>
+      <div class="small" style="margin-bottom:8px">A：${q.a}　/　B：${q.b}</div>
+      <div class="scale">
+        ${[1,2,3,4,5].map(v=>{
+          const mid = v===3?' mid':''; const sel = answers[idx]===v?' sel':'';
+          const label = v===1?'Aにとても近い':v===2?'Aに近い':v===3?'中立':v===4?'Bに近い':'Bにとても近い';
+          return `<div class="opt${mid}${sel}" data-idx="${idx}" data-val="${v}" title="${label}">${v}</div>`;
+        }).join('')}
+      </div>`;
+    box.innerHTML = html;
+    wrap.appendChild(box);
+  });
+
+  // prev/next有効化
+  qs("#prevBtn").disabled = (page===0);
+  qs("#nextBtn").textContent = (page===3?'結果を見る →':'次の5問 →');
+}
+
+function clickScale(e){
+  const t = e.target.closest(".opt"); if(!t) return;
+  const idx = +t.dataset.idx, val = +t.dataset.val;
+  answers[idx]=val;
+  // 再描画（選択反映）
+  renderPage();
+
+  // このページの5問が埋まったら自動で次へ/結果へ（0.4秒後）
+  const from=page*5, done = answers.slice(from,from+5).every(v=>v>0);
+  if(done){
+    setTimeout(()=>{ if(page<3){page++; renderPage(); go(1);} else {showResult();} }, 400);
   }
 }
-function render(){
-  // 進捗
-  const answered = answers.filter(v=>v>0).length;
-  $bar.style.width = (answered/TOTAL*100)+'%';
-  $label.textContent = `${answered} / ${TOTAL}`;
 
-  // ページコントロール
-  $prev.disabled = page===0;
-  const allAnsweredThisPage = answers
-    .slice(page*PAGE_SIZE, page*PAGE_SIZE+PAGE_SIZE)
-    .every(v=>v>0);
-  const lastPage = page === Math.floor((TOTAL-1)/PAGE_SIZE);
-  $next.style.display   = lastPage ? 'none' : 'inline-flex';
-  $result.style.display = lastPage ? 'inline-flex' : 'none';
-  $next.disabled   = !allAnsweredThisPage;
-  $result.disabled = answered<TOTAL;
-
-  // グリッド
-  $grid.innerHTML='';
-  const start = page*PAGE_SIZE;
-  const end   = Math.min(start+PAGE_SIZE, TOTAL);
-  for(let i=start;i<end;i++){
-    $grid.appendChild(renderCard(i));
+function nextPage(){
+  const from=page*5;
+  if(!answers.slice(from,from+5).every(v=>v>0)){
+    alert("未回答があります（この5問をすべて選んでください）");
+    return;
   }
-  renderSteps();
+  if(page<3){ page++; renderPage(); }
+  else { showResult(); }
 }
-function renderCard(i){
-  const q = QUESTIONS[i];
-  const wrap = document.createElement('section');
-  wrap.className = 'card';
+function prevPage(){ if(page>0){ page--; renderPage(); } }
 
-  const head = document.createElement('div');
-  head.className = 'qhead';
-  head.innerHTML = `<span class="pill">Q${i+1} / ${TOTAL}</span>`;
-  wrap.appendChild(head);
-
-  const title = document.createElement('div');
-  title.className = 'title';
-  title.textContent = q.text;
-  wrap.appendChild(title);
-
-  const labels = document.createElement('div');
-  labels.className='labels';
-  labels.innerHTML = `<span>🅰️ ${q.a}</span><span>🅱️ ${q.b}</span>`;
-  wrap.appendChild(labels);
-
-  const dots = document.createElement('div');
-  dots.className='dots';
-  for(let v=1; v<=5; v++){
-    const b = document.createElement('button');
-    b.className = 'dot';
-    b.setAttribute('data-v', v);
-    b.setAttribute('aria-label', `Q${i+1}: ${v} を選ぶ`);
-    if(answers[i]===v) b.classList.add('active');
-    b.addEventListener('click', ()=>{
-      answers[i]=v;
-      focusQ=i;
-      // 選んだら自動的に次の未回答へ視線移動
-      render();
-      autoAdvanceFrom(i);
-    });
-    dots.appendChild(b);
-  }
-  wrap.appendChild(dots);
-
-  const scale = document.createElement('div');
-  scale.className='scale-help';
-  scale.innerHTML = `<span>A寄り</span><span>中立</span><span>B寄り</span>`;
-  wrap.appendChild(scale);
-
-  return wrap;
-}
-function autoAdvanceFrom(i){
-  // 今のページ内で未回答があればそこまでスクロール
-  const start = page*PAGE_SIZE, end=Math.min(start+PAGE_SIZE, TOTAL);
-  let nextIndex = -1;
-  for(let k=i+1; k<end; k++){ if(answers[k]===0){ nextIndex=k; break; } }
-  if(nextIndex===-1){
-    for(let k=start; k<i; k++){ if(answers[k]===0){ nextIndex=k; break; } }
-  }
-  if(nextIndex>-1){
-    const idxOnPage = nextIndex - start;
-    const sec = $grid.children[idxOnPage];
-    sec?.scrollIntoView({behavior:'smooth', block:'nearest'});
-    focusQ = nextIndex;
-  }else{
-    // すべて回答済みなら次へボタンを点灯
-    if(page < Math.floor((TOTAL-1)/PAGE_SIZE)){
-      $next.focus();
-    }else{
-      $result.focus();
+// キーボード 1..5
+window.addEventListener('keydown',e=>{
+  const n = +e.key;
+  if(n>=1 && n<=5 && qs('#step1').classList.contains('active')){
+    // 最初の未回答に入れる
+    const from=page*5, to=from+5;
+    let idx = answers.findIndex((v,i)=> i>=from && i<to && v===0);
+    if(idx<0) idx=from; // すでに埋まっていたら最初の質問を上書き
+    answers[idx]=n;
+    renderPage();
+    const done = answers.slice(from,to).every(v=>v>0);
+    if(done){
+      setTimeout(()=>{ if(page<3){page++; renderPage();} else {showResult();} }, 150);
     }
   }
+});
+
+/* ====== 結果（Step2） ====== */
+const AXIS_MAP = Q.map(q=>q.ax); // 20個の A/B/C/D
+
+function buildAxis(){
+  const acc={A:[],B:[],C:[],D:[]};
+  answers.forEach((v,i)=>{ acc[AXIS_MAP[i]].push( v5to2(v) ); });
+  const avg = k => acc[k].length ? (acc[k].reduce((s,x)=>s+x,0)/acc[k].length) : 0;
+  return {A:avg('A'),B:avg('B'),C:avg('C'),D:avg('D')};
 }
-
-/* ---------- ナビゲーション ---------- */
-$prev.addEventListener('click', ()=>{ if(page>0){ page--; render(); window.scrollTo({top:0,behavior:'smooth'}); }});
-$next.addEventListener('click', ()=>{ const maxPage=Math.floor((TOTAL-1)/PAGE_SIZE); if(page<maxPage){ page++; render(); window.scrollTo({top:0,behavior:'smooth'});} });
-
-/* ---------- キーボード選択 (1..5) ---------- */
-document.addEventListener('keydown', (e)=>{
-  if(e.key<'1'||e.key>'5') return;
-  const val = parseInt(e.key,10);
-  // 未回答の最初をフォーカス対象に
-  if(answers[focusQ] && answers[focusQ]>0){
-    const firstUnanswered = answers.findIndex(v=>v===0);
-    if(firstUnanswered>=0) focusQ = firstUnanswered;
+function decideType(axis){
+  const w={A:1.2,B:1.0,C:0.9,D:0.8};
+  let best=null,bestDist=1e9;
+  for(const [name,o] of Object.entries(TYPES)){
+    const [a,b,c,d]=o.v;
+    const dist=w.A*(axis.A-a)**2+w.B*(axis.B-b)**2+w.C*(axis.C-c)**2+w.D*(axis.D-d)**2;
+    if(dist<bestDist){bestDist=dist;best=name;}
   }
-  answers[focusQ]=val;
-  render();
-  autoAdvanceFrom(focusQ);
-});
-
-/* ---------- 結果保存→遷移 ---------- */
-function saveAndGo(){
-  const payload = {
-    version: 'v3',
-    created_at: Date.now(),
-    answers: answers.slice(0, TOTAL),
-    // ここでは集計は行わず、結果ページで計算する想定
-  };
-  // 互換のため複数キーへ保存
-  const json = JSON.stringify(payload);
-  localStorage.setItem('meatbti_answers', json);
-  localStorage.setItem('meatbti_v2_answers', json);
-  localStorage.setItem('meatbti_payload', json);
-  // リダイレクト（既存構成に合わせて sub.html に）
-  location.href = 'sub.html';
+  return best;
 }
-$result.addEventListener('click', ()=>{
-  if(answers.some(v=>v===0)){ alert('未回答があります。'); return; }
-  saveAndGo();
-});
+function bestPartner(selfName, axis){
+  const w={A:0.8,B:1.0,C:1.2,D:0.9};
+  let best=null,score=1e9;
+  for(const [name,o] of Object.entries(TYPES)){
+    if(name===selfName) continue;
+    const [a,b,c,d]=o.v;
+    const s = w.A*(axis.A-(-0.4*a))**2 + w.B*(axis.B-b)**2 + w.C*(axis.C-c)**2 + w.D*(axis.D-(-0.3*d))**2;
+    if(s<score){score=s;best={name,why:explainPair(axis,o.v)};}
+  }
+  return best;
+}
+function explainPair(ax,v){
+  const labsC = Math.abs(ax.C - v[2])<0.5 ? "テンポ感が近い" : "テンポを補完し合う";
+  const labsB = Math.abs(ax.B - v[1])<0.5 ? "量感の好みが近い" : "量感のバランスが取れる";
+  const labsA = ax.A>0 ? "濃厚寄り" : "赤身寄り";
+  return `${labsC}＋${labsB}。好みは${labsA}を補完。`;
+}
 
-/* 初期表示 */
-render();
+function showResult(){
+  if(answers.filter(Boolean).length<20){ qs("#err").style.display='block'; return; }
+  const axis = buildAxis();
+  const you  = decideType(axis);
+  const t    = TYPES[you];
+
+  // メイン
+  qs("#typeName").textContent  = you;
+  qs("#typeCatch").textContent = t.catch;
+  qs("#heroImg").src           = IMGS[you]||"";
+  qs("#heroImg").alt           = you;
+
+  const tips = qs("#tips"); tips.innerHTML="";
+  (t.tips||[]).forEach(s=>tips.appendChild(el("span",{class:"btn slim"},s)));
+
+  // 軸バー
+  const bars = qs("#bars"); bars.innerHTML="";
+  [["風味 A（赤身↔濃厚）",to01(axis.A)],
+   ["量 B（軽め↔ボリューム）",to01(axis.B)],
+   ["テンポ C（静か↔にぎやか）",to01(axis.C)],
+   ["演出 D（素朴↔映え）",to01(axis.D)]]
+  .forEach(([label,ratio])=>{
+    const row = el("div",{class:"bar"});
+    row.innerHTML = `<div class="small">${label}</div>
+      <div class="track"><div class="fill" style="width:${Math.round(ratio*100)}%"></div></div>`;
+    bars.appendChild(row);
+  });
+
+  // 相性No.1 と 近いタイプ
+  const pair = bestPartner(you, axis);
+  if(pair){
+    qs("#pairName").textContent = pair.name;
+    qs("#pairImg").src = IMGS[pair.name]||"";
+    qs("#pairImg").alt = pair.name;
+    qs("#pairWhy").textContent = pair.why;
+  }
+  // 近いタイプ＝距離2位
+  const distances = Object.entries(TYPES).map(([name,o])=>{
+    const [a,b,c,d]=o.v;
+    const dist=(axis.A-a)**2+(axis.B-b)**2+(axis.C-c)**2+(axis.D-d)**2;
+    return {name,dist};
+  }).sort((x,y)=>x.dist-y.dist);
+  const second = distances.find(x=>x.name!==you);
+  if(second){
+    qs("#secondName").textContent = second.name;
+    qs("#secondImg").src = IMGS[second.name]||"";
+    qs("#secondImg").alt = second.name;
+  }
+
+  go(2);
+}
+
+/* ====== 初期化 ====== */
+renderTypeGrid();
+qs("#startBtn").onclick = ()=>{ page=0; answers=Array(Q.length).fill(0); renderPage(); go(1); }
+qs("#qgrid").addEventListener("click", clickScale);
+qs("#nextBtn").onclick = nextPage;
+qs("#prevBtn").onclick = prevPage;
+qs("#againBtn").onclick = ()=>{ page=0; answers=Array(Q.length).fill(0); renderPage(); go(1); };
 </script>
 </body>
 </html>
