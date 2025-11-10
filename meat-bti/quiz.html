@@ -3,83 +3,60 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Meat BTI 診断｜回答しやすい5段階UI</title>
+<title>Meat BTI 診断｜5段階×20問</title>
 <meta name="theme-color" content="#0b0a0a">
 <style>
   :root{
     --bg:#0b0a0a; --panel:#131723; --ink:#f7f7fb; --muted:#c5c9d3; --bd:#232a3a;
-    --brand:#ffd966; --accent:#ff6b4a; --ok:#3fbf7b; --pill:#151b2a; --pillbd:#2b344a;
+    --brand:#ffd966; --accent:#ff6b4a; --pill:#151b2a; --pillbd:#2b344a;
     --a:#7bc3ff; --b:#ff9bb3;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
-  body{
-    margin:0; background:var(--bg); color:var(--ink);
-    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;
-    letter-spacing:.02em; line-height:1.65;
-  }
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;letter-spacing:.02em;line-height:1.65}
   a{color:inherit;text-decoration:none}
-  /* Shell */
-  header{
-    position:sticky; top:0; z-index:20; background:rgba(11,12,16,.75);
-    backdrop-filter:saturate(120%) blur(8px); border-bottom:1px solid var(--bd);
-  }
-  .wrap{width:min(1080px,92vw); margin:0 auto}
-  .nav{
-    height:56px; display:flex; align-items:center; gap:10px; justify-content:space-between;
-  }
-  .nav .left{display:flex; align-items:center; gap:10px}
+
+  header{position:sticky;top:0;z-index:20;background:rgba(11,12,16,.75);
+    backdrop-filter:saturate(120%) blur(8px);border-bottom:1px solid var(--bd)}
+  .wrap{width:min(1080px,92vw);margin:0 auto}
+  .nav{height:56px;display:flex;align-items:center;justify-content:space-between;gap:10px}
   .logo{width:28px;height:28px;border-radius:8px;background:conic-gradient(from 140deg,var(--brand),var(--accent));display:grid;place-items:center}
   .back{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--bd);border-radius:10px;background:#121726}
-  .prog{height:6px;background:#0e1322;border-radius:999px;overflow:hidden;margin:8px 0 14px;border:1px solid var(--bd)}
+  .prog{height:6px;background:#0e1322;border-radius:999px;overflow:hidden;margin:8px 0 6px;border:1px solid var(--bd)}
   .bar{height:100%;width:0%;background:linear-gradient(90deg,var(--brand),#ffc64a);transition:width .25s ease}
-  h1{font-size:clamp(18px,4.6vw,26px);margin:0 0 2px}
+  .meta{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin:0 0 14px}
+
+  h1{font-size:clamp(18px,4.6vw,26px);margin:8px 0 4px}
   .note{color:var(--muted);margin:0 0 12px}
 
-  /* Cards */
   .grid{display:grid;gap:14px;grid-template-columns:1fr}
   @media(min-width:920px){.grid{grid-template-columns:1fr 1fr}}
-  .card{background:var(--panel); border:1px solid var(--bd); border-radius:16px; padding:14px; position:relative}
-  .qhead{display:flex; justify-content:space-between; align-items:center; gap:10px}
-  .qno{font-weight:900; color:#9fb0d6}
-  .qtitle{margin:6px 0 8px; font-size:clamp(16px,2.6vw,18px); font-weight:800}
-  .anchors{display:flex; justify-content:space-between; gap:10px; font-size:12px; color:var(--muted)}
+  .card{background:var(--panel);border:1px solid var(--bd);border-radius:16px;padding:14px}
+  .qno{font-weight:900;color:#9fb0d6}
+  .qtitle{margin:6px 0 8px;font-size:clamp(16px,2.6vw,18px);font-weight:800}
+  .anchors{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted)}
   .anchors .a{color:var(--a);font-weight:700}
   .anchors .b{color:var(--b);font-weight:700}
 
-  /* 5段階ピル */
-  .scale{display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-top:10px}
-  .opt{
-    appearance:none; border:1px solid var(--pillbd); background:var(--pill); color:var(--ink);
-    padding:12px 8px; border-radius:12px; font-weight:900; cursor:pointer; text-align:center;
-    transition:transform .05s ease, border-color .15s ease, background .15s ease; user-select:none;
-  }
-  .opt small{display:block; font-weight:700; color:var(--muted); letter-spacing:.02em}
-  .opt:active{transform:translateY(1px)}
+  .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
+  .opt{appearance:none;border:1px solid var(--pillbd);background:var(--pill);color:var(--ink);
+       padding:12px 8px;border-radius:12px;font-weight:900;cursor:pointer;text-align:center;
+       transition:transform .05s ease,border-color .15s ease,background .15s ease;user-select:none}
+  .opt small{display:block;font-weight:700;color:var(--muted)}
   .opt[data-val="1"] small{color:var(--a)}
   .opt[data-val="5"] small{color:var(--b)}
-  .opt.active{border-color:#ffcf66; box-shadow:0 0 0 1px #ffcf66 inset}
+  .opt:active{transform:translateY(1px)}
+  .opt.active{border-color:#ffcf66;box-shadow:0 0 0 1px #ffcf66 inset}
 
-  /* Pager */
-  .pager{
-    display:flex; justify-content:space-between; gap:10px; margin:16px 0 8px;
-  }
-  .btn{
-    appearance:none; border:1px solid var(--bd); background:#151b2a; color:var(--ink);
-    padding:12px 14px; border-radius:12px; font-weight:900; cursor:pointer;
-  }
-  .btn.primary{background:linear-gradient(180deg,var(--brand),#f7c84a); color:#2a1e0b; border:none}
+  .pager{display:flex;justify-content:space-between;gap:10px;margin:16px 0 8px}
+  .btn{appearance:none;border:1px solid var(--bd);background:#151b2a;color:var(--ink);
+       padding:12px 14px;border-radius:12px;font-weight:900;cursor:pointer}
+  .btn.primary{background:linear-gradient(180deg,var(--brand),#f7c84a);color:#2a1e0b;border:none}
   .btn.ghost{background:#121726}
-  .btn:disabled{opacity:.5; cursor:not-allowed}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
 
-  .foot{display:flex; justify-content:flex-end; gap:10px; margin:6px 0 24px}
-  .hint{color:#9aa6c7; font-size:12px; margin:2px 0 0}
-
-  /* Floating submit */
-  .floating{
-    position:fixed; right:18px; bottom:18px; z-index:30;
-    display:flex; gap:10px; align-items:center;
-  }
+  .floating{position:fixed;right:18px;bottom:18px;z-index:30;display:none}
   .floating .btn{box-shadow:0 12px 26px rgba(247,200,74,.28)}
 </style>
 </head>
@@ -87,71 +64,53 @@
 <header>
   <div class="wrap">
     <div class="nav">
-      <div class="left">
+      <div style="display:flex;gap:10px;align-items:center">
         <div class="logo">🥩</div>
         <a class="back" href="../index1.html" title="LPへ戻る">← LPへ戻る</a>
       </div>
       <div style="font-weight:900">Meat BTI 診断</div>
     </div>
     <div class="prog"><div class="bar" id="bar"></div></div>
+    <div class="meta"><span id="count">0 / 20 回答</span><span>1=かなりA寄り ／ 5=かなりB寄り（タップで自動進行）</span></div>
   </div>
 </header>
 
-<main class="wrap" id="app" aria-live="polite">
-  <h1>好みや食べ方の“傾き”を5段階でサクサク選ぶだけ。</h1>
-  <p class="note">各設問は <b>1=「かなりA寄り」</b>〜<b>5=「かなりB寄り」</b> 。タップすると自動で次へ進みます（キーボード <b>1〜5</b> でも回答OK）。</p>
+<main class="wrap" id="app">
+  <h1>好みの“傾き”を 5 段階でさくっと選ぶだけ。</h1>
+  <p class="note">各設問：<b>1=かなりA寄り</b> ～ <b>5=かなりB寄り</b>。キーボード <b>1〜5</b> でも回答できます。</p>
 
-  <!-- ページ1 -->
+  <!-- ===== Page 1 (1-5) ===== -->
   <section class="page" data-page="1">
     <div class="grid">
-      <!-- Q1 -->
-      <article class="card" data-q="1">
-        <div class="qhead"><div class="qno">Q1/20</div></div>
-        <div class="qtitle">最初の一皿は？</div>
+      <article class="card" data-q="1"><div class="qno">Q1/20</div><div class="qtitle">最初の一皿は？</div>
         <div class="anchors"><span class="a">A：タン塩など軽快に</span><span class="b">B：リブロース/サーロインで華やかに</span></div>
         <div class="scale" role="group" aria-label="Q1">
-          <button class="opt" data-val="1"><small>A寄り</small>1</button>
-          <button class="opt" data-val="2"><small>ややA</small>2</button>
-          <button class="opt" data-val="3"><small>中立</small>3</button>
-          <button class="opt" data-val="4"><small>ややB</small>4</button>
-          <button class="opt" data-val="5"><small>B寄り</small>5</button>
+          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
         </div>
       </article>
 
-      <!-- Q2 -->
-      <article class="card" data-q="2">
-        <div class="qhead"><div class="qno">Q2/20</div></div>
-        <div class="qtitle">メインの一皿を優先するなら？</div>
+      <article class="card" data-q="2"><div class="qno">Q2/20</div><div class="qtitle">メインの一皿を優先するなら？</div>
         <div class="anchors"><span class="a">A：ヒレ/ランプ/赤身</span><span class="b">B：リブロース/サーロイン</span></div>
         <div class="scale" role="group" aria-label="Q2">
           <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
         </div>
       </article>
 
-      <!-- Q3 -->
-      <article class="card" data-q="3">
-        <div class="qhead"><div class="qno">Q3/20</div></div>
-        <div class="qtitle">脂の重さはどちらが心地よい？</div>
+      <article class="card" data-q="3"><div class="qno">Q3/20</div><div class="qtitle">脂の重さはどちらが心地よい？</div>
         <div class="anchors"><span class="a">A：軽め・キレ重視</span><span class="b">B：濃厚でも満足</span></div>
         <div class="scale" role="group" aria-label="Q3">
           <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
         </div>
       </article>
 
-      <!-- Q4 -->
-      <article class="card" data-q="4">
-        <div class="qhead"><div class="qno">Q4/20</div></div>
-        <div class="qtitle">量と赤身のバランスは？</div>
+      <article class="card" data-q="4"><div class="qno">Q4/20</div><div class="qtitle">量と赤身のバランスは？</div>
         <div class="anchors"><span class="a">A：赤身多めで満足</span><span class="b">B：ボリューム優先もOK</span></div>
         <div class="scale" role="group" aria-label="Q4">
           <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
         </div>
       </article>
 
-      <!-- Q5 -->
-      <article class="card" data-q="5">
-        <div class="qhead"><div class="qno">Q5/20</div></div>
-        <div class="qtitle">オーダー方針は？</div>
+      <article class="card" data-q="5"><div class="qno">Q5/20</div><div class="qtitle">オーダー方針は？</div>
         <div class="anchors"><span class="a">A：定番中心で確実に</span><span class="b">B：新作・変化球も攻める</span></div>
         <div class="scale" role="group" aria-label="Q5">
           <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
@@ -161,188 +120,243 @@
     <div class="pager"><button class="btn ghost" disabled>前の5問</button><button class="btn primary next">次の5問へ</button></div>
   </section>
 
-  <!-- ページ2 -->
+  <!-- ===== Page 2 (6-10) ===== -->
   <section class="page" data-page="2" hidden>
     <div class="grid">
-      <article class="card" data-q="6"><div class="qhead"><div class="qno">Q6/20</div></div><div class="qtitle">焼き加減の好みは？</div><div class="anchors"><span class="a">A：レア寄り</span><span class="b">B：ミディアム〜ウェル</span></div><div class="scale" role="group" aria-label="Q6">
-        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+      <article class="card" data-q="6"><div class="qno">Q6/20</div><div class="qtitle">焼き加減の好みは？</div>
+        <div class="anchors"><span class="a">A：レア寄り</span><span class="b">B：ミディアム〜ウェル</span></div>
+        <div class="scale" role="group" aria-label="Q6">
+          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
+        </div>
+      </article>
 
-      <article class="card" data-q="7"><div class="qhead"><div class="qno">Q7/20</div></div><div class="qtitle">香りの演出は？</div><div class="anchors"><span class="a">A：炭火や焼き目の香ばしさ</span><span class="b">B：フランベなど香り立ち</span></div><div class="scale" role="group" aria-label="Q7">
-        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+      <article class="card" data-q="7"><div class="qno">Q7/20</div><div class="qtitle">香りの演出は？</div>
+        <div class="anchors"><span class="a">A：炭火や焼き目の香ばしさ</span><span class="b">B：フランベなど香り立ち</span></div>
+        <div class="scale" role="group" aria-label="Q7">
+          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
+        </div>
+      </article>
 
-      <article class="card" data-q="8"><div class="qhead"><div class="qno">Q8/20</div></div><div class="qtitle">味つけは？</div><div class="anchors"><span class="a">A：塩で旨みを際立てる</span><span class="b">B：特製ソースで華やかに</span></div><div class="scale" role="group" aria-label="Q8">
-        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+      <article class="card" data-q="8"><div class="qno">Q8/20</div><div class="qtitle">味つけは？</div>
+        <div class="anchors"><span class="a">A：塩で旨みを際立てる</span><span class="b">B：特製ソースで華やかに</span></div>
+        <div class="scale" role="group" aria-label="Q8">
+          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
+        </div>
+      </article>
 
-      <article class="card" data-q="9"><div class="qhead"><div class="qno">Q9/20</div></div><div class="qtitle">シェアのスタイルは？</div><div class="anchors"><span class="a">A：少量×多皿で比較</span><span class="b">B：どーんと大皿で満足</span></div><div class="scale" role="group" aria-label="Q9">
-        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+      <article class="card" data-q="9"><div class="qno">Q9/20</div><div class="qtitle">シェアのスタイルは？</div>
+        <div class="anchors"><span class="a">A：少量×多皿で比較</span><span class="b">B：大皿でどーんと満足</span></div>
+        <div class="scale" role="group" aria-label="Q9">
+          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
+        </div>
+      </article>
 
-      <article class="card" data-q="10"><div class="qhead"><div class="qno">Q10/20</div></div><div class="qtitle">締め（〆）は？</div><div class="anchors"><span class="a">A：軽め（サラダ/スープ）</span><span class="b">B：しっかり（ご飯/麺）</span></div><div class="scale" role="group" aria-label="Q10">
-        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+      <article class="card" data-q="10"><div class="qno">Q10/20</div><div class="qtitle">締め（〆）は？</div>
+        <div class="anchors"><span class="a">A：軽め（サラダ/スープ）</span><span class="b">B：しっかり（ご飯/麺）</span></div>
+        <div class="scale" role="group" aria-label="Q10">
+          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
+        </div>
+      </article>
     </div>
     <div class="pager"><button class="btn ghost prev">前の5問</button><button class="btn primary next">次の5問へ</button></div>
   </section>
 
-  <!-- ページ3 -->
+  <!-- ===== Page 3 (11-15) ===== -->
   <section class="page" data-page="3" hidden>
     <div class="grid">
-      <article class="card" data-q="11"><div class="qhead"><div class="qno">Q11/20</div></div><div class="qtitle">食事のテンポは？</div><div class="anchors"><span class="a">A：テンポ良く回す</span><span class="b">B：ゆっくり会話を楽しむ</span></div><div class="scale" role="group" aria-label="Q11">
-        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+      <article class="card" data-q="11"><div class="qno">Q11/20</div><div class="qtitle">食事のテンポは？</div>
+        <div class="anchors"><span class="a">A：テンポ良く回す</span><span class="b">B：ゆっくり会話を楽しむ</span></div>
+        <div class="scale" role="group" aria-label="Q11">
+          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
+        </div>
+      </article>
 
-      <article class="card" data-q="12"><div class="qhead"><div class="qno">Q12/20</div></div><div class="qtitle">写真・映えは？</div><div class="anchors"><span class="a">A：ほどほどでOK</span><span class="b">B：しっかり撮って楽しむ</span></div><div class="scale" role="group" aria-label="Q12">
-        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+      <article class="card" data-q="12"><div class="qno">Q12/20</div><div class="qtitle">写真・映えは？</div>
+        <div class="anchors"><span class="a">A：ほどほどでOK</span><span class="b">B：しっかり撮って楽しむ</span></div>
+        <div class="scale" role="group" aria-label="Q12">
+          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
+        </div>
+      </article>
 
-      <article class="card" data-q="13"><div class="qhead"><div class="qno">Q13/20</div></div><div class="qtitle">席の雰囲気は？</div><div class="anchors"><span class="a">A：静かめ・落ち着き</span><span class="b">B：賑やか・活気</span></div><div class="scale" role="group" aria-label="Q13">
-        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+      <article class="card" data-q="13"><div class="qno">Q13/20</div><div class="qtitle">席の雰囲気は？</div>
+        <div class="anchors"><span class="a">A：静かめ・落ち着き</span><span class="b">B：賑やか・活気</span></div>
+        <div class="scale" role="group" aria-label="Q13">
+          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
+        </div>
+      </article>
 
-      <article class="card" data-q="14"><div class="qhead"><div class="qno">Q14/20</div></div><div class="qtitle">乾杯ドリンクは？</div><div class="anchors"><span class="a">A：ハイボール/スパークリング</span><span class="b">B：ワイン/カクテル系</span></div><div class="scale" role="group" aria-label="Q14">
-        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+      <article class="card" data-q="14"><div class="qno">Q14/20</div><div class="qtitle">乾杯ドリンクは？</div>
+        <div class="anchors"><span class="a">A：ハイボール/スパークリング</span><span class="b">B：ワイン/カクテル系</span></div>
+        <div class="scale" role="group" aria-label="Q14">
+          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
+        </div>
+      </article>
 
-      <article class="card" data-q="15"><div class="qhead"><div class="qno">Q15/20</div></div><div class="qtitle">食感の魅力は？</div><div class="anchors"><span class="a">A：歯切れ・噛み心地</span><span class="b">B：とろける口どけ</span></div><div class="scale" role="group" aria-label="Q15">
-        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+      <article class="card" data-q="15"><div class="qno">Q15/20</div><div class="qtitle">食感の魅力は？</div>
+        <div class="anchors"><span class="a">A：歯切れ・噛み心地</span><span class="b">B：とろける口どけ</span></div>
+        <div class="scale" role="group" aria-label="Q15">
+          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
+        </div>
+      </article>
     </div>
     <div class="pager"><button class="btn ghost prev">前の5問</button><button class="btn primary next">次の5問へ</button></div>
   </section>
 
-  <!-- ページ4 -->
+  <!-- ===== Page 4 (16-20) ===== -->
   <section class="page" data-page="4" hidden>
     <div class="grid">
-      <article class="card" data-q="16"><div class="qhead"><div class="qno">Q16/20</div></div><div class="qtitle">種類の組み方は？</div><div class="anchors"><span class="a">A：赤身の比較中心</span><span class="b">B：霜降り・リッチ中心</span></div><div class="scale" role="group" aria-label="Q16">
-        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+      <article class="card" data-q="16"><div class="qno">Q16/20</div><div class="qtitle">種類の組み方は？</div>
+        <div class="anchors"><span class="a">A：赤身の比較中心</span><span class="b">B：霜降り・リッチ中心</span></div>
+        <div class="scale" role="group" aria-label="Q16">
+          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt class="opt" data-val="5"><small>B寄り</small>5</button>
+        </div>
+      </article>
 
-      <article class="card" data-q="17"><div class="qhead"><div class="qno">Q17/20</div></div><div class="qtitle">チャレンジ度合いは？</div><div class="anchors"><span class="a">A：定番を極めたい</span><span class="b">B：変わり種も積極的に</span></div><div class="scale" role="group" aria-label="Q17">
-        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+      <article class="card" data-q="17"><div class="qno">Q17/20</div><div class="qtitle">チャレンジ度合いは？</div>
+        <div class="anchors"><span class="a">A：定番を極めたい</span><span class="b">B：変わり種も積極的に</span></div>
+        <div class="scale" role="group" aria-label="Q17">
+          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
+        </div>
+      </article>
 
-      <article class="card" data-q="18"><div class="qhead"><div class="qno">Q18/20</div></div><div class="qtitle">焼き台の役割は？</div><div class="anchors"><span class="a">A：自分でじっくり管理</span><span class="b">B：お店に任せテンポ良く</span></div><div class="scale" role="group" aria-label="Q18">
-        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+      <article class="card" data-q="18"><div class="qno">Q18/20</div><div class="qtitle">焼き台の役割は？</div>
+        <div class="anchors"><span class="a">A：自分でじっくり管理</span><span class="b">B：お店に任せテンポ良く</span></div>
+        <div class="scale" role="group" aria-label="Q18">
+          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
+        </div>
+      </article>
 
-      <article class="card" data-q="19"><div class="qhead"><div class="qno">Q19/20</div></div><div class="qtitle">食後の流れは？</div><div class="anchors"><span class="a">A：少人数で深話</span><span class="b">B：大人数でワイワイ</span></div><div class="scale" role="group" aria-label="Q19">
-        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+      <article class="card" data-q="19"><div class="qno">Q19/20</div><div class="qtitle">食後の流れは？</div>
+        <div class="anchors"><span class="a">A：少人数で深話</span><span class="b">B：大人数でワイワイ</span></div>
+        <div class="scale" role="group" aria-label="Q19">
+          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
+        </div>
+      </article>
 
-      <article class="card" data-q="20"><div class="qhead"><div class="qno">Q20/20</div></div><div class="qtitle">会話のスタイルは？</div><div class="anchors"><span class="a">A：落ち着いて相手を見る</span><span class="b">B：ノリ良く盛り上げる</span></div><div class="scale" role="group" aria-label="Q20">
-        <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button></div></article>
+      <article class="card" data-q="20"><div class="qno">Q20/20</div><div class="qtitle">会話のスタイルは？</div>
+        <div class="anchors"><span class="a">A：落ち着いて相手を見る</span><span class="b">B：ノリ良く盛り上げる</span></div>
+        <div class="scale" role="group" aria-label="Q20">
+          <button class="opt" data-val="1"><small>A寄り</small>1</button><button class="opt" data-val="2"><small>ややA</small>2</button><button class="opt" data-val="3"><small>中立</small>3</button><button class="opt" data-val="4"><small>ややB</small>4</button><button class="opt" data-val="5"><small>B寄り</small>5</button>
+        </div>
+      </article>
     </div>
-    <div class="pager"><button class="btn ghost prev">前の5問</button><button class="btn primary" id="toResult">結果を見る</button></div>
+    <div class="pager">
+      <button class="btn ghost prev">前の5問</button>
+      <button class="btn primary" id="toResult" disabled>結果を見る</button>
+    </div>
   </section>
-
-  <div class="foot">
-    <button class="btn ghost" id="reset">回答をリセット</button>
-    <p class="hint">進捗は端末に自動保存されます。</p>
-  </div>
 </main>
 
-<!-- 浮遊送信ボタン（モバイル補助） -->
-<div class="floating">
-  <button class="btn primary" id="floatSubmit" style="display:none">結果を見る</button>
+<!-- 全問回答時に表示（モバイル補助） -->
+<div class="floating" id="floatWrap">
+  <button class="btn primary" id="floatSubmit">結果を見る</button>
 </div>
 
 <script>
+(function(){
   const TOTAL = 20;
-  const answers = JSON.parse(localStorage.getItem('meatbti_answers_v2')||'{}');
-  const bar = document.getElementById('bar');
+  const answers = {}; // 途中保存なし
 
-  // 進捗更新
+  const $ = s=>document.querySelector(s);
+  const $$ = s=>document.querySelectorAll(s);
+  const bar = $('#bar');
+  const count = $('#count');
+  const floatWrap = $('#floatWrap');
+  const floatSubmit = $('#floatSubmit');
+  const toResult = $('#toResult');
+
+  function answeredCount(){ return Object.keys(answers).length; }
+  function allAnswered(){ return answeredCount() === TOTAL; }
+
   function updateProgress(){
-    const answered = Object.keys(answers).length;
-    bar.style.width = ((answered/TOTAL)*100)+'%';
-    // 最後のページに来たらフローティングボタン表示
-    document.getElementById('floatSubmit').style.display = answered>=TOTAL ? 'inline-flex':'none';
+    const n = answeredCount();
+    bar.style.width = (n/TOTAL*100)+'%';
+    count.textContent = `${n} / ${TOTAL} 回答`;
+    if(allAnswered()){
+      toResult?.removeAttribute('disabled');
+      floatWrap.style.display = 'block';
+    }else{
+      toResult?.setAttribute('disabled','true');
+      floatWrap.style.display = 'none';
+    }
   }
 
-  // ページ切替
   function showPage(n){
-    document.querySelectorAll('.page').forEach(p=>{
-      p.hidden = (p.dataset.page != n);
-    });
+    $$('.page').forEach(p=>p.hidden = (p.dataset.page != n));
     window.scrollTo({top:0,behavior:'smooth'});
+    updateProgress();
   }
-  document.querySelectorAll('.page .next').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      const cur = Number(btn.closest('.page').dataset.page);
-      showPage(cur+1);
-    });
-  });
-  document.querySelectorAll('.page .prev').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      const cur = Number(btn.closest('.page').dataset.page);
-      showPage(cur-1);
-    });
-  });
 
-  // 回答クリック（自動で次カードへ）
-  document.querySelectorAll('.card .opt').forEach(opt=>{
+  $$('.page .next').forEach(b=>b.addEventListener('click',()=>{
+    const cur = Number(b.closest('.page').dataset.page);
+    showPage(cur+1);
+  }));
+  $$('.page .prev').forEach(b=>b.addEventListener('click',()=>{
+    const cur = Number(b.closest('.page').dataset.page);
+    showPage(cur-1);
+  }));
+
+  $$('.card .opt').forEach(opt=>{
     opt.addEventListener('click', e=>{
       const card = e.target.closest('.card');
       const q = card.dataset.q;
-      // active表示
-      card.querySelectorAll('.opt').forEach(b=>b.classList.remove('active'));
+      card.querySelectorAll('.opt').forEach(x=>x.classList.remove('active'));
       opt.classList.add('active');
-
       answers[q] = Number(opt.dataset.val);
-      localStorage.setItem('meatbti_answers_v2', JSON.stringify(answers));
       updateProgress();
 
-      // 未回答の次カードへフォーカス
       const cards = [...card.parentElement.querySelectorAll('.card')];
       const idx = cards.indexOf(card);
       const next = cards.slice(idx+1).find(c=>!answers[c.dataset.q]);
-      if(next){ next.scrollIntoView({behavior:'smooth', block:'center'}); }
-      else{
-        // 現ページが埋まっていたら自動で次ページ
+      if(next){
+        next.scrollIntoView({behavior:'smooth',block:'center'});
+      }else{
         const page = card.closest('.page');
-        const remain = [...page.querySelectorAll('.card')].filter(c=>!answers[c.dataset.q]);
-        if(remain.length===0){
-          const nextPage = Number(page.dataset.page)+1;
-          const hasNext = document.querySelector(`.page[data-page="${nextPage}"]`);
-          if(hasNext){ showPage(nextPage); }
+        const remain = [...page.querySelectorAll('.card')].some(c=>!answers[c.dataset.q]);
+        if(!remain){
+          const nextPage = Number(page.dataset.page) + 1;
+          if(document.querySelector(`.page[data-page="${nextPage}"]`)){
+            showPage(nextPage);
+          }
         }
       }
     });
   });
 
-  // 既存回答反映（再訪時）
-  document.querySelectorAll('.card').forEach(card=>{
-    const q = card.dataset.q;
-    if(answers[q]){
-      const btn = card.querySelector(`.opt[data-val="${answers[q]}"]`);
-      if(btn) btn.classList.add('active');
-    }
-  });
-  updateProgress();
-
-  // キーボード 1〜5 で直近のカードに回答
-  let lastHoverCard = null;
-  document.querySelectorAll('.card').forEach(c=>{
-    c.addEventListener('pointerenter',()=>lastHoverCard=c);
-    c.addEventListener('focusin',()=>lastHoverCard=c);
+  let focusCard = null;
+  $$('.card').forEach(c=>{
+    c.addEventListener('pointerenter',()=>focusCard=c);
+    c.addEventListener('focusin',()=>focusCard=c);
   });
   window.addEventListener('keydown',e=>{
     if(e.key<'1'||e.key>'5') return;
-    const val=e.key;
-    const card = lastHoverCard || document.querySelector('.page:not([hidden]) .card');
+    const card = focusCard || document.querySelector('.page:not([hidden]) .card');
     if(!card) return;
-    const btn = card.querySelector(`.opt[data-val="${val}"]`);
-    if(btn) btn.click();
+    const btn = card.querySelector(`.opt[data-val="${e.key}"]`);
+    btn?.click();
   });
 
-  // リセット
-  document.getElementById('reset').addEventListener('click',()=>{
-    if(!confirm('回答をリセットしますか？')) return;
-    localStorage.removeItem('meatbti_answers_v2');
-    location.reload();
-  });
-
-  // 結果へ
   function goResult(){
-    if(Object.keys(answers).length < TOTAL){
-      alert('全設問の回答をお願いします。');
+    if(!allAnswered()){
+      for(let i=1;i<=TOTAL;i++){
+        if(!(i in answers)){
+          const target = document.querySelector(`.card[data-q="${i}"]`);
+          const pageNo = target.closest('.page').dataset.page;
+          showPage(Number(pageNo));
+          target.scrollIntoView({behavior:'smooth',block:'center'});
+          break;
+        }
+      }
       return;
     }
-    // 結果ページが既存の sub.html（または result.html）ならそこへ
-    // ここでは以前の構成に合わせて sub.html を想定しています
     location.href = 'sub.html';
   }
-  document.getElementById('toResult')?.addEventListener('click', goResult);
-  document.getElementById('floatSubmit')?.addEventListener('click', goResult);
+  toResult?.addEventListener('click', goResult);
+  floatSubmit?.addEventListener('click', goResult);
+
+  updateProgress();
+  showPage(1);
+})();
 </script>
 </body>
 </html>
