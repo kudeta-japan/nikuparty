@@ -33,7 +33,7 @@
   img{max-width:100%;display:block}
   .container{width:min(1040px,92vw);margin:0 auto}
 
-  /* Buttons（色を統一：申込み＝オレンジ／MeatBTI＝黄色） */
+  /* Buttons（申込み＝オレンジ／MeatBTI＝黄色） */
   .btn{appearance:none;border:1px solid var(--bd);background:#1a1513;color:var(--ink);
     padding:12px 16px;border-radius:12px;font-weight:800;cursor:pointer;transition:transform .06s ease}
   .btn:hover{transform:translateY(-1px)}
@@ -49,7 +49,7 @@
   .nav-cta{display:flex;gap:10px;align-items:center}
   .chip{display:inline-flex;align-items:center;background:#1a1513;border:1px solid var(--bd);padding:6px 10px;border-radius:999px;font-size:12px}
 
-  /* HERO（スマホで端切れ抑制＋タイマー特大） */
+  /* HERO（スマホの端切れ抑制＋タイマー特大＋応募状況） */
   .hero{position:relative;border-bottom:1px solid var(--bd);background:#000}
   .hero-inner{display:grid;grid-template-columns:1fr;gap:18px;align-items:end;width:min(1040px,92vw);margin:0 auto;padding:0}
   .hero-media{width:100%}
@@ -62,8 +62,13 @@
   .h1{font-size:clamp(22px,6vw,40px);line-height:1.25;font-weight:900;margin:10px 0 0}
   .lead{color:var(--muted);margin:6px 0 8px}
 
+  .status-line{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:6px 0 8px}
+  .status-chip{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
+    background:rgba(255,232,137,.12);border:1px solid #3a2d0d;color:#ffe9b0;font-weight:900}
+  .status-text{font-weight:800;color:#ffe9b0}
+
   /* Big Countdown */
-  .bigtime{margin:6px 0 10px}
+  .bigtime{margin:4px 0 10px}
   .bigtime .label{font-size:clamp(12px,2.8vw,14px);color:#ffe9b0;opacity:.95}
   .bigtime .cd{
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
@@ -136,7 +141,7 @@
   .map-wrap iframe{width:100%;height:360px;border:0;display:block}
   @media(max-width:640px){ .map-wrap iframe{height:320px} }
 
-  /* Sticky CTA（申込み＝オレンジ系へ変更） */
+  /* Sticky CTA（オレンジ） */
   .sticky-cta{position:fixed;left:50%;transform:translateX(-50%);
     bottom:calc(12px + env(safe-area-inset-bottom));z-index:45}
   .sticky-cta a{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;
@@ -156,7 +161,6 @@
 
   footer{border-top:1px solid var(--bd);color:var(--muted);padding:24px 0 40px;margin-top:28px;text-align:center}
 
-  /* Mobile tweaks */
   @media (max-width: 860px){
     .nav-cta{display:none;}
     .hero-overlay{margin-top:-110px}
@@ -180,7 +184,7 @@
   </div>
 </header>
 
-<!-- HERO（特大カウントダウン） -->
+<!-- HERO -->
 <section class="hero" aria-label="Hero">
   <div class="hero-inner">
     <div class="hero-media">
@@ -191,6 +195,13 @@
       <h1 class="h1">肉好き同士、ちゃんと出会える夜。</h1>
       <p class="lead">11/15(土) 19:00–21:00｜男女各25名限定</p>
 
+      <!-- 応募状況 -->
+      <div class="status-line">
+        <span class="status-chip">現在の応募状況</span>
+        <span id="statText" class="status-text">男性 --/--（残り--）・女性 --/--（残り--）</span>
+      </div>
+
+      <!-- カウントダウン -->
       <div class="bigtime" aria-live="polite">
         <div class="label">⏰ 締切まで</div>
         <div id="countdown" class="cd">--:--:--</div>
@@ -236,7 +247,7 @@
     </div>
   </section>
 
-  <!-- 料理（画像3点） -->
+  <!-- 料理 -->
   <section id="menu" class="card section" aria-labelledby="menu-title">
     <h2 id="menu-title" class="h2">🍖 当日の料理（一例）</h2>
     <div class="divider"></div>
@@ -288,7 +299,6 @@
 
   <!-- 料金 -->
   <section id="price" class="pricing" aria-label="料金">
-    <!-- 男性 -->
     <article class="p-card">
       <div class="p-head male">
         <div style="display:flex;align-items:center;gap:12px">
@@ -309,7 +319,6 @@
       </div>
     </article>
 
-    <!-- 女性 -->
     <article class="p-card">
       <div class="p-head female">
         <div style="display:flex;align-items:center;gap:12px">
@@ -440,12 +449,17 @@
   © <span id="y"></span> Cheese Meat Mania KU-DETA / ニクパーティ
 </footer>
 
-<!-- 下部の固定CTA（オレンジ系） -->
+<!-- 固定CTA（タイマー付き） -->
 <div class="sticky-cta" aria-hidden="false">
-  <a href="#entry" id="sticky-apply" aria-label="申し込む">締切まで<span id="cdMini" style="margin:0 6px;font-variant-numeric:tabular-nums">--:--:--</span>申込み</a>
+  <a href="#entry" id="sticky-apply" aria-label="申し込む">締切まで <span id="cdMini" style="margin:0 6px;font-variant-numeric:tabular-nums">--:--:--</span> 申込み</a>
 </div>
 
 <script>
+  // ====== 設定：現在人数と定員
+  const CAPACITY_PER_GENDER = 25;
+  const CURRENT_MALE = 15;
+  const CURRENT_FEMALE = 13;
+
   // ====== 年号
   document.getElementById('y').textContent = new Date().getFullYear();
 
@@ -456,6 +470,15 @@
     let ev = new Date(y, 10, 15, 19, 0, 0); // 11月=10
     if(now > ev) ev = new Date(y+1, 10, 15, 19, 0, 0);
     window.EVENT_AT = ev;
+  })();
+
+  // ====== 応募状況レンダリング
+  (function renderStatus(){
+    const mRem = Math.max(0, CAPACITY_PER_GENDER - CURRENT_MALE);
+    const fRem = Math.max(0, CAPACITY_PER_GENDER - CURRENT_FEMALE);
+    const t = `男性 ${CURRENT_MALE}/${CAPACITY_PER_GENDER}（残り${mRem}）・女性 ${CURRENT_FEMALE}/${CAPACITY_PER_GENDER}（残り${fRem}）`;
+    const el = document.getElementById('statText');
+    if(el) el.textContent = t;
   })();
 
   // ====== スムーススクロール
@@ -477,7 +500,7 @@
     set('referrer', document.referrer || '');
   })();
 
-  // ====== カウントダウン（HERO特大 & 下部CTA）
+  // ====== カウントダウン（HERO & 固定CTA）
   function renderCountdown(){
     const el = document.getElementById('countdown');
     const elMini = document.getElementById('cdMini');
@@ -500,7 +523,7 @@
   renderCountdown();
   setInterval(renderCountdown, 1000);
 
-  // ====== 申込み：男女いずれか1名以上
+  // ====== 申込み送信
   const form = document.getElementById('form');
   const msg  = document.getElementById('msg');
   form.addEventListener('submit', async (e)=>{
