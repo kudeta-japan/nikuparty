@@ -19,9 +19,10 @@
 <style>
   :root{
     --bg:#0b0a0a; --panel:#141111; --ink:#fff9ef; --muted:#ccbfae; --bd:#2a2421;
-    --cheese:#ffd966; --tomato:#ff6b4a; --basil:#3fbf7b; --basil-deep:#1a9c63;
+    --cheese:#ffd966; --cheese-deep:#f7c84a;
+    --tomato:#ff6b4a; --tomato-deep:#ff5231;
+    --basil:#3fbf7b; --basil-deep:#1a9c63;
     --wine:#9b4a8f; --wine-deep:#c86b9e; --seal:#ffe889;
-    --ok:#22c55e; --warn:#f59e0b; --alert:#ef4444;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
@@ -32,15 +33,15 @@
   img{max-width:100%;display:block}
   .container{width:min(1040px,92vw);margin:0 auto}
 
-  /* Buttons */
+  /* Buttons（色を統一：申込み＝オレンジ／MeatBTI＝黄色） */
   .btn{appearance:none;border:1px solid var(--bd);background:#1a1513;color:var(--ink);
     padding:12px 16px;border-radius:12px;font-weight:800;cursor:pointer;transition:transform .06s ease}
   .btn:hover{transform:translateY(-1px)}
-  .btn.primary{background:linear-gradient(180deg,var(--tomato),#ff5231);color:#110e0c;border:none}
-  .btn.cheese{background:linear-gradient(180deg,var(--cheese),#f7c84a);color:#2a1e0b;border:none}
+  .btn.primary{background:linear-gradient(180deg,var(--tomato),var(--tomato-deep));color:#110e0c;border:none}
+  .btn.cheese{background:linear-gradient(180deg,var(--cheese),var(--cheese-deep));color:#2a1e0b;border:none}
 
   /* Shell */
-  header.nav{position:sticky;top:0;z-index:40;background:rgba(12,10,9,.72);
+  header.nav{position:sticky;top:0;z-index:30;background:rgba(12,10,9,.72);
     backdrop-filter:saturate(120%) blur(8px);border-bottom:1px solid var(--bd)}
   .nav-inner{height:56px;display:flex;align-items:center;justify-content:space-between}
   .brand{display:flex;align-items:center;gap:10px;font-weight:900}
@@ -48,34 +49,33 @@
   .nav-cta{display:flex;gap:10px;align-items:center}
   .chip{display:inline-flex;align-items:center;background:#1a1513;border:1px solid var(--bd);padding:6px 10px;border-radius:999px;font-size:12px}
 
-  /* PULSE BAR（残席＆カウントダウン） */
-  .pulsebar{position:sticky;top:56px;z-index:35;background:#1a1513;border-bottom:1px solid #3a2e2a}
-  .pb-inner{width:min(1040px,92vw);margin:0 auto;display:flex;gap:12px;align-items:center;padding:8px 0;flex-wrap:wrap}
-  .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid #3a2e2a;background:#120e0c;color:#ffe7b0;border-radius:999px;padding:6px 10px;font-size:12px}
-  .pill b{font-size:14px}
-  .sep{width:1px;height:18px;background:#3a2e2a}
-  .remain{display:inline-flex;gap:6px;align-items:center}
-  .dot{width:8px;height:8px;border-radius:999px;display:inline-block}
-  .male{color:#bfe9d2}.male .dot{background:var(--basil)}
-  .female{color:#f0c6de}.female .dot{background:var(--wine)}
-  .today{color:#ffe3a3}
-
-  /* HERO（スマホで端切れ抑制） */
+  /* HERO（スマホで端切れ抑制＋タイマー特大） */
   .hero{position:relative;border-bottom:1px solid var(--bd);background:#000}
   .hero-inner{display:grid;grid-template-columns:1fr;gap:18px;align-items:end;width:min(1040px,92vw);margin:0 auto;padding:0}
   .hero-media{width:100%}
   .hero-img{width:100%;height:clamp(420px,68vh,640px);object-fit:cover;object-position:center 55%;filter:brightness(.82) contrast(1.05)}
-  @media (max-width:600px){
-    .hero-img{height:min(70vh,520px);object-position:center 40%}
-  }
-  .hero-overlay{position:relative;margin-top:-120px;padding:0 0 22px}
+  @media (max-width:600px){ .hero-img{height:min(70vh,520px);object-position:center 40%} }
+  .hero-overlay{position:relative;margin-top:-120px;padding:0 0 24px}
   .hero-overlay::before{content:"";position:absolute;inset:-24px 0 -22px 0;
     background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.75) 58%,rgba(0,0,0,.9) 100%);z-index:-1}
   .eyebrow{display:inline-flex;gap:8px;align-items:center;background:rgba(255,232,137,.14);border:1px solid #3a2d0d;color:#ffe9b0;padding:5px 10px;border-radius:999px;font-size:12px}
   .h1{font-size:clamp(22px,6vw,40px);line-height:1.25;font-weight:900;margin:10px 0 0}
-  .lead{color:var(--muted);margin:6px 0 0}
-  .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-  .cta .btn{min-width:200px}
+  .lead{color:var(--muted);margin:6px 0 8px}
+
+  /* Big Countdown */
+  .bigtime{margin:6px 0 10px}
+  .bigtime .label{font-size:clamp(12px,2.8vw,14px);color:#ffe9b0;opacity:.95}
+  .bigtime .cd{
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    font-weight:900; line-height:1; letter-spacing:.06em;
+    font-size:clamp(34px,12vw,88px);
+    background:linear-gradient(90deg,var(--cheese),var(--tomato));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 1px 0 rgba(0,0,0,.25);
+  }
+
+  .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+  .cta .btn{min-width:220px}
 
   /* Ribbon */
   .offer{border-top:1px solid #3a2e2a;border-bottom:1px solid #3a2e2a;background:#1a1513}
@@ -110,10 +110,9 @@
   .pricing{display:grid;gap:14px;grid-template-columns:1fr}
   @media(min-width:860px){.pricing{grid-template-columns:1fr 1fr}}
   .p-card{border:1px solid var(--bd);border-radius:16px;overflow:hidden;background:#171210}
-  .p-head{padding:14px 16px;color:#2a150f;font-weight:900;display:flex;align-items:center;gap:12px;justify-content:space-between}
+  .p-head{padding:14px 16px;color:#2a150f;font-weight:900;display:flex;align-items:center;gap:12px}
   .p-head.male{background:linear-gradient(90deg,var(--basil),var(--basil-deep));color:#0b120d}
   .p-head.female{background:linear-gradient(90deg,var(--wine),var(--wine-deep));color:#220d1d}
-  .remain-badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 10px;font-size:12px;border:1px solid rgba(0,0,0,.2);background:rgba(255,255,255,.15)}
   .p-body{padding:12px 14px}
   .p-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px 0;border-top:1px dashed #3a2e2a}
   .p-row:first-child{border-top:none}
@@ -124,14 +123,6 @@
   .seal small{display:block;font-size:10px;line-height:1}
   .seal b{font-size:15px;line-height:1.1}
   .no1{color:#ff9b95;font-weight:900;margin-right:6px}
-
-  /* 残席メーター */
-  .remain-card{display:grid;gap:14px}
-  .meter{display:grid;grid-template-columns:80px 1fr 60px;gap:10px;align-items:center}
-  .track{height:12px;background:#0e0e0e;border:1px solid #3a2e2a;border-radius:999px;overflow:hidden}
-  .fill{height:100%;width:0%}
-  .fill.m{background:linear-gradient(90deg,var(--basil),#73e2a3)}
-  .fill.f{background:linear-gradient(90deg,var(--wine),#eaa6d1)}
 
   /* Flow */
   .flow{display:grid;gap:10px}
@@ -145,12 +136,12 @@
   .map-wrap iframe{width:100%;height:360px;border:0;display:block}
   @media(max-width:640px){ .map-wrap iframe{height:320px} }
 
-  /* Sticky CTA */
+  /* Sticky CTA（申込み＝オレンジ系へ変更） */
   .sticky-cta{position:fixed;left:50%;transform:translateX(-50%);
     bottom:calc(12px + env(safe-area-inset-bottom));z-index:45}
   .sticky-cta a{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;
-    background:linear-gradient(180deg,var(--cheese),#f7c84a);color:#2a1e0b;border:none;
-    box-shadow:0 10px 22px rgba(247,200,74,.32);font-weight:900;min-width:140px}
+    background:linear-gradient(180deg,var(--tomato),var(--tomato-deep));color:#2a1e0b;border:none;
+    box-shadow:0 10px 22px rgba(255,82,49,.28);font-weight:900;min-width:160px}
   .sticky-cta a:active{transform:translate(-50%,1px)}
 
   /* Form */
@@ -189,21 +180,7 @@
   </div>
 </header>
 
-<!-- PULSE BAR -->
-<div class="pulsebar">
-  <div class="pb-inner">
-    <span class="pill">⏰ 締切まで <b id="countdown">--:--:--</b></span>
-    <div class="sep"></div>
-    <span class="pill">いま <b id="nowTotal">--</b> 名（<span class="male"><span class="dot"></span>男 <b id="nowM">--</b></span> / <span class="female"><span class="dot"></span>女 <b id="nowF">--</b></span>）</span>
-    <div class="sep"></div>
-    <span class="pill remain">残席 <span class="male"><span class="dot"></span>男 <b id="remM">--</b></span> / <span class="female"><span class="dot"></span>女 <b id="remF">--</b></span></span>
-    <div class="sep"></div>
-    <span class="pill today" id="todayNote" style="display:none">📩 本日 <b id="todayCnt">0</b> 組のお申込み</span>
-    <a class="btn primary" href="#entry" style="margin-left:auto">今すぐ申込み</a>
-  </div>
-</div>
-
-<!-- HERO -->
+<!-- HERO（特大カウントダウン） -->
 <section class="hero" aria-label="Hero">
   <div class="hero-inner">
     <div class="hero-media">
@@ -213,6 +190,12 @@
       <span class="eyebrow">Cheese Meat Mania KU-DETA presents</span>
       <h1 class="h1">肉好き同士、ちゃんと出会える夜。</h1>
       <p class="lead">11/15(土) 19:00–21:00｜男女各25名限定</p>
+
+      <div class="bigtime" aria-live="polite">
+        <div class="label">⏰ 締切まで</div>
+        <div id="countdown" class="cd">--:--:--</div>
+      </div>
+
       <div class="cta">
         <a class="btn primary" href="#entry">👇 参加申込みはこちら（1分・当日現地払い）</a>
         <a class="btn cheese" href="meat-bti/quiz.html">あなたのタイプは？肉診断『Meat BTI』</a>
@@ -230,25 +213,6 @@
 </section>
 
 <main class="container">
-  <!-- 残席状況（視覚化） -->
-  <section class="card section" aria-labelledby="remain-title">
-    <h2 id="remain-title" class="h2">📣 残席状況（いまがチャンス！）</h2>
-    <div class="divider"></div>
-    <div class="remain-card">
-      <div class="meter">
-        <div class="label">男性</div>
-        <div class="track"><div id="barM" class="fill m"></div></div>
-        <div><b><span id="leftM">--</span>席</b></div>
-      </div>
-      <div class="meter">
-        <div class="label">女性</div>
-        <div class="track"><div id="barF" class="fill f"></div></div>
-        <div><b><span id="leftF">--</span>席</b></div>
-      </div>
-      <p class="help">※最新の応募状況は上段のバーでもご確認いただけます。</p>
-    </div>
-  </section>
-
   <!-- BTI teaser -->
   <section class="teaser" aria-labelledby="bti-teaser">
     <div class="teaser-inner">
@@ -331,7 +295,6 @@
           <div style="width:40px;height:40px;border-radius:999px;background:rgba(0,0,0,.15);display:grid;place-items:center">👨</div>
           <div style="font-size:18px;letter-spacing:.35em">男　性</div>
         </div>
-        <div class="remain-badge"><b>残席 <span id="badgeM">--</span></b></div>
       </div>
       <div class="p-body">
         <div class="p-row"><div class="label">通常価格（1名様）</div><div class="new">6,500円</div></div>
@@ -353,7 +316,6 @@
           <div style="width:40px;height:40px;border-radius:999px;background:rgba(0,0,0,.15);display:grid;place-items:center">👩</div>
           <div style="font-size:18px;letter-spacing:.35em">女　性</div>
         </div>
-        <div class="remain-badge"><b>残席 <span id="badgeF">--</span></b></div>
       </div>
       <div class="p-body">
         <div class="p-row"><div class="label">通常価格（1名様）</div><div class="new">3,500円</div></div>
@@ -478,27 +440,23 @@
   © <span id="y"></span> Cheese Meat Mania KU-DETA / ニクパーティ
 </footer>
 
-<!-- Sticky CTA -->
+<!-- 下部の固定CTA（オレンジ系） -->
 <div class="sticky-cta" aria-hidden="false">
-  <a href="#entry" id="sticky-apply" aria-label="申し込む">締切まで<span id="cdMini">--:--:--</span>｜申込み</a>
+  <a href="#entry" id="sticky-apply" aria-label="申し込む">締切まで<span id="cdMini" style="margin:0 6px;font-variant-numeric:tabular-nums">--:--:--</span>申込み</a>
 </div>
 
 <script>
-  // ====== 設定（ここだけ更新すればOK） ======
-  const capMale = 25, capFemale = 25;         // 募集枠
-  const appliedMale = 14, appliedFemale = 12; // 現在の応募（ユーザー提供）
-  const todayNewGroups = 2;                    // 「本日◯組」の表示（0で非表示）
-  // イベント日時（今年の11/15 19:00 開始）— 翌年ロールオーバー対応
+  // ====== 年号
+  document.getElementById('y').textContent = new Date().getFullYear();
+
+  // ====== イベント日時（今年の11/15 19:00。過ぎていたら翌年へ）
   (function(){
     const now = new Date();
     const y = now.getFullYear();
-    let ev = new Date(y, 10, 15, 19, 0, 0); // 月は0始まり（10=11月）
+    let ev = new Date(y, 10, 15, 19, 0, 0); // 11月=10
     if(now > ev) ev = new Date(y+1, 10, 15, 19, 0, 0);
     window.EVENT_AT = ev;
   })();
-
-  // ====== 年号
-  document.getElementById('y').textContent = new Date().getFullYear();
 
   // ====== スムーススクロール
   document.querySelectorAll('a[href^="#"]').forEach(a=>{
@@ -515,51 +473,18 @@
   // ====== 計測フィールド
   (function(){
     const set = (id,val)=>{ const el=document.getElementById(id); if(el) el.value = val || ""; };
-    const lu = location.href.split('#')[0];
-    set('landing_url', lu);
+    set('landing_url', location.href.split('#')[0]);
     set('referrer', document.referrer || '');
   })();
 
-  // ====== 残席＆バー反映
-  (function updateSeats(){
-    const mRemain = Math.max(0, capMale - appliedMale);
-    const fRemain = Math.max(0, capFemale - appliedFemale);
-    const total = appliedMale + appliedFemale;
-
-    const byId = id => document.getElementById(id);
-    byId('nowM').textContent = appliedMale;
-    byId('nowF').textContent = appliedFemale;
-    byId('nowTotal').textContent = total;
-
-    byId('remM').textContent = mRemain;
-    byId('remF').textContent = fRemain;
-
-    byId('badgeM').textContent = mRemain;
-    byId('badgeF').textContent = fRemain;
-
-    byId('leftM').textContent = mRemain;
-    byId('leftF').textContent = fRemain;
-
-    const pctM = Math.min(100, Math.round(appliedMale / capMale * 100));
-    const pctF = Math.min(100, Math.round(appliedFemale / capFemale * 100));
-    byId('barM').style.width = pctM + '%';
-    byId('barF').style.width = pctF + '%';
-
-    // 本日◯組
-    if(todayNewGroups > 0){
-      byId('todayCnt').textContent = todayNewGroups;
-      byId('todayNote').style.display = 'inline-flex';
-    }
-  })();
-
-  // ====== カウントダウン（ヘッダー＆下部CTA）
+  // ====== カウントダウン（HERO特大 & 下部CTA）
   function renderCountdown(){
     const el = document.getElementById('countdown');
     const elMini = document.getElementById('cdMini');
     const now = new Date();
     const diff = (window.EVENT_AT - now);
     if(diff <= 0){
-      el.textContent = 'まもなく開始';
+      el.textContent = '00:00:00';
       elMini.textContent = '00:00:00';
       return;
     }
