@@ -19,8 +19,8 @@
 <style>
   :root{
     --bg:#0b0a0a; --panel:#141111; --ink:#fff9ef; --muted:#ccbfae; --bd:#2a2421;
-    --cheese:#ffd966; --tomato:#ff6b4a; --basil:#3fbf7b; --basil-deep:#1a9c63;
-    --wine:#9b4a8f; --wine-deep:#c86b9e; --seal:#ffe889;
+    --cheese:#ffd966; --tomato:#ff6b4a; --tomato-deep:#e24f31;
+    --basil:#3fbf7b; --basil-deep:#1a9c63; --wine:#9b4a8f; --wine-deep:#c86b9e; --seal:#ffe889;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
@@ -35,7 +35,7 @@
   .btn{appearance:none;border:1px solid var(--bd);background:#1a1513;color:var(--ink);
     padding:12px 16px;border-radius:12px;font-weight:800;cursor:pointer;transition:transform .06s ease}
   .btn:hover{transform:translateY(-1px)}
-  .btn.primary{background:linear-gradient(180deg,var(--tomato),#ff5231);color:#110e0c;border:none}
+  .btn.primary{background:linear-gradient(180deg,var(--tomato),var(--tomato-deep));color:#110e0c;border:none}
   .btn.cheese{background:linear-gradient(180deg,var(--cheese),#f7c84a);color:#2a1e0b;border:none}
 
   /* Shell */
@@ -47,7 +47,7 @@
   .nav-cta{display:flex;gap:10px;align-items:center}
   .chip{display:inline-flex;align-items:center;background:#1a1513;border:1px solid var(--bd);padding:6px 10px;border-radius:999px;font-size:12px}
 
-  /* HERO（画像はテキストと同幅。スマホで端切れ抑制） */
+  /* HERO */
   .hero{position:relative;border-bottom:1px solid var(--bd);background:#000}
   .hero-inner{display:grid;grid-template-columns:1fr;gap:18px;align-items:end;width:min(1040px,92vw);margin:0 auto;padding:0}
   .hero-media{width:100%}
@@ -61,11 +61,12 @@
   .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
   .cta .btn{min-width:200px}
 
-  /* Big offer ribbon */
-  .offer{border-top:1px solid #3a2e2a;border-bottom:1px solid #3a2e2a;background:#1a1513}
-  .offer .inner{width:min(1040px,92vw);margin:0 auto;padding:12px 0;display:grid;gap:8px}
-  .offer h2{margin:0;font-size:clamp(18px,5.2vw,22px);font-weight:900;color:#ffe08a}
-  .offer p{margin:0;color:#f2e6d2}
+  /* 🔔 Notice band */
+  .notice{border-top:1px solid #47231c;border-bottom:1px solid #47231c;
+    background:linear-gradient(90deg,var(--tomato),var(--tomato-deep));color:#fff9f5}
+  .notice .inner{width:min(1040px,92vw);margin:0 auto;padding:12px 0;display:flex;gap:10px;align-items:center;justify-content:center}
+  .badge-stop{display:inline-flex;align-items:center;gap:6px;background:rgba(0,0,0,.22);
+    border:1px solid rgba(255,255,255,.25);padding:6px 10px;border-radius:999px;font-weight:900}
 
   /* Cards / Sections */
   .card{background:var(--panel);border:1px solid var(--bd);border-radius:16px;overflow:hidden}
@@ -97,6 +98,8 @@
   .p-head{padding:14px 16px;color:#2a150f;font-weight:900;display:flex;align-items:center;gap:12px}
   .p-head.male{background:linear-gradient(90deg,var(--basil),var(--basil-deep));color:#0b120d}
   .p-head.female{background:linear-gradient(90deg,var(--wine),var(--wine-deep));color:#220d1d}
+  .p-head .stop-pill{margin-left:auto;display:inline-flex;align-items:center;gap:6px;
+    padding:6px 10px;background:#1e0d0a;color:#ffe9e6;border:1px solid rgba(255,255,255,.25);border-radius:999px;font-size:12px}
   .p-body{padding:12px 14px}
   .p-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px 0;border-top:1px dashed #3a2e2a}
   .p-row:first-child{border-top:none}
@@ -120,7 +123,7 @@
   .map-wrap iframe{width:100%;height:360px;border:0;display:block}
   @media(max-width:640px){ .map-wrap iframe{height:320px} }
 
-  /* Sticky CTA（常時表示・幅短め） */
+  /* Sticky CTA */
   .sticky-cta{position:fixed;left:50%;transform:translateX(-50%);
     bottom:calc(12px + env(safe-area-inset-bottom));z-index:40}
   .sticky-cta a{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;
@@ -182,6 +185,15 @@
   </div>
 </section>
 
+<!-- 🔔 男性募集一時停止の告知帯 -->
+<section class="notice" role="status" aria-live="polite">
+  <div class="inner">
+    <span class="badge-stop">📢 お知らせ</span>
+    <b>現在、男性の募集は一時停止中です。</b>
+    <span>女性・<u>男女ペア</u>の申込みは受付中です。</span>
+  </div>
+</section>
+
 <!-- Big Offer -->
 <section class="offer" role="note" aria-label="特典案内">
   <div class="inner">
@@ -214,7 +226,7 @@
     </div>
   </section>
 
-  <!-- 料理（画像3点） -->
+  <!-- 料理 -->
   <section id="menu" class="card section" aria-labelledby="menu-title">
     <h2 id="menu-title" class="h2">🍖 当日の料理（一例）</h2>
     <div class="divider"></div>
@@ -243,6 +255,7 @@
       <li>📅 <b>11/15(土) 19:00–21:00</b></li>
       <li>👫 <b>20〜40歳ぐらい</b> の独身 各<b>25名限定</b></li>
       <li>💰 男性 <b>6,500円</b>／女性 <b>3,500円</b>（<b>飲み放題＋肉ビュッフェ</b>）</li>
+      <li>📣 <b style="color:#ffb3a5">現在、男性単独での申込みは一時停止中です。</b> 女性・男女ペアは受付中。</li>
     </ul>
   </section>
 
@@ -266,12 +279,14 @@
   <!-- 料金 -->
   <section id="price" class="pricing" aria-label="料金">
     <!-- 男性 -->
-    <article class="p-card">
+    <article class="p-card" aria-describedby="male-stop-note">
       <div class="p-head male">
         <div style="width:40px;height:40px;border-radius:999px;background:rgba(0,0,0,.15);display:grid;place-items:center">👨</div>
         <div style="font-size:18px;letter-spacing:.35em">男　性</div>
+        <span class="stop-pill">受付停止中</span>
       </div>
-      <div class="p-body">
+      <div class="p-body" id="male-stop-note">
+        <p class="help" style="margin:0 0 8px;color:#ffb3a5">※現在、男性のみでの申込みは停止しています。</p>
         <div class="p-row"><div class="label">通常価格（1名様）</div><div class="new">6,500円</div></div>
         <div class="p-row"><div class="label">2名様 <span class="old">13,000円</span></div>
           <div style="display:flex;align-items:center;gap:8px"><div class="seal"><small>¥</small><b>500</b><small>OFF</small></div><div class="new"><span class="no1">人気No.1</span>12,500円</div></div></div>
@@ -310,7 +325,6 @@
     <div class="divider"></div>
     <div class="access-grid">
       <div class="map-wrap">
-        <!-- プレイス名での簡易埋め込み（API不要） -->
         <iframe
           title="Google Map - KU-DETA"
           src="https://www.google.com/maps?q=Cheese%20Meat%20Mania%20KU-DETA%20%E5%B2%90%E9%98%9C&output=embed"
@@ -363,15 +377,15 @@
 
       <div class="row-2">
         <div class="field">
-          <label for="men">男性の人数</label>
-          <input id="men" name="men_count" type="number" min="0" step="1" placeholder="未入力可">
+          <label for="men">男性の人数（<span style="color:#ff9b95">現在、男性のみは停止中</span>）</label>
+          <input id="men" name="men_count" type="number" min="0" step="1" placeholder="例）1（男女ペアの場合）">
         </div>
         <div class="field">
           <label for="women">女性の人数</label>
-          <input id="women" name="women_count" type="number" min="0" step="1" placeholder="未入力可">
+          <input id="women" name="women_count" type="number" min="0" step="1" placeholder="例）1">
         </div>
       </div>
-      <p class="help">※男性／女性のどちらか片方のみの入力でも申し込み可能です。</p>
+      <p class="help">※<b>男性のみ</b>での申込みは現在停止中です。<br>女性のみ、または<b>男女ペア</b>でお申込みください（ペアの場合は男女それぞれ人数をご入力ください）。</p>
 
       <div class="field">
         <label for="age">年齢層（代表者）<span aria-hidden="true">＊</span></label>
@@ -414,7 +428,7 @@
   © <span id="y"></span> Cheese Meat Mania KU-DETA / ニクパーティ
 </footer>
 
-<!-- 常時表示の下部CTA（幅短め・文言は「申し込む」） -->
+<!-- 常時表示の下部CTA -->
 <div class="sticky-cta" aria-hidden="false">
   <a href="#entry" id="sticky-apply" aria-label="申し込む">申し込む</a>
 </div>
@@ -442,7 +456,7 @@
     set('referrer', document.referrer || '');
   })();
 
-  // 申込バリデーション：男性/女性どちらか1名以上
+  // 申込バリデーション：男性のみの申込みをブロック／女性 or 男女ペアのみ許可
   const form = document.getElementById('form');
   const msg  = document.getElementById('msg');
   form.addEventListener('submit', async (e)=>{
@@ -450,6 +464,13 @@
     const url = form.getAttribute('action');
     const men = parseInt(document.getElementById('men').value || '0',10);
     const women = parseInt(document.getElementById('women').value || '0',10);
+
+    // 男性単独はNG
+    if (men > 0 && women === 0) {
+      alert('現在、男性のみでの申込みは一時停止中です。女性のみ、または男女ペアでご入力ください。');
+      return;
+    }
+    // どちらか1名以上
     if ((men + women) < 1) {
       alert('男性または女性の人数を1名以上ご入力ください。');
       return;
@@ -460,7 +481,6 @@
     try{
       const res = await fetch(url, { method:'POST', body:data, headers:{ 'Accept':'application/json' }});
       if(res.ok){
-        // GA: 申込み完了イベント
         try{ gtag('event','generate_lead',{event_category:'form',value:1}); }catch(_){}
         msg.style.display = 'block';
         form.reset();
