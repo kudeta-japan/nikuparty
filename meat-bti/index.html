@@ -53,8 +53,17 @@ a{color:inherit;text-decoration:none}
 .progress{height:8px;background:#0e1426;border:1px solid var(--line);border-radius:999px;overflow:hidden}
 .progress .fill{height:100%;background:linear-gradient(90deg,#66d2ff,#7aa2ff,#9b87f5);width:0%}
 .qwrap{display:grid;gap:12px}
-.qbox{background:#0f1527;border:1px solid var(--line);border-radius:14px;padding:14px}
-.qtitle{font-weight:900;margin:0 0 10px}
+
+/* 1問ブロック：中央寄せ＆A/B表示強化 */
+.qbox{background:#0f1527;border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center}
+.qtitle{font-weight:900;margin:0 0 12px}
+.abRow{display:flex;align-items:center;gap:14px;justify-content:center;margin:8px 0}
+.abLabel{
+  width:44px;height:44px;border-radius:999px;display:grid;place-items:center;font-weight:900;
+  border:1px solid var(--line); box-shadow:0 4px 10px rgba(0,0,0,.25);
+}
+.abLabel.a{background:linear-gradient(180deg,#e7f3ff,#cfe5ff);color:#0c1a2b}
+.abLabel.b{background:linear-gradient(180deg,#ffe6d1,#ffd1ad);color:#2b140b}
 
 /* ---- dots（未選択は淡く、選択で濃く） ---- */
 .scale{display:flex;align-items:center;gap:14px;justify-content:center}
@@ -86,6 +95,16 @@ a{color:inherit;text-decoration:none}
 .b2.sel{  background:radial-gradient(40% 40% at 35% 30%, #ffa566 0%, #ff591f 65%);
           box-shadow:0 0 0 4px rgba(255,120,60,.28), 0 6px 16px rgba(0,0,0,.45) }
 
+/* 選択側のA/Bラベルを発光 */
+.choice[data-side="A"] .abLabel.a{ box-shadow:0 0 0 5px rgba(111,197,255,.30), 0 6px 16px rgba(0,0,0,.45) }
+.choice[data-side="B"] .abLabel.b{ box-shadow:0 0 0 5px rgba(255,140,80,.28), 0 6px 16px rgba(0,0,0,.45) }
+
+/* A/Bの説明（中央寄せ・2列→モバイル1列） */
+.abDesc{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:start;margin-top:10px}
+.abDesc .desc{padding:6px 10px;border:1px dashed var(--line);border-radius:10px;background:#0e152a}
+.abDesc .desc b{font-weight:900}
+@media(max-width:560px){ .abDesc{grid-template-columns:1fr} }
+
 /* result */
 .row{display:grid;grid-template-columns:1fr;gap:14px}
 @media(min-width:880px){.row{grid-template-columns:1.2fr .8fr}}
@@ -99,7 +118,7 @@ a{color:inherit;text-decoration:none}
 .pair{display:flex;gap:12px;align-items:center}
 .pair img{width:72px;height:72px;object-fit:contain;border-radius:14px;border:1px solid var(--line);background:#0d1324}
 
-footer{border-top:1px solid var(--line);color:var(--muted);text-align:center;padding:22px 0;margin-top:28px}
+footer{border-top:1px solid var(--line);color:#a9b5cc;text-align:center;padding:22px 0;margin-top:28px}
 </style>
 </head>
 <body>
@@ -275,6 +294,29 @@ function renderTypeGrid(){
 let page=0;                 // 0..3
 let answers=Array(Q.length).fill(0); // 1..5
 
+function qMarkup(q, idx){
+  // A/Bラベル＋スケール＋説明（中央寄せ）
+  return `
+    <div class="qtitle">${q.t}</div>
+    <div class="choice ${answers[idx]?'chosen':''}" data-idx="${idx}" data-side="${answers[idx]<3?'A':(answers[idx]>3?'B':'MID')}">
+      <div class="abRow">
+        <div class="abLabel a" aria-hidden="true">A</div>
+        <div class="scale" role="group" aria-label="${q.t}">
+          <button class="dot a2 ${answers[idx]===1?'sel':''}" data-val="1" title="Aにとても近い" aria-label="A寄り(強)"></button>
+          <button class="dot a1 ${answers[idx]===2?'sel':''}" data-val="2" title="Aに近い" aria-label="A寄り"></button>
+          <button class="dot mid ${answers[idx]===3?'sel':''}" data-val="3" title="中立" aria-label="中立"></button>
+          <button class="dot b1 ${answers[idx]===4?'sel':''}" data-val="4" title="Bに近い" aria-label="B寄り"></button>
+          <button class="dot b2 ${answers[idx]===5?'sel':''}" data-val="5" title="Bにとても近い" aria-label="B寄り(強)"></button>
+        </div>
+        <div class="abLabel b" aria-hidden="true">B</div>
+      </div>
+      <div class="abDesc">
+        <div class="desc"><b>A：</b>${q.a}</div>
+        <div class="desc"><b>B：</b>${q.b}</div>
+      </div>
+    </div>`;
+}
+
 function renderPage(){
   const from=page*5,to=from+5;
   qs("#pp").textContent=`Q${from+1}–${to} / 20`;
@@ -283,20 +325,8 @@ function renderPage(){
   const wrap=qs("#qwrap"); wrap.innerHTML="";
   Q.slice(from,to).forEach((q,i)=>{
     const idx=from+i;
-
     const box=el("div",{class:"qbox"});
-    box.innerHTML=`
-      <div class="qtitle">${q.t}</div>
-      <div class="small" style="margin-bottom:10px">A：${q.a}　/　B：${q.b}</div>
-      <div class="choice ${answers[idx]?'chosen':''}" data-idx="${idx}">
-        <div class="scale">
-          <div class="dot a2 ${answers[idx]===1?'sel':''}" data-val="1" title="Aにとても近い"></div>
-          <div class="dot a1 ${answers[idx]===2?'sel':''}" data-val="2" title="Aに近い"></div>
-          <div class="dot mid ${answers[idx]===3?'sel':''}" data-val="3" title="中立"></div>
-          <div class="dot b1 ${answers[idx]===4?'sel':''}" data-val="4" title="Bに近い"></div>
-          <div class="dot b2 ${answers[idx]===5?'sel':''}" data-val="5" title="Bにとても近い"></div>
-        </div>
-      </div>`;
+    box.innerHTML = qMarkup(q, idx);
     wrap.appendChild(box);
   });
 
@@ -308,15 +338,17 @@ qs("#qwrap").addEventListener("click",e=>{
   const d=e.target.closest(".dot"); if(!d) return;
   const choice=d.closest(".choice"); const idx=+choice.dataset.idx; const val=+d.dataset.val;
   answers[idx]=val;
-  // 見た目更新（選択済み状態）
+
+  // 見た目更新（選択済み状態 & A/Bラベル発光方向）
   choice.classList.add("chosen");
+  choice.dataset.side = (val<3?'A':(val>3?'B':'MID'));
   choice.querySelectorAll(".dot").forEach(x=>x.classList.remove("sel"));
   d.classList.add("sel");
 
   // 自動ページ送り
   const from=page*5,to=from+5;
   const done=answers.slice(from,to).every(v=>v>0);
-  if(done){ setTimeout(()=>{ if(page<3){page++; renderPage();} else {showResult();} }, 300); }
+  if(done){ setTimeout(()=>{ if(page<3){page++; renderPage();} else {showResult();} }, 280); }
 });
 
 function nextPage(){
@@ -414,11 +446,13 @@ function showResult(){
 }
 
 /* ====== init ====== */
-renderTypeGrid();
-qs("#startBtn").onclick=()=>{ page=0; answers=Array(Q.length).fill(0); renderPage(); go(1); }
-qs("#nextBtn").onclick=nextPage;
-qs("#prevBtn").onclick=prevPage;
-qs("#againBtn").onclick=()=>{ page=0; answers=Array(Q.length).fill(0); renderPage(); go(1); };
+(function init(){
+  renderTypeGrid();
+  qs("#startBtn").onclick=()=>{ page=0; answers=Array(Q.length).fill(0); renderPage(); go(1); }
+  qs("#nextBtn").onclick=nextPage;
+  qs("#prevBtn").onclick=prevPage;
+  qs("#againBtn").onclick=()=>{ page=0; answers=Array(Q.length).fill(0); renderPage(); go(1); };
+})();
 </script>
 </body>
 </html>
