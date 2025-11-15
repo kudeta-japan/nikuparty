@@ -53,8 +53,17 @@ a{color:inherit;text-decoration:none}
 .progress{height:8px;background:#0e1426;border:1px solid var(--line);border-radius:999px;overflow:hidden}
 .progress .fill{height:100%;background:linear-gradient(90deg,#66d2ff,#7aa2ff,#9b87f5);width:0%}
 .qwrap{display:grid;gap:12px}
-.qbox{background:#0f1527;border:1px solid var(--line);border-radius:14px;padding:14px}
-.qtitle{font-weight:900;margin:0 0 10px}
+
+/* 1問ブロック：中央寄せ＆A/B表示強化 */
+.qbox{background:#0f1527;border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center}
+.qtitle{font-weight:900;margin:0 0 12px}
+.abRow{display:flex;align-items:center;gap:14px;justify-content:center;margin:8px 0}
+.abLabel{
+  width:44px;height:44px;border-radius:999px;display:grid;place-items:center;font-weight:900;
+  border:1px solid var(--line); box-shadow:0 4px 10px rgba(0,0,0,.25);
+}
+.abLabel.a{background:linear-gradient(180deg,#e7f3ff,#cfe5ff);color:#0c1a2b}
+.abLabel.b{background:linear-gradient(180deg,#ffe6d1,#ffd1ad);color:#2b140b}
 
 /* ---- dots（未選択は淡く、選択で濃く） ---- */
 .scale{display:flex;align-items:center;gap:14px;justify-content:center}
@@ -64,6 +73,7 @@ a{color:inherit;text-decoration:none}
   box-shadow:0 4px 10px rgba(0,0,0,.25);
   cursor:pointer;
   transition:transform .05s ease, box-shadow .15s ease, background .15s ease, filter .15s ease, opacity .15s ease;
+  background:none;
 }
 /* 未選択パレット：A=水色系 / 中央=黄 / B=オレンジ系 */
 .a2{  background:radial-gradient(40% 40% at 35% 30%, #e7f3ff 0%, #d3e7ff 65%) }
@@ -86,6 +96,16 @@ a{color:inherit;text-decoration:none}
 .b2.sel{  background:radial-gradient(40% 40% at 35% 30%, #ffa566 0%, #ff591f 65%);
           box-shadow:0 0 0 4px rgba(255,120,60,.28), 0 6px 16px rgba(0,0,0,.45) }
 
+/* 選択側のA/Bラベルを発光 */
+.choice[data-side="A"] .abLabel.a{ box-shadow:0 0 0 5px rgba(111,197,255,.30), 0 6px 16px rgba(0,0,0,.45) }
+.choice[data-side="B"] .abLabel.b{ box-shadow:0 0 0 5px rgba(255,140,80,.28), 0 6px 16px rgba(0,0,0,.45) }
+
+/* A/Bの説明（中央寄せ・2列→モバイル1列） */
+.abDesc{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:start;margin-top:10px}
+.abDesc .desc{padding:6px 10px;border:1px dashed var(--line);border-radius:10px;background:#0e152a}
+.abDesc .desc b{font-weight:900}
+@media(max-width:560px){ .abDesc{grid-template-columns:1fr} }
+
 /* result */
 .row{display:grid;grid-template-columns:1fr;gap:14px}
 @media(min-width:880px){.row{grid-template-columns:1.2fr .8fr}}
@@ -99,7 +119,7 @@ a{color:inherit;text-decoration:none}
 .pair{display:flex;gap:12px;align-items:center}
 .pair img{width:72px;height:72px;object-fit:contain;border-radius:14px;border:1px solid var(--line);background:#0d1324}
 
-footer{border-top:1px solid var(--line);color:var(--muted);text-align:center;padding:22px 0;margin-top:28px}
+footer{border-top:1px solid var(--line);color:#a9b5cc;text-align:center;padding:22px 0;margin-top:28px}
 </style>
 </head>
 <body>
@@ -149,6 +169,7 @@ footer{border-top:1px solid var(--line);color:var(--muted);text-align:center;pad
             <div class="badge2">あなたのタイプ</div>
             <h2 id="typeName" class="h1" style="margin-top:6px"></h2>
             <p id="typeCatch" class="lead"></p>
+            <p id="typeDesc" style="margin:8px 0 6px"></p>
             <div id="tips" class="btns" style="margin-top:0"></div>
             <div class="btns">
               <button class="btn primary" id="againBtn">もう一度診断</button>
@@ -203,33 +224,71 @@ const IMGS = {
   "ギャルカルビ":"karubi.png","やり手の営業マンハラミ":"harami.png","カイノミ舞妓はん":"kainomi.png",
   "書道家ミスジ":"misuji.png","シャトーブリアン女王":"shato-.png"
 };
-/* ====== 12タイプ（座標 v=[A,B,C,D]） ====== */
+
+/* ====== 12タイプ（座標 v=[A,B,C,D] + 詳細desc） ====== */
 const TYPES = {
-  "ヒレ男爵":      {v:[-1.5,-1.0,-0.5,-0.5], one:"静かな主役の赤身派", catch:"無駄なく上品、芯が強い赤身派。",
-                    tips:["最初は“名物の塩”で会話を整える","相手の好みを一つ拾って次の一皿に反映","乾杯はハイボール/スパークリング"]},
-  "タン隊長":      {v:[-1.0,-0.5, 0.6,-0.2], one:"場をほぐすムードメーカー", catch:"空気をほぐす切り込み隊長。",
-                    tips:["“タン塩→赤身”の黄金ルート","小皿シェアで会話を回す","一言コメントで盛り上げ"]},
-  "イチボママ":    {v:[-0.5,-0.2, 0.0,-0.2], one:"通好みの調和役", catch:"通好みの調和役。",
-                    tips:["“比較食べ”で会話を作る","火入れは相手に寄り添う","締めは軽めで余白を残す"]},
-  "ランプ博士":    {v:[-0.8,-0.5, 0.0, 0.2], one:"小さな冒険家", catch:"定番を更新する工夫好き。",
-                    tips:["“少量×多皿”でミニ実験","創作系を一皿まぜる","焼き担当で観察＆話題"]},
-  "リブロースボス":{v:[ 0.8, 0.6, 0.2, 0.2], one:"安心感のリーダー", catch:"王道リッチで満足度重視。",
-                    tips:["“名物→名物”で段取り良く","会計/席替えを主導","写真は少なめ体験濃く"]},
-  "サーロイン王":  {v:[ 1.3, 0.8, 0.5, 0.8], one:"華やぎの演出家", catch:"華やか演出で場の中心に。",
-                    tips:["フランベ/香り演出で拍手","乾杯の音頭で明るく開始","隣席とも軽く乾杯"]},
-  "美食家ザブトン":{v:[ 1.0, 0.2,-0.3, 0.2], one:"しっとり濃厚派", catch:"しっとり濃厚、少量高満足。",
-                    tips:["“少量高満足”を提案","休ませ時間を大切に","深めの質問を1つ"]},
-  "ギャルカルビ":  {v:[ 1.2, 0.7, 0.9, 0.9], one:"巻き込み型エンタメ", catch:"甘濃エンタメで巻き込み型。",
-                    tips:["“みんなの一口カルビ”手配","自分が撮ってシェア","満足派の希望を拾う"]},
-  "やり手の営業マンハラミ":{v:[ 0.2, 0.4, 0.8, 0.3], one:"テンポの司令塔", catch:"テンポ良く結果を出す実利派。",
-                    tips:["回転を上げて間を作らない","焼き台管理役で活躍","飲みすぎ注意で笑顔キープ"]},
-  "カイノミ舞妓はん":{v:[ 0.5,-0.2, 0.2, 0.2], one:"軽リッチのコーデ", catch:"軽やか派の橋渡し。",
-                    tips:["“塩→タレ”でメリハリ","軽い締めで余白を残す","相手の得意トークを振る"]},
-  "書道家ミスジ":  {v:[ 0.4,-0.4,-0.5, 0.2], one:"繊細さの職人", catch:"口どけ上品、所作で魅せる。",
-                    tips:["火入れは控えめで共有","小声のツッコミで距離縮め","甘めは量を絞って提案"]},
-  "シャトーブリアン女王":{v:[-1.3,-0.2,-0.6, 0.4], one:"寡黙な審美家", catch:"特選一点主義。静かに深く。",
-                    tips:["“量より質”で軸を見せる","静かな席を選ぶ","デザート前に次回の約束"]}
+  "ヒレ男爵": {
+    v:[-1.5,-1.0,-0.5,-0.5], one:"静かな主役の赤身派", catch:"無駄なく上品、芯が強い赤身派。",
+    desc:"無駄を削ぎ落とした上品さが魅力の赤身派。香りは控えめ、旨みの余韻を丁寧に味わうタイプ。席選びは落ち着き優先、会話は相手を尊重してテンポはゆっくり。注文は「名物の塩・柑橘・わさび」で素材感を引き出すのが得意。量はほどほどに、皿数でリズムを作る。時に硬派になりすぎるので、香りの一皿や甘酸っぱい箸休めを挟むと余白が生まれ、同席者の満足度も上がる。",
+    tips:["最初は“名物の塩”で会話を整える","相手の好みを一つ拾って次の一皿に反映","乾杯はハイボール/スパークリング"]
+  },
+  "タン隊長": {
+    v:[-1.0,-0.5, 0.6,-0.2], one:"場をほぐすムードメーカー", catch:"空気をほぐす切り込み隊長。",
+    desc:"場をほぐすムードメーカー。最初の一声と気配りで空気を温め、タン塩から赤身へ滑らかに橋渡し。写真は最小限、体験重視。小皿シェアや取り分けで全員に目を配れる実務派。会話は明るく、相手の得意領域に合わせて投げかけるのが上手。量は中庸、テンポはやや速め。主役を立てる脇役力が高い一方、自分の好みを後回しにしがち。要所で一皿だけ“自分の推し”を通すと満足度が跳ね上がる。",
+    tips:["“タン塩→赤身”の黄金ルート","小皿シェアで会話を回す","一言コメントで盛り上げ"]
+  },
+  "イチボママ": {
+    v:[-0.5,-0.2, 0.0,-0.2], one:"通好みの調和役", catch:"通好みの調和役。",
+    desc:"通好みの調和役。脂と赤身のバランス感覚に優れ、焼きや火入れを相手に寄り添わせる器用さが光る。比較食べや半ポーションで会話を作り、全員がちょうど良いところに落ち着くよう段取り。写真は控えめで余韻重視。テンポは中庸、量は軽めから普通。場の緊張をほどき、居心地を整えるのが得意。優等生になりすぎると印象が薄くなるので、序盤か中盤に“ひとクセの一皿”を差し込むとキャラが立つ。",
+    tips:["“比較食べ”で会話を作る","火入れは相手に寄り添う","締めは軽めで余白を残す"]
+  },
+  "ランプ博士": {
+    v:[-0.8,-0.5, 0.0, 0.2], one:"小さな冒険家", catch:"定番を更新する工夫好き。",
+    desc:"定番を小さく更新する実験好き。少量×多皿で景色を変えながら、創作や限定メニューを一皿混ぜて会話を回す。焼き台や盛り付けの工夫にも目が利き、さりげなく体験をアップデート。味は赤身寄り、量は軽め、テンポは中庸。分析眼が強い分、説明が長くなりがちなので、要点は短く“次を食べながら話す”。締めは軽く、香りの良いドリンクやハーブでリセットすると全体の構成美が際立つ。",
+    tips:["“少量×多皿”でミニ実験","創作系を一皿まぜる","焼き担当で観察＆話題"]
+  },
+  "リブロースボス": {
+    v:[ 0.8, 0.6, 0.2, 0.2], one:"安心感のリーダー", catch:"王道リッチで満足度重視。",
+    desc:"王道で満足度を積み上げる安心感のリーダー。名物から名物へと段取りよく運び、会計や席替えも主導。味はやや濃厚、量はしっかり、テンポは中庸。写真は控えめで体験濃度を優先。全体最適を見ながら要所で決断できるため、同席者のストレスが少ない。ときに“重厚一直線”になりやすいので、柑橘・ピクルス・冷菜を挟み、口中をリフレッシュさせると最後まで心地よい満腹を作れる。",
+    tips:["“名物→名物”で段取り良く","会計/席替えを主導","写真は少なめ体験濃く"]
+  },
+  "サーロイン王": {
+    v:[ 1.3, 0.8, 0.5, 0.8], one:"華やぎの演出家", catch:"華やか演出で場の中心に。",
+    desc:"華やぎの演出家。香り・音・見た目で高揚感を作り、乾杯の音頭やフランベ演出で場の中心へ。味は濃厚寄り、量も満足感重視、テンポは速め。写真やシェアもうまく、楽しい記憶を残す力が高い。半面、強い演出が続くと疲れが出やすいので、途中に“静かな赤身”や出汁感のある一皿で緩急を。最後は軽いデザートで余白を残すと、華やかさが上品な余韻に変わり、相手の満足度がさらに上がる。",
+    tips:["フランベ/香り演出で拍手","乾杯の音頭で明るく開始","隣席とも軽く乾杯"]
+  },
+  "美食家ザブトン": {
+    v:[ 1.0, 0.2,-0.3, 0.2], one:"しっとり濃厚派", catch:"しっとり濃厚、少量高満足。",
+    desc:"少量高満足を知るしっとり濃厚派。脂の甘みと旨みのレイヤーを丁寧に楽しみ、休ませ時間を大切にする。会話は穏やかで深め、テンポはやや遅め。写真は少なめで味覚集中。主役は厳選し、他は引き算で整える編集力が高い。コッテリに傾きすぎると終盤に重さが残るため、香味野菜・酸・温度差で抜け道を用意。食後は温かいお茶やビターな一杯で締めると余韻が長く、美味しさの記憶が続く。",
+    tips:["“少量高満足”を提案","休ませ時間を大切に","深めの質問を1つ"]
+  },
+  "ギャルカルビ": {
+    v:[ 1.2, 0.7, 0.9, 0.9], one:"巻き込み型エンタメ", catch:"甘濃エンタメで巻き込み型。",
+    desc:"巻き込み型エンタメ。甘濃ジューシーな一口で全員を笑顔にし、写真やストーリー作りも得意。テンポは速く、量もそこそこいける。場の盛り上げに長ける一方、濃さが続くと飽きが来やすいので、塩・レモン・キムチ・スープでリズムを切替。推しの名物は“みんなの一口”で手配し、満足派と軽め派の希望を拾う配慮が鍵。終盤は香りの良い赤身や冷たいデザートで締めると、全体がきれいにまとまる。",
+    tips:["“みんなの一口カルビ”手配","自分が撮ってシェア","満足派の希望を拾う"]
+  },
+  "やり手の営業マンハラミ": {
+    v:[ 0.2, 0.4, 0.8, 0.3], one:"テンポの司令塔", catch:"テンポ良く結果を出す実利派。",
+    desc:"テンポの司令塔。焼き台管理とオーダーの回転で間を作らず、結果を出す実利派。味は中庸〜やや濃厚、量はしっかり、会話は明るくスピーディ。場の流れを読む力が高い反面、急ぎ足になりすぎることも。要所で“深呼吸の一皿”を置き、乾杯は控えめペース配分を。序盤は塩・柑橘、中盤にタレ系、終盤は出汁や香りの軽い料理でクールダウン。全員の満腹線を合わせる調整力が武器。",
+    tips:["回転を上げて間を作らない","焼き台管理役で活躍","飲みすぎ注意で笑顔キープ"]
+  },
+  "カイノミ舞妓はん": {
+    v:[ 0.5,-0.2, 0.2, 0.2], one:"軽リッチのコーデ", catch:"軽やか派の橋渡し。",
+    desc:"軽やかなリッチ感をコーディネート。赤身と脂の橋渡しが上手で、塩→タレのメリハリを作る。量は控えめ〜普通、テンポは中庸。席の空気を柔らかく整え、相手の得意トークを引き出す聞き上手。華やかさと落ち着きのバランスが良い反面、決め手に欠ける印象になりがち。中盤に“香りの名物”を一点差し込むと芯が立つ。締めは軽めにして余白を残すと再会の約束につながりやすい。",
+    tips:["“塩→タレ”でメリハリ","軽い締めで余白を残す","相手の得意トークを振る"]
+  },
+  "書道家ミスジ": {
+    v:[ 0.4,-0.4,-0.5, 0.2], one:"繊細さの職人", catch:"口どけ上品、所作で魅せる。",
+    desc:"繊細さの職人。口どけと香りの折り重なりを静かに愛で、所作の美しさで魅せるタイプ。焼きは控えめ、量は少量、テンポはゆっくり。甘めは量を絞り、塩や山葵で奥行きを作る。対話は小声のツッコミで距離を縮めるのが得意。丁寧さが過ぎると遠慮に見えやすいので、序盤に“本日の推し”を明言して軸を提示。写真は最小限、光がきれいな一枚を狙うと印象がぐっと上品になる。",
+    tips:["火入れは控えめで共有","小声のツッコミで距離縮め","甘めは量を絞って提案"]
+  },
+  "シャトーブリアン女王": {
+    v:[-1.3,-0.2,-0.6, 0.4], one:"寡黙な審美家", catch:"特選一点主義。静かに深く。",
+    desc:"特選一点主義の審美家。量より質を徹底し、静かな席で一皿を深く味わう。脂は控えめでも肉質と香りの完成度にこだわり、休ませ・温度・切り付けにも敏感。会話は穏やかで間も楽しむ。全体がミニマルになりすぎると硬く映るため、途中に季節の副菜や酸で景色を変えると親しみが増す。デザート前に次回の約束を軽く示すと、体験が“物語”に昇華し相手の記憶に残る。",
+    tips:["“量より質”で軸を見せる","静かな席を選ぶ","デザート前に次回の約束"]
+  }
 };
+
 /* ====== 質問（20問：A/B/C/D 軸） ====== */
 const Q = [
   {t:"同じ価格ならどちらを選ぶ？", a:"キレ重視（さっぱり）", b:"コク重視（濃厚）", ax:"A"},
@@ -275,6 +334,29 @@ function renderTypeGrid(){
 let page=0;                 // 0..3
 let answers=Array(Q.length).fill(0); // 1..5
 
+function qMarkup(q, idx){
+  // A/Bラベル＋スケール＋説明（中央寄せ）
+  return `
+    <div class="qtitle">${q.t}</div>
+    <div class="choice ${answers[idx]?'chosen':''}" data-idx="${idx}" data-side="${answers[idx]<3?'A':(answers[idx]>3?'B':'MID')}">
+      <div class="abRow">
+        <div class="abLabel a" aria-hidden="true">A</div>
+        <div class="scale" role="group" aria-label="${q.t}">
+          <button class="dot a2 ${answers[idx]===1?'sel':''}" data-val="1" title="Aにとても近い" aria-label="A寄り(強)"></button>
+          <button class="dot a1 ${answers[idx]===2?'sel':''}" data-val="2" title="Aに近い" aria-label="A寄り"></button>
+          <button class="dot mid ${answers[idx]===3?'sel':''}" data-val="3" title="中立" aria-label="中立"></button>
+          <button class="dot b1 ${answers[idx]===4?'sel':''}" data-val="4" title="Bに近い" aria-label="B寄り"></button>
+          <button class="dot b2 ${answers[idx]===5?'sel':''}" data-val="5" title="Bにとても近い" aria-label="B寄り(強)"></button>
+        </div>
+        <div class="abLabel b" aria-hidden="true">B</div>
+      </div>
+      <div class="abDesc">
+        <div class="desc"><b>A：</b>${q.a}</div>
+        <div class="desc"><b>B：</b>${q.b}</div>
+      </div>
+    </div>`;
+}
+
 function renderPage(){
   const from=page*5,to=from+5;
   qs("#pp").textContent=`Q${from+1}–${to} / 20`;
@@ -283,20 +365,8 @@ function renderPage(){
   const wrap=qs("#qwrap"); wrap.innerHTML="";
   Q.slice(from,to).forEach((q,i)=>{
     const idx=from+i;
-
     const box=el("div",{class:"qbox"});
-    box.innerHTML=`
-      <div class="qtitle">${q.t}</div>
-      <div class="small" style="margin-bottom:10px">A：${q.a}　/　B：${q.b}</div>
-      <div class="choice ${answers[idx]?'chosen':''}" data-idx="${idx}">
-        <div class="scale">
-          <div class="dot a2 ${answers[idx]===1?'sel':''}" data-val="1" title="Aにとても近い"></div>
-          <div class="dot a1 ${answers[idx]===2?'sel':''}" data-val="2" title="Aに近い"></div>
-          <div class="dot mid ${answers[idx]===3?'sel':''}" data-val="3" title="中立"></div>
-          <div class="dot b1 ${answers[idx]===4?'sel':''}" data-val="4" title="Bに近い"></div>
-          <div class="dot b2 ${answers[idx]===5?'sel':''}" data-val="5" title="Bにとても近い"></div>
-        </div>
-      </div>`;
+    box.innerHTML = qMarkup(q, idx);
     wrap.appendChild(box);
   });
 
@@ -304,34 +374,37 @@ function renderPage(){
   qs("#nextBtn").textContent=(page===3?'結果を見る →':'次の5問 →');
 }
 
+// ボタンクリックでのみページ送り（自動送りはしない）
 qs("#qwrap").addEventListener("click",e=>{
   const d=e.target.closest(".dot"); if(!d) return;
   const choice=d.closest(".choice"); const idx=+choice.dataset.idx; const val=+d.dataset.val;
   answers[idx]=val;
-  // 見た目更新（選択済み状態）
+
+  // 見た目更新（選択済み状態 & A/Bラベル発光方向）
   choice.classList.add("chosen");
+  choice.dataset.side = (val<3?'A':(val>3?'B':'MID'));
   choice.querySelectorAll(".dot").forEach(x=>x.classList.remove("sel"));
   d.classList.add("sel");
-
-  // 自動ページ送り
-  const from=page*5,to=from+5;
-  const done=answers.slice(from,to).every(v=>v>0);
-  if(done){ setTimeout(()=>{ if(page<3){page++; renderPage();} else {showResult();} }, 300); }
 });
 
 function nextPage(){
-  const from=page*5; if(!answers.slice(from,from+5).every(v=>v>0)){ alert("未回答があります（この5問をすべて選んでください）"); return; }
+  const from=page*5;
+  if(!answers.slice(from,from+5).every(v=>v>0)){
+    alert("未回答があります（この5問をすべて選んでください）");
+    return;
+  }
   if(page<3){ page++; renderPage(); } else { showResult(); }
 }
 function prevPage(){ if(page>0){ page--; renderPage(); } }
+
 window.addEventListener("keydown",e=>{
   const n=+e.key;
   if(n>=1 && n<=5 && qs("#step1").classList.contains("active")){
     const from=page*5,to=from+5;
-    let idx=answers.findIndex((v,i)=>i>=from&&i<to&&v===0); if(idx<0) idx=from;
-    answers[idx]=n; renderPage();
-    const done=answers.slice(from,to).every(v=>v>0);
-    if(done){ setTimeout(()=>{ if(page<3){page++; renderPage();} else {showResult();} }, 150); }
+    let idx=answers.findIndex((v,i)=>i>=from&&i<to&&v===0);
+    if(idx<0) idx=from;
+    answers[idx]=n;
+    renderPage(); // 自動では進まない
   }
 });
 
@@ -378,6 +451,7 @@ function showResult(){
 
   qs("#typeName").textContent=you;
   qs("#typeCatch").textContent=t.catch;
+  qs("#typeDesc").textContent=t.desc || "";
   qs("#heroImg").src=IMGS[you]||""; qs("#heroImg").alt=you;
 
   const tips=qs("#tips"); tips.innerHTML=""; (t.tips||[]).forEach(s=>tips.appendChild(el("span",{class:"btn slim"},s)));
@@ -414,11 +488,13 @@ function showResult(){
 }
 
 /* ====== init ====== */
-renderTypeGrid();
-qs("#startBtn").onclick=()=>{ page=0; answers=Array(Q.length).fill(0); renderPage(); go(1); }
-qs("#nextBtn").onclick=nextPage;
-qs("#prevBtn").onclick=prevPage;
-qs("#againBtn").onclick=()=>{ page=0; answers=Array(Q.length).fill(0); renderPage(); go(1); };
+(function init(){
+  renderTypeGrid();
+  qs("#startBtn").onclick=()=>{ page=0; answers=Array(Q.length).fill(0); renderPage(); go(1); }
+  qs("#nextBtn").onclick=nextPage;
+  qs("#prevBtn").onclick=prevPage;
+  qs("#againBtn").onclick=()=>{ page=0; answers=Array(Q.length).fill(0); renderPage(); go(1); };
+})();
 </script>
 </body>
 </html>
