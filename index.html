@@ -28,7 +28,7 @@
   html,body{height:100%}
   body{margin:0;background:var(--bg);color:var(--ink);
     font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;
-    letter-spacing:.02em;line-height:1.65}
+    letter-spacing:.02em;line-height:1.65;overflow-x:hidden}
   a{color:inherit;text-decoration:none}
   img{max-width:100%;display:block}
   .container{width:min(1040px,92vw);margin:0 auto}
@@ -37,6 +37,7 @@
   .btn{appearance:none;border:1px solid var(--bd);background:#1a1513;color:var(--ink);
     padding:12px 16px;border-radius:12px;font-weight:800;cursor:pointer;transition:transform .06s ease}
   .btn:hover{transform:translateY(-1px)}
+  .btn[disabled]{opacity:.6;cursor:not-allowed;transform:none}
   .btn.primary{background:linear-gradient(180deg,var(--tomato),var(--tomato-deep));color:#110e0c;border:none}
   .btn.cheese{background:linear-gradient(180deg,var(--cheese),var(--cheese-deep));color:#2a1e0b;border:none}
 
@@ -49,8 +50,8 @@
   .nav-cta{display:flex;gap:10px;align-items:center}
   .chip{display:inline-flex;align-items:center;background:#1a1513;border:1px solid var(--bd);padding:6px 10px;border-radius:999px;font-size:12px}
 
-  /* HERO（スマホ端切れ抑制＋フルブリード画像＋カウントダウン） */
-  .hero{position:relative;border-bottom:1px solid var(--bd);background:#000}
+  /* HERO（フルブリード画像＋18時締切カウント） */
+  .hero{position:relative;border-bottom:1px solid var(--bd);background:#000;overflow:hidden}
   .hero-inner{display:grid;grid-template-columns:1fr;gap:18px;align-items:end;width:min(1040px,92vw);margin:0 auto;padding:0}
   .hero-media{width:100%}
   .hero-img{width:100%;height:clamp(420px,68vh,640px);object-fit:cover;object-position:center 55%;filter:brightness(.82) contrast(1.05)}
@@ -67,7 +68,7 @@
   .status-text{font-weight:800;color:#ffe9b0}
 
   /* Big Countdown */
-  .bigtime{margin:4px 0 10px}
+  .bigtime{margin:6px 0 10px}
   .bigtime .label{font-size:clamp(12px,2.8vw,14px);color:#ffe9b0;opacity:.95}
   .bigtime .cd{
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
@@ -146,6 +147,7 @@
   .sticky-cta a{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;
     background:linear-gradient(180deg,var(--tomato),var(--tomato-deep));color:#2a1e0b;border:none;
     box-shadow:0 10px 22px rgba(255,82,49,.28);font-weight:900;min-width:160px}
+  .sticky-cta a[aria-disabled="true"]{pointer-events:none;opacity:.7}
   .sticky-cta a:active{transform:translate(-50%,1px)}
 
   /* Form */
@@ -160,24 +162,20 @@
 
   footer{border-top:1px solid var(--bd);color:var(--muted);padding:24px 0 40px;margin-top:28px;text-align:center}
 
-  /* ===== モバイル調整：HERO画像を画面いっぱいに（フルブリード） ===== */
+  /* ===== モバイル：HERO画像フルブリード ===== */
   @media (max-width: 860px){
-    body{ overflow-x:hidden; }
     .nav-cta{display:none;}
-    .hero{ overflow:hidden; }
-    .hero-overlay{margin-top:-110px}
-    .cta .btn{width:100%}
-
-    /* 画像だけをビューポート幅に広げる */
     .hero-media{
       width:100vw;
-      margin-left:calc(50% - 50vw); /* コンテナ中央から左右いっぱいに広げる */
+      margin-left:calc(50% - 50vw);
     }
     .hero-img{
       width:100vw;
       height:min(70vh,560px);
       object-position:center 40%;
     }
+    .hero-overlay{margin-top:-110px}
+    .cta .btn{width:100%}
   }
 </style>
 </head>
@@ -214,14 +212,14 @@
         <span id="statText" class="status-text">男性 --/--（残り--）・女性 --/--（残り--）</span>
       </div>
 
-      <!-- カウントダウン -->
+      <!-- カウントダウン（締切18:00） -->
       <div class="bigtime" aria-live="polite">
-        <div class="label">⏰ 締切まで</div>
+        <div class="label">⏰ 申込締切 11/15(土) <b>18:00</b></div>
         <div id="countdown" class="cd">--:--:--</div>
       </div>
 
       <div class="cta">
-        <a class="btn primary" href="#entry">👇 参加申込みはこちら（1分・当日現地払い）</a>
+        <button id="submitTop" class="btn primary" onclick="document.getElementById('entry').scrollIntoView({behavior:'smooth'})">👇 参加申込みはこちら（1分・当日現地払い）</button>
         <a class="btn cheese" href="meat-bti/quiz.html">あなたのタイプは？肉診断『Meat BTI』</a>
       </div>
     </div>
@@ -450,7 +448,7 @@
       </div>
 
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
-        <button class="btn primary" type="submit">上記内容で申込み</button>
+        <button id="submitBtn" class="btn primary" type="submit">上記内容で申込み</button>
         <a class="btn cheese" href="meat-bti/quiz.html">あなたのタイプは？肉診断『Meat BTI』</a>
       </div>
       <p class="help">※確認の連絡や自動返信はありません。内容変更のみお電話またはSNSのDMでご連絡ください。</p>
@@ -476,13 +474,13 @@
   // 年号
   document.getElementById('y').textContent = new Date().getFullYear();
 
-  // イベント日時（今年の11/15 19:00。過ぎていたら翌年へ）
+  // 申込締切（今年の11/15 18:00。過ぎていたら翌年へ）
   (function(){
     const now = new Date();
     const y = now.getFullYear();
-    let ev = new Date(y, 10, 15, 19, 0, 0); // 11月=10
-    if(now > ev) ev = new Date(y+1, 10, 15, 19, 0, 0);
-    window.EVENT_AT = ev;
+    let dead = new Date(y, 10, 15, 18, 0, 0); // 11月=10, 18:00 締切
+    if(now > dead) dead = new Date(y+1, 10, 15, 18, 0, 0);
+    window.DEADLINE_AT = dead;
   })();
 
   // 応募状況
@@ -513,15 +511,39 @@
     set('referrer', document.referrer || '');
   })();
 
-  // カウントダウン（HERO & 固定CTA）
+  // 締切到達時のUIロック
+  function setClosedState(){
+    const cd = document.getElementById('countdown');
+    const mini = document.getElementById('cdMini');
+    const sticky = document.getElementById('sticky-apply');
+    const btnTop = document.getElementById('submitTop');
+    const btn = document.getElementById('submitBtn');
+
+    if(cd) cd.textContent = '受付終了';
+    if(mini) mini.textContent = '終了';
+    if(sticky){
+      sticky.textContent = '受付終了';
+      sticky.removeAttribute('href');
+      sticky.setAttribute('aria-disabled','true');
+    }
+    if(btnTop){ btnTop.textContent='受付終了しました'; btnTop.disabled = true; }
+    if(btn){ btn.textContent='受付終了しました'; btn.disabled = true; }
+
+    // フォーム要素も入力不可に
+    document.querySelectorAll('#form input, #form select, #form textarea').forEach(el=>el.disabled=true);
+  }
+
+  // カウントダウン（18:00 締切）
+  let cdTimer = null;
   function renderCountdown(){
     const el = document.getElementById('countdown');
     const elMini = document.getElementById('cdMini');
     const now = new Date();
-    const diff = (window.EVENT_AT - now);
+    const diff = (window.DEADLINE_AT - now);
+
     if(diff <= 0){
-      el.textContent = '00:00:00';
-      elMini.textContent = '00:00:00';
+      setClosedState();
+      if(cdTimer) clearInterval(cdTimer);
       return;
     }
     const sec = Math.floor(diff/1000);
@@ -530,16 +552,24 @@
     const m = Math.floor((sec%3600)/60);
     const s = sec%60;
     const fmt = (n)=>String(n).padStart(2,'0');
-    el.textContent = (d>0? d+'日 ':'') + fmt(h)+':'+fmt(m)+':'+fmt(s);
-    elMini.textContent = fmt(h + d*24)+':'+fmt(m)+':'+fmt(s);
+    if(el) el.textContent = (d>0? d+'日 ':'') + fmt(h)+':'+fmt(m)+':'+fmt(s);
+    if(elMini) elMini.textContent = fmt(h + d*24)+':'+fmt(m)+':'+fmt(s);
   }
   renderCountdown();
-  setInterval(renderCountdown, 1000);
+  cdTimer = setInterval(renderCountdown, 1000);
 
-  // 申込み送信
+  // 申込み送信（締切後はボタン無効なので発火しない想定）
   const form = document.getElementById('form');
   const msg  = document.getElementById('msg');
   form.addEventListener('submit', async (e)=>{
+    // 念のため、締切チェック
+    if(new Date() >= window.DEADLINE_AT){
+      e.preventDefault();
+      setClosedState();
+      alert('申し込みは締切済みです（18:00まで）。');
+      return;
+    }
+
     e.preventDefault();
     const url = form.getAttribute('action');
     const men = parseInt(document.getElementById('men').value || '0',10);
