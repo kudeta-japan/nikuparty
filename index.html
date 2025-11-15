@@ -66,6 +66,11 @@
   .status-chip{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
     background:rgba(255,232,137,.12);border:1px solid #3a2d0d;color:#ffe9b0;font-weight:900}
   .status-text{font-weight:800;color:#ffe9b0}
+  /* 募集バッジ（強調） */
+  .status-chip.want{
+    background:linear-gradient(90deg,#ffb08a,#ff6b4a);
+    color:#2a100c;border-color:#6f2a1f;
+  }
 
   /* Big Countdown */
   .bigtime{margin:4px 0 10px}
@@ -199,11 +204,12 @@
       <div class="status-line">
         <span class="status-chip">現在の応募状況</span>
         <span id="statText" class="status-text">男性 --/--（残り--）・女性 --/--（残り--）</span>
+        <span class="status-chip want" id="recruitChip">男性募集中！もちろん女性も！</span>
       </div>
 
       <!-- カウントダウン -->
       <div class="bigtime" aria-live="polite">
-        <div class="label">⏰ 締切まで</div>
+        <div class="label" id="deadlineLabel">⏰ 締切まで</div>
         <div id="countdown" class="cd">--:--:--</div>
       </div>
 
@@ -458,18 +464,19 @@
   // ====== 設定：現在人数と定員
   const CAPACITY_PER_GENDER = 25;
   const CURRENT_MALE = 15;
-  const CURRENT_FEMALE = 13;
+  const CURRENT_FEMALE = 17;
 
   // ====== 年号
   document.getElementById('y').textContent = new Date().getFullYear();
 
-  // ====== イベント日時（今年の11/15 19:00。過ぎていたら翌年へ）
+  // ====== イベント日時（11/15 19:00）＆ 申込み締切（同日18:00）
   (function(){
     const now = new Date();
     const y = now.getFullYear();
     let ev = new Date(y, 10, 15, 19, 0, 0); // 11月=10
     if(now > ev) ev = new Date(y+1, 10, 15, 19, 0, 0);
     window.EVENT_AT = ev;
+    window.DEADLINE_AT = new Date(ev.getFullYear(), ev.getMonth(), ev.getDate(), 18, 0, 0);
   })();
 
   // ====== 応募状況レンダリング
@@ -496,19 +503,33 @@
   // ====== 計測フィールド
   (function(){
     const set = (id,val)=>{ const el=document.getElementById(id); if(el) el.value = val || ""; };
-    set('landing_url', location.href.split('#')[0]);
-    set('referrer', document.referrer || '');
+    const lu = document.getElementById('landing_url');
+    const rf = document.getElementById('referrer');
+    if(lu) lu.value = location.href.split('#')[0];
+    if(rf) rf.value = document.referrer || '';
   })();
 
-  // ====== カウントダウン（HERO & 固定CTA）
+  // ====== ラベル更新（本日なら「本日18:00までOK」）
+  (function updateDeadlineLabel(){
+    const el = document.getElementById('deadlineLabel');
+    if(!el) return;
+    const now = new Date();
+    const d = window.DEADLINE_AT;
+    const w = ['日','月','火','水','木','金','土'];
+    const isToday = now.toDateString() === d.toDateString();
+    el.textContent = isToday ? '⏰ 本日18:00までOK' :
+      `⏰ ${d.getMonth()+1}/${d.getDate()}(${w[d.getDay()]}) 18:00まで`;
+  })();
+
+  // ====== カウントダウン（HERO & 固定CTA）→ 締切18:00に向ける
   function renderCountdown(){
     const el = document.getElementById('countdown');
     const elMini = document.getElementById('cdMini');
     const now = new Date();
-    const diff = (window.EVENT_AT - now);
+    const diff = (window.DEADLINE_AT - now);
     if(diff <= 0){
-      el.textContent = '00:00:00';
-      elMini.textContent = '00:00:00';
+      if(el) el.textContent = '00:00:00';
+      if(elMini) elMini.textContent = '00:00:00';
       return;
     }
     const sec = Math.floor(diff/1000);
@@ -517,8 +538,8 @@
     const m = Math.floor((sec%3600)/60);
     const s = sec%60;
     const fmt = (n)=>String(n).padStart(2,'0');
-    el.textContent = (d>0? d+'日 ':'') + fmt(h)+':'+fmt(m)+':'+fmt(s);
-    elMini.textContent = fmt(h + d*24)+':'+fmt(m)+':'+fmt(s);
+    if(el) el.textContent = (d>0? d+'日 ':'') + fmt(h)+':'+fmt(m)+':'+fmt(s);
+    if(elMini) elMini.textContent = fmt(h + d*24)+':'+fmt(m)+':'+fmt(s);
   }
   renderCountdown();
   setInterval(renderCountdown, 1000);
