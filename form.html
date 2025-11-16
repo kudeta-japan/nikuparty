@@ -1,10 +1,7 @@
 <!doctype html>
 <html lang="ja">
 <head>
-  <!-- Niku Party アンケート（Formspree版・Meat BTI 版・視認性アップ）
-       ・A/B/C 3画面・進行メーター固定(A0/B33/C66) → 成功で100%
-       ・色味コントラスト改善／質問カード化／質問文の色を強調
-  -->
+  <!-- Niku Party アンケート（Formspree版・Meat BTI 版・C画面選択色調整版） -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ニクパーティ アンケート</title>
@@ -133,7 +130,7 @@
       box-shadow:0 8px 18px rgba(15,23,42,.7);
     }
 
-    /* ★ 質問文（label）の色をあたたかいオレンジ系に */
+    /* 質問文の色 */
     label{
       display:block;
       font-weight:700;
@@ -146,8 +143,6 @@
       font-size:.88rem;
       margin-bottom:4px;
     }
-
-    /* Cステップのラベルも少しだけ明るめに（ほぼ同系色） */
     .step[data-step="3"] label{
       color:#ffe5c0;
     }
@@ -167,7 +162,7 @@
       align-items:center;
       gap:6px;
       white-space:nowrap;
-      color:#e5e7eb; /* ボタン内文字色は上書きしておく */
+      color:#e5e7eb;
     }
     .opt label:hover{
       transform:translateY(-1px);
@@ -291,16 +286,24 @@
     }
     .cgroup.alt1:before{ background:var(--stripe2); }
     .cgroup.alt2:before{ background:var(--stripe3); }
+
+    /* ★ C画面のボタン色を見やすく（未選択・選択中） */
     .step[data-step="3"] .opt label{
       background:#020617;
       border-color:rgba(148,163,184,.8);
+      color:#e5e7eb;
     }
     .step[data-step="3"] .opt input:checked + label{
+      background:linear-gradient(135deg,#38bdf8,#0ea5e9);
+      color:#0f172a;
+      border-color:#e0f2fe;
       outline-color:var(--accent-soft);
       box-shadow:
         0 0 0 3px rgba(56,189,248,.25),
         0 16px 30px rgba(15,23,42,.98);
+      transform:translateY(-1px);
     }
+
     .hint{color:#bae6fd; font-size:.88rem}
     .divider{
       height:1px;
@@ -769,7 +772,6 @@
   <div class="confetti" id="confetti" aria-hidden="true"></div>
 
   <script>
-    // ✅ FormspreeのURL
     const FORMSPREE_ENDPOINT = "https://formspree.io/f/movynoyp";
 
     const steps = Array.from(document.querySelectorAll('.step'));
@@ -780,7 +782,6 @@
     const capR = document.getElementById('captionRight');
     const bubble = document.getElementById('bubble');
 
-    // 固定メーター: A=0, B=33, C=66（送信成功で100）
     const pctByStep = [0, 33, 66];
     const captions = [
       {l:'A. 全体評価 / 残り2画面', b:'まずはイベント全体の感想を教えてね🥩'},
@@ -788,7 +789,6 @@
       {l:'C. 参加理由ほか / 最終画面', b:'ここが最後！「送信」で完了✨'}
     ];
 
-    // === 5段階 ライブ表示 ===
     const csatText = {1:'とても不満',2:'やや不満',3:'ふつう',4:'満足',5:'とても満足'};
     const npsText  = {1:'勧めない',2:'あまり勧めない',3:'どちらとも言えない',4:'勧めたい',5:'とても勧めたい'};
     const attrText = {1:'イマイチ',2:'やや物足りない',3:'ふつう',4:'良かった',5:'最高！'};
@@ -859,7 +859,6 @@
       window.scrollTo({top:0, behavior:'smooth'});
     }
 
-    // 次へ／戻る
     document.querySelectorAll('[data-next]').forEach(b=>b.addEventListener('click', ()=>{
       const required = steps[idx].querySelectorAll('[required]');
       for(const el of required){
@@ -877,12 +876,10 @@
     }));
     document.querySelectorAll('[data-prev]').forEach(b=>b.addEventListener('click', ()=> goto(Math.max(idx-1, 0))));
 
-    // 初期メタ
     document.getElementById('timestamp').value = new Date().toISOString();
     const params = new URLSearchParams(location.search);
     document.getElementById('source').value = params.get('ch') || params.get('utm_source') || '';
 
-    // 「その他」表示切替
     function toggleEtc(triggerId, inputId){
       const t = document.getElementById(triggerId); const i = document.getElementById(inputId);
       function u(){
@@ -897,7 +894,6 @@
     ['mot_etc:mot_etc_text','theme_other:theme_other_text','pt5:preferred_time_other','aw6:awareness_other']
       .forEach(pair=>{ const [t,i]=pair.split(':'); toggleEtc(t,i); });
 
-    // 順位の重複防止
     const selects = ['rank1','rank2','rank3'].map(id=>document.getElementById(id));
     function refreshOptions(){
       const chosen = new Set(selects.map(s=>s.value).filter(Boolean));
@@ -907,12 +903,10 @@
     }
     selects.forEach(s=> s.addEventListener('change', refreshOptions));
 
-    // フォーム送信
     const form = document.getElementById('form');
     form.addEventListener('submit', async (e)=>{
       e.preventDefault();
 
-      // 🔒 ハニーポット
       const honey = form.querySelector('input[name="website"]');
       if (honey && honey.value.trim() !== '') { return; }
 
@@ -935,7 +929,6 @@
           return;
         }
       }
-      // 順位必須
       for(const id of ['rank1','rank2','rank3']){
         if(!document.getElementById(id).value){
           alert('良かったコンテンツの順位を選択してください');
