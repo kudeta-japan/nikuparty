@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <!-- Niku Party アンケート（Formspree版）
+       ・A/B/C 3画面・進行メーター固定(A0/B33/C66) → 成功で100%
+       ・街コン仕様：出会い満足度・次回ニーズなど
+       ・人数は2〜6ボタン ＋「ひとり」選択時は1を送信
+       ・5段階は「低←→高」目盛＋ライブ説明（★表示）
+       ・成功画面：niku_staff.jpg＋お礼文／再入力ボタン
+       ・ハニーポット(sr-only)を不可視＋ボット投稿を弾く
+  -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ニクパーティ アンケート</title>
+  <meta name="description" content="ニクパーティ ご参加者アンケート（所要2〜3分・匿名）" />
+  <style>
+    :root{
+      --bg:#080a10; --fg:#f8f8fb; --muted:#b9bfd1; --brand:#ff8a65; --brand2:#ff7043;
+      --card:#121520; --accent:#78d3ff; --rose:#ff7ab6; --cbg:#0b1020;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:system-ui, -apple-system, Segoe UI, Roboto, "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+      background:
+        radial-gradient(1200px 800px at 70% -20%, rgba(255,138,101,.10), transparent),
+        radial-gradient(1000px 600px at 10% 110%, rgba(120,211,255,.08), transparent),
+        var(--bg);
+      color:var(--fg);
+    }
+    .wrap{max-width:960px; margin:0 auto; padding:28px 18px 64px;}
+    header{display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:12px}
+    .brand{display:flex; align-items:center; gap:12px}
+    .logo{width:44px; height:44px; border-radius:12px; background:conic-gradient(from 20deg,var(--brand),var(--brand2)); box-shadow:0 6px 18px rgba(255,138,101,.25);}
+    h1{font-size: clamp(1.2rem, 2.4vw, 1.8rem); margin:0}
+    .muted{color:var(--muted); font-size:.95rem}
+
+    /* mascot */
+    .mascot{position:relative; display:flex; align-items:center; gap:12px}
+    .mascot svg{width:96px; filter: drop-shadow(0 10px 28px rgba(255,138,101,.22)); animation: floaty 4s ease-in-out infinite;}
+    @keyframes floaty{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+    .bubble{position:relative; background:#0f1430; border:1px solid rgba(255,255,255,.10); padding:10px 12px; border-radius:14px; max-width:320px;}
+    .bubble:after{content:""; position:absolute; left:-8px; top:22px; border:8px solid transparent; border-right-color:#0f1430; filter:drop-shadow(-1px 0 0 rgba(255,255,255,.1))}
+    .bubble strong{color:#ffab91}
+
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.0)); border:1px solid rgba(255,255,255,.06); box-shadow:0 10px 30px rgba(0,0,0,.25); border-radius:22px; padding:18px; margin:16px 0;}
+
+    /* progress */
+    .progress-wrap{position:relative;}
+    .bar{height:10px; background:#20242c; border-radius:999px; overflow:hidden;}
+    .bar>i{display:block; height:100%; width:0%; background:linear-gradient(90deg,var(--brand),var(--brand2)); box-shadow:0 0 22px rgba(255,138,101,.45) inset; transition:width .35s ease}
+    .bar .buddy{position:absolute; top:50%; transform:translate(-50%,-50%); width:28px; height:28px; border-radius:50%; background:radial-gradient(circle at 30% 30%, #ffe0b2, #ff7043); box-shadow:0 8px 18px rgba(255,138,101,.35); border:2px solid #2a2210}
+    .bar .buddy:after{content:"🥩"; position:absolute; inset:0; display:grid; place-items:center; font-size:16px}
+    .progress-caption{display:flex; justify-content:space-between; align-items:center; margin-top:6px; font-size:.92rem; color:var(--muted)}
+
+    /* inputs */
+    .grid{display:grid; gap:12px}
+    .two{grid-template-columns:repeat(2, minmax(0,1fr));}
+    @media (max-width: 720px){ .two{grid-template-columns:1fr;} }
+    label{display:block; font-weight:700; margin:6px 0 8px}
+    .help{color:var(--muted); font-size:.9rem}
+    .opt{display:flex; gap:10px; flex-wrap:wrap}
+    .opt input[type="radio"], .opt input[type="checkbox"]{display:none}
+    .opt label{border:1px solid rgba(255,255,255,.14); padding:12px 14px; border-radius:14px; cursor:pointer; background:#101217; transition:.15s transform, .2s box-shadow}
+    .opt label:hover{transform:translateY(-1px)}
+    .opt input:checked + label{outline:2px solid var(--brand); background:linear-gradient(180deg,rgba(255,138,101,.12),transparent); box-shadow:0 0 0 6px rgba(255,138,101,.10)}
+    select, input[type="text"], textarea{ width:100%; background:#101217; color:#f8f8fb; border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:12px 14px; font-size:1rem; outline:none; }
+    textarea{min-height:120px; line-height:1.5}
+
+    .btns{display:flex; gap:10px; flex-wrap:wrap}
+    button{cursor:pointer; border:0; padding:12px 16px; border-radius:14px; font-weight:800; transition:transform .08s ease}
+    .primary{background:linear-gradient(135deg,var(--brand),var(--brand2)); color:#202020}
+    .ghost{background:transparent; color:#fff; border:1px solid rgba(255,255,255,.14)}
+    button:active{transform:translateY(1px) scale(.99)}
+
+    .section-badge{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; background:#101217; border:1px solid rgba(255,255,255,.12); font-size:.85rem; margin-bottom:8px}
+    .section-badge--c{background:#0f1426; border-color:rgba(120,211,255,.3); box-shadow:0 0 0 2px rgba(120,211,255,.15) inset}
+
+    .step{display:none}
+    .step.active{display:block; animation: fadeIn .22s ease}
+    @keyframes fadeIn{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)}}
+
+    /* C画面強調 */
+    .step[data-step="3"]{--stripe1:linear-gradient(180deg,var(--accent),#9ad9ff); --stripe2:linear-gradient(180deg,#ffa8d2,var(--rose)); --stripe3:linear-gradient(180deg,#ffd761,#ffb300);}
+    .cgroup{background:var(--cbg); border:1px solid rgba(255,255,255,.10); border-radius:16px; padding:14px; position:relative; box-shadow:0 6px 20px rgba(0,0,0,.25);}
+    .cgroup:before{content:""; position:absolute; left:-1px; top:-1px; bottom:-1px; width:6px; border-radius:16px 0 0 16px; background:var(--stripe1);}
+    .cgroup.alt1:before{ background:var(--stripe2); }
+    .cgroup.alt2:before{ background:var(--stripe3); }
+    .step[data-step="3"] .opt label{ background:#0f1528; border-color:rgba(120,211,255,.22);}
+    .step[data-step="3"] .opt input:checked + label{ outline-color:#9ad9ff; background:linear-gradient(180deg,rgba(120,211,255,.18),transparent); box-shadow:0 0 0 6px rgba(120,211,255,.12)}
+    .step[data-step="3"] label{ color:#e8f3ff }
+    .hint{color:#a3c9ff; font-size:.9rem}
+    .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(120,211,255,.35),transparent); margin:6px 0 2px}
+
+    /* 5段階表示 */
+    .scale-hint{display:flex;justify-content:space-between;align-items:center;font-size:.88rem;color:var(--muted);margin:-2px 0 6px}
+    .opt.scale label{min-width:38px;text-align:center}
+    .now-hint{margin-top:6px;color:var(--muted);font-size:.9rem}
+    .now-hint b{color:#ffcc80}
+
+    /* ハニーポット */
+    .sr-only{
+      position:absolute !important;
+      width:1px;height:1px;padding:0;margin:-1px;
+      overflow:hidden;clip:rect(0,0,0,0);
+      white-space:nowrap;border:0;
+    }
+
+    .foot{font-size:.85rem;margin-top:4px}
+    .confetti span{
+      position:fixed; top:-10px; font-size:20px; animation:fall linear forwards;
+      pointer-events:none; z-index:50;
+    }
+    @keyframes fall{
+      to{transform:translate3d(var(--x,0),105vh,0) rotate(360deg); opacity:0;}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>ニクパーティ アンケート</h1>
+          <div class="muted">所要 <b>2〜3分</b>／匿名・一部任意</div>
+        </div>
+      </div>
+      <div class="mascot" aria-live="polite">
+        <!-- 🥩 マスコット -->
+        <svg viewBox="0 0 160 140" aria-hidden="true">
+          <defs>
+            <radialGradient id="meatGrad" cx="35%" cy="30%" r="75%">
+              <stop offset="0%" stop-color="#ffe0b2"/><stop offset="100%" stop-color="#ff7043"/>
+            </radialGradient>
+          </defs>
+          <ellipse cx="80" cy="90" rx="40" ry="32" fill="url(#meatGrad)" stroke="#5d2a16" stroke-width="4"/>
+          <circle cx="80" cy="90" r="18" fill="#ffab91" stroke="#ffccbc" stroke-width="3"/>
+          <circle cx="68" cy="78" r="4" fill="#5d2a16"/>
+          <circle cx="92" cy="78" r="4" fill="#5d2a16"/>
+          <path d="M70 102 Q80 108 90 102" stroke="#5d2a16" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <circle cx="62" cy="88" r="3" fill="#ff8a80"/>
+          <circle cx="98" cy="88" r="3" fill="#ff8a80"/>
+          <line x1="60" y1="118" x2="54" y2="136" stroke="#5d2a16" stroke-width="4">
+            <animate attributeName="y2" values="136;132;136" dur="1.2s" repeatCount="indefinite"/>
+          </line>
+          <line x1="100" y1="118" x2="106" y2="136" stroke="#5d2a16" stroke-width="4">
+            <animate attributeName="y2" values="136;140;136" dur="1.2s" repeatCount="indefinite"/>
+          </line>
+        </svg>
+        <div class="bubble" id="bubble">ようこそ！まずは<strong>A</strong>から。全部で3画面だよ🥩</div>
+      </div>
+    </header>
+
+    <div class="card">
+      <div class="progress-wrap">
+        <div class="bar"><i id="progress"></i><i class="buddy" id="buddy" style="left:0%"></i></div>
+        <div class="progress-caption"><span id="captionLeft">A. 全体評価 / 残り2画面</span><span id="captionRight">0%</span></div>
+      </div>
+
+      <form id="form" class="grid" novalidate>
+        <!-- 🔒 honeypot (不可視) -->
+        <input type="text" name="website" autocomplete="off" class="sr-only" tabindex="-1" aria-hidden="true">
+        <input type="hidden" name="timestamp" id="timestamp">
+        <input type="hidden" name="source" id="source">
+        <input type="hidden" name="form_version" value="niku_party_v1">
+
+        <!-- A -->
+        <section class="step active" data-step="1">
+          <div class="section-badge">A. 全体評価</div>
+          <div class="grid two">
+            <!-- 全体の満足度 -->
+            <div>
+              <label>本日のイベント全体の満足度（1〜5）</label>
+              <div class="scale-hint"><span>低（不満）</span><span>高（とても満足）</span></div>
+              <div class="opt scale" role="radiogroup" aria-label="満足度">
+                <input type="radio" id="csat1" name="csat" value="1" required><label for="csat1">1</label>
+                <input type="radio" id="csat2" name="csat" value="2"><label for="csat2">2</label>
+                <input type="radio" id="csat3" name="csat" value="3"><label for="csat3">3</label>
+                <input type="radio" id="csat4" name="csat" value="4"><label for="csat4">4</label>
+                <input type="radio" id="csat5" name="csat" value="5"><label for="csat5">5</label>
+              </div>
+              <div class="now-hint" id="csatNow">選択：—（<span>1=不満 / 5=とても満足</span>）</div>
+            </div>
+
+            <!-- 友人に勧めたい度 -->
+            <div>
+              <label>友人にニクパーティを勧めたい度（1〜5）</label>
+              <div class="scale-hint"><span>勧めない</span><span>とても勧めたい</span></div>
+              <div class="opt scale" role="radiogroup" aria-label="勧めたい度">
+                <input type="radio" id="nps1" name="nps" value="1" required><label for="nps1">1</label>
+                <input type="radio" id="nps2" name="nps" value="2"><label for="nps2">2</label>
+                <input type="radio" id="nps3" name="nps" value="3"><label for="nps3">3</label>
+                <input type="radio" id="nps4" name="nps" value="4"><label for="nps4">4</label>
+                <input type="radio" id="nps5" name="nps" value="5"><label for="nps5">5</label>
+              </div>
+              <div class="now-hint" id="npsNow">選択：—（<span>1=勧めない / 5=とても勧めたい</span>）</div>
+            </div>
+
+            <div>
+              <label>次回のニクパーティにも参加したいですか？</label>
+              <div class="opt">
+                <input type="radio" id="rejoin_yes" name="rejoin" value="ぜひ参加したい" required><label for="rejoin_yes">ぜひ参加したい</label>
+                <input type="radio" id="rejoin_maybe" name="rejoin" value="予定が合えば参加したい"><label for="rejoin_maybe">予定が合えば参加したい</label>
+                <input type="radio" id="rejoin_no" name="rejoin" value="たぶん参加しない"><label for="rejoin_no">たぶん参加しない</label>
+              </div>
+            </div>
+            <div>
+              <label>参加費の納得感</label>
+              <div class="opt">
+                <input type="radio" id="price1" name="price_fairness" value="高すぎる" required><label for="price1">高すぎる</label>
+                <input type="radio" id="price2" name="price_fairness" value="やや高い"><label for="price2">やや高い</label>
+                <input type="radio" id="price3" name="price_fairness" value="ちょうどよい"><label for="price3">ちょうどよい</label>
+                <input type="radio" id="price4" name="price_fairness" value="やや安い"><label for="price4">やや安い</label>
+                <input type="radio" id="price5" name="price_fairness" value="安すぎる"><label for="price5">安すぎる</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 任意：各要素 -->
+          <div class="grid two" style="margin-top:6px">
+            <div>
+              <label>肉料理の満足度（任意）</label>
+              <div class="scale-hint"><span>低い</span><span>高い</span></div>
+              <div class="opt scale" role="radiogroup" aria-label="肉料理満足度">
+                <input type="radio" id="meat1" name="meat_quality" value="1"><label for="meat1">1</label>
+                <input type="radio" id="meat2" name="meat_quality" value="2"><label for="meat2">2</label>
+                <input type="radio" id="meat3" name="meat_quality" value="3"><label for="meat3">3</label>
+                <input type="radio" id="meat4" name="meat_quality" value="4"><label for="meat4">4</label>
+                <input type="radio" id="meat5" name="meat_quality" value="5"><label for="meat5">5</label>
+              </div>
+              <div class="now-hint" id="meatNow">選択：—（<span>1=イマイチ / 5=最高！</span>）</div>
+            </div>
+            <div>
+              <label>出会い・会話の満足度（任意）</label>
+              <div class="scale-hint"><span>低い</span><span>高い</span></div>
+              <div class="opt scale" role="radiogroup" aria-label="出会い満足度">
+                <input type="radio" id="meet1" name="meet_satisfaction" value="1"><label for="meet1">1</label>
+                <input type="radio" id="meet2" name="meet_satisfaction" value="2"><label for="meet2">2</label>
+                <input type="radio" id="meet3" name="meet_satisfaction" value="3"><label for="meet3">3</label>
+                <input type="radio" id="meet4" name="meet_satisfaction" value="4"><label for="meet4">4</label>
+                <input type="radio" id="meet5" name="meet_satisfaction" value="5"><label for="meet5">5</label>
+              </div>
+              <div class="now-hint" id="meetNow">選択：—（<span>1=イマイチ / 5=最高！</span>）</div>
+            </div>
+            <div>
+              <label>会場の雰囲気（任意）</label>
+              <div class="scale-hint"><span>低い</span><span>高い</span></div>
+              <div class="opt scale" role="radiogroup" aria-label="雰囲気">
+                <input type="radio" id="env1" name="env_atmosphere" value="1"><label for="env1">1</label>
+                <input type="radio" id="env2" name="env_atmosphere" value="2"><label for="env2">2</label>
+                <input type="radio" id="env3" name="env_atmosphere" value="3"><label for="env3">3</label>
+                <input type="radio" id="env4" name="env_atmosphere" value="4"><label for="env4">4</label>
+                <input type="radio" id="env5" name="env_atmosphere" value="5"><label for="env5">5</label>
+              </div>
+              <div class="now-hint" id="envNow">選択：—（<span>1=イマイチ / 5=最高！</span>）</div>
+            </div>
+            <div>
+              <label>スタッフの対応（任意）</label>
+              <div class="scale-hint"><span>低い</span><span>高い</span></div>
+              <div class="opt scale" role="radiogroup" aria-label="スタッフの対応">
+                <input type="radio" id="svc1" name="staff_hospitality" value="1"><label for="svc1">1</label>
+                <input type="radio" id="svc2" name="staff_hospitality" value="2"><label for="svc2">2</label>
+                <input type="radio" id="svc3" name="staff_hospitality" value="3"><label for="svc3">3</label>
+                <input type="radio" id="svc4" name="staff_hospitality" value="4"><label for="svc4">4</label>
+                <input type="radio" id="svc5" name="staff_hospitality" value="5"><label for="svc5">5</label>
+              </div>
+              <div class="now-hint" id="svcNow">選択：—（<span>1=イマイチ / 5=最高！</span>）</div>
+            </div>
+          </div>
+
+          <div class="btns"><button type="button" class="primary" data-next>次へ（Bへ進む）</button></div>
+        </section>
+
+        <!-- B -->
+        <section class="step" data-step="2">
+          <div class="section-badge">B. コンテンツ評価（1〜5）</div>
+          <div class="grid two">
+            <div>
+              <label>肉料理（ステーキ・ローストビーフなど）</label>
+              <div class="scale-hint"><span>低い</span><span>高い</span></div>
+              <div class="opt scale" role="radiogroup" aria-label="肉料理評価">
+                <input type="radio" id="cont_meat1" name="content_meat" value="1" required><label for="cont_meat1">1</label>
+                <input type="radio" id="cont_meat2" name="content_meat" value="2"><label for="cont_meat2">2</label>
+                <input type="radio" id="cont_meat3" name="content_meat" value="3"><label for="cont_meat3">3</label>
+                <input type="radio" id="cont_meat4" name="content_meat" value="4"><label for="cont_meat4">4</label>
+                <input type="radio" id="cont_meat5" name="content_meat" value="5"><label for="cont_meat5">5</label>
+              </div>
+              <div class="now-hint" id="contMeatNow">選択：—（<span>1=イマイチ / 5=最高！</span>）</div>
+            </div>
+
+            <div>
+              <label>ドリンク（アルコール・ソフトドリンク）</label>
+              <div class="scale-hint"><span>低い</span><span>高い</span></div>
+              <div class="opt scale" role="radiogroup" aria-label="ドリンク評価">
+                <input type="radio" id="cont_drink1" name="content_drink" value="1" required><label for="cont_drink1">1</label>
+                <input type="radio" id="cont_drink2" name="content_drink" value="2"><label for="cont_drink2">2</label>
+                <input type="radio" id="cont_drink3" name="content_drink" value="3"><label for="cont_drink3">3</label>
+                <input type="radio" id="cont_drink4" name="content_drink" value="4"><label for="cont_drink4">4</label>
+                <input type="radio" id="cont_drink5" name="content_drink" value="5"><label for="cont_drink5">5</label>
+              </div>
+              <div class="now-hint" id="contDrinkNow">選択：—（<span>1=イマイチ / 5=最高！</span>）</div>
+            </div>
+
+            <div>
+              <label>グループトークの時間</label>
+              <div class="scale-hint"><span>低い</span><span>高い</span></div>
+              <div class="opt scale" role="radiogroup" aria-label="グループトーク評価">
+                <input type="radio" id="cont_group1" name="content_group_talk" value="1" required><label for="cont_group1">1</label>
+                <input type="radio" id="cont_group2" name="content_group_talk" value="2"><label for="cont_group2">2</label>
+                <input type="radio" id="cont_group3" name="content_group_talk" value="3"><label for="cont_group3">3</label>
+                <input type="radio" id="cont_group4" name="content_group_talk" value="4"><label for="cont_group4">4</label>
+                <input type="radio" id="cont_group5" name="content_group_talk" value="5"><label for="cont_group5">5</label>
+              </div>
+              <div class="now-hint" id="contGroupNow">選択：—（<span>1=イマイチ / 5=最高！</span>）</div>
+            </div>
+
+            <div>
+              <label>1対1トークの時間</label>
+              <div class="scale-hint"><span>短すぎ・話しにくい</span><span>ちょうどよい・話しやすい</span></div>
+              <div class="opt scale" role="radiogroup" aria-label="1対1トーク評価">
+                <input type="radio" id="cont_one1" name="content_one_talk" value="1" required><label for="cont_one1">1</label>
+                <input type="radio" id="cont_one2" name="content_one_talk" value="2"><label for="cont_one2">2</label>
+                <input type="radio" id="cont_one3" name="content_one_talk" value="3"><label for="cont_one3">3</label>
+                <input type="radio" id="cont_one4" name="content_one_talk" value="4"><label for="cont_one4">4</label>
+                <input type="radio" id="cont_one5" name="content_one_talk" value="5"><label for="cont_one5">5</label>
+              </div>
+              <div class="now-hint" id="contOneNow">選択：—（<span>1=イマイチ / 5=最高！</span>）</div>
+            </div>
+
+            <div>
+              <label>マッチング・投票のわかりやすさ</label>
+              <div class="scale-hint"><span>わかりにくい</span><span>とてもわかりやすい</span></div>
+              <div class="opt scale" role="radiogroup" aria-label="マッチング評価">
+                <input type="radio" id="cont_match1" name="content_matching" value="1" required><label for="cont_match1">1</label>
+                <input type="radio" id="cont_match2" name="content_matching" value="2"><label for="cont_match2">2</label>
+                <input type="radio" id="cont_match3" name="content_matching" value="3"><label for="cont_match3">3</label>
+                <input type="radio" id="cont_match4" name="content_matching" value="4"><label for="cont_match4">4</label>
+                <input type="radio" id="cont_match5" name="content_matching" value="5"><label for="cont_match5">5</label>
+              </div>
+              <div class="now-hint" id="contMatchNow">選択：—（<span>1=イマイチ / 5=最高！</span>）</div>
+            </div>
+          </div>
+
+          <div class="grid" style="margin-top:10px">
+            <label>良かったコンテンツの順位（重複不可）</label>
+            <div class="two">
+              <div><span class="help">1位</span>
+                <select id="rank1" name="favorite_rank_1" required>
+                  <option value="">選択してください</option>
+                  <option>肉料理</option>
+                  <option>ドリンク</option>
+                  <option>グループトーク</option>
+                  <option>1対1トーク</option>
+                  <option>マッチング・投票</option>
+                </select>
+              </div>
+              <div><span class="help">2位</span>
+                <select id="rank2" name="favorite_rank_2" required>
+                  <option value="">選択してください</option>
+                  <option>肉料理</option>
+                  <option>ドリンク</option>
+                  <option>グループトーク</option>
+                  <option>1対1トーク</option>
+                  <option>マッチング・投票</option>
+                </select>
+              </div>
+              <div><span class="help">3位</span>
+                <select id="rank3" name="favorite_rank_3" required>
+                  <option value="">選択してください</option>
+                  <option>肉料理</option>
+                  <option>ドリンク</option>
+                  <option>グループトーク</option>
+                  <option>1対1トーク</option>
+                  <option>マッチング・投票</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid" style="margin-top:10px">
+            <label>特に良かった点・もっとこうしてほしい点（任意）</label>
+            <textarea name="good_and_improve" placeholder="例：肉の焼き加減がちょうど良かった／トーク時間をもう少し長くしてほしい など"></textarea>
+          </div>
+
+          <div class="btns"><button type="button" class="ghost" data-prev>戻る</button><button type="button" class="primary" data-next>次へ（Cへ）</button></div>
+        </section>
+
+        <!-- C -->
+        <section class="step" data-step="3">
+          <div class="section-badge section-badge--c">C. 来店動機・次回ニーズ・属性（最終画面）</div>
+
+          <div class="grid">
+            <div class="cgroup alt2">
+              <label>参加した理由（複数選択可） <span class="hint">※ あてはまるものをすべて</span></label>
+              <div class="divider"></div>
+              <div class="opt">
+                <input type="checkbox" id="mot1" name="visit_motivation" value="恋人・パートナーを見つけたかった"><label for="mot1">恋人・パートナーを見つけたかった</label>
+                <input type="checkbox" id="mot2" name="visit_motivation" value="友だち・飲み仲間を増やしたかった"><label for="mot2">友だち・飲み仲間を増やしたかった</label>
+                <input type="checkbox" id="mot3" name="visit_motivation" value="肉・グルメイベントとして興味があった"><label for="mot3">肉・グルメイベントとして興味があった</label>
+                <input type="checkbox" id="mot4" name="visit_motivation" value="SNSの投稿が楽しそうだった"><label for="mot4">SNSの投稿が楽しそうだった</label>
+                <input type="checkbox" id="mot5" name="visit_motivation" value="友人に誘われて"><label for="mot5">友人に誘われて</label>
+                <input type="checkbox" id="mot6" name="visit_motivation" value="開催時間・場所がちょうど良かった"><label for="mot6">開催時間・場所がちょうど良かった</label>
+                <input type="checkbox" id="mot7" name="visit_motivation" value="とりあえず面白そうだったから"><label for="mot7">とりあえず面白そうだったから</label>
+                <input type="checkbox" id="mot_etc" name="visit_motivation" value="その他"><label for="mot_etc">その他</label>
+              </div>
+              <input type="text" id="mot_etc_text" name="visit_motivation_other" placeholder="その他（よろしければ理由を）" style="margin-top:8px; display:none">
+            </div>
+
+            <div class="cgroup">
+              <label>ニクパーティを知ったきっかけ</label>
+              <div class="divider"></div>
+              <div class="opt">
+                <input type="radio" id="aw1" name="awareness_channel" value="LINE"><label for="aw1">KU-DETA公式LINE</label>
+                <input type="radio" id="aw2" name="awareness_channel" value="Instagram"><label for="aw2">Instagram</label>
+                <input type="radio" id="aw3" name="awareness_channel" value="知人紹介"><label for="aw3">知人紹介</label>
+                <input type="radio" id="aw4" name="awareness_channel" value="来店時の案内"><label for="aw4">来店時の案内</label>
+                <input type="radio" id="aw5" name="awareness_channel" value="ホームページ・検索"><label for="aw5">ホームページ・検索</label>
+                <input type="radio" id="aw6" name="awareness_channel" value="その他"><label for="aw6">その他</label>
+              </div>
+              <input type="text" id="awareness_other" name="awareness_channel_other" placeholder="その他（自由記述）" style="margin-top:8px; display:none">
+            </div>
+
+            <div class="cgroup alt2">
+              <label>次回あったら行きたいテーマ（複数可）</label>
+              <div class="divider"></div>
+              <div class="opt">
+                <input type="checkbox" id="theme_light" name="next_theme" value="少人数ゆっくりトーク会"><label for="theme_light">少人数ゆっくりトーク会</label>
+                <input type="checkbox" id="theme_big" name="next_theme" value="大人数わいわいパーティー"><label for="theme_big">大人数わいわいパーティー</label>
+                <input type="checkbox" id="theme_meat" name="next_theme" value="肉ガチ勢向け・赤身ステーキ会"><label for="theme_meat">肉ガチ勢向け・赤身ステーキ会</label>
+                <input type="checkbox" id="theme_wine" name="next_theme" value="ワイン&肉ペアリング会"><label for="theme_wine">ワイン&肉ペアリング会</label>
+                <input type="checkbox" id="theme_beginner" name="next_theme" value="初参加・おひとり様中心会"><label for="theme_beginner">初参加・おひとり様中心会</label>
+                <input type="checkbox" id="theme_age" name="next_theme" value="年代別（例：20代・30代向け）"><label for="theme_age">年代別（例：20代・30代向け）</label>
+                <input type="checkbox" id="theme_other" name="next_theme" value="その他"><label for="theme_other">その他</label>
+              </div>
+              <input type="text" id="theme_other_text" name="theme_other_text" placeholder="その他（自由記述）" style="margin-top:8px; display:none">
+            </div>
+
+            <div class="two">
+              <div class="cgroup alt1">
+                <label>開催の希望時間帯</label>
+                <div class="divider"></div>
+                <div class="opt">
+                  <input type="radio" id="pt1" name="preferred_time" value="平日夜"><label for="pt1">平日夜</label>
+                  <input type="radio" id="pt2" name="preferred_time" value="土曜夜"><label for="pt2">土曜夜</label>
+                  <input type="radio" id="pt3" name="preferred_time" value="日曜昼"><label for="pt3">日曜昼</label>
+                  <input type="radio" id="pt4" name="preferred_time" value="祝日前夜"><label for="pt4">祝日前夜</label>
+                  <input type="radio" id="pt5" name="preferred_time" value="その他"><label for="pt5">その他</label>
+                </div>
+                <input type="text" id="preferred_time_other" name="preferred_time_other" placeholder="その他（自由記述）" style="margin-top:8px; display:none">
+              </div>
+              <div class="cgroup">
+                <label>希望する価格帯</label>
+                <div class="divider"></div>
+                <div class="opt">
+                  <input type="radio" id="pp3" name="preferred_price" value="3,000円台"><label for="pp3">3,000円台</label>
+                  <input type="radio" id="pp4" name="preferred_price" value="4,000円台"><label for="pp4">4,000円台</label>
+                  <input type="radio" id="pp5" name="preferred_price" value="5,000円台"><label for="pp5">5,000円台</label>
+                  <input type="radio" id="pp6" name="preferred_price" value="6,000円台"><label for="pp6">6,000円台</label>
+                  <input type="radio" id="pp8" name="preferred_price" value="8,000円以上"><label for="pp8">8,000円以上</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="cgroup alt2">
+              <label>同伴者・人数・年代・性別</label>
+              <div class="divider"></div>
+              <div class="two">
+                <div>
+                  <div class="opt" style="margin-bottom:8px">
+                    <input type="radio" id="p1" name="companion_type" value="ひとり"><label for="p1">ひとり</label>
+                    <input type="radio" id="p2" name="companion_type" value="友人と"><label for="p2">友人と</label>
+                    <input type="radio" id="p3" name="companion_type" value="職場仲間と"><label for="p3">職場仲間と</label>
+                    <input type="radio" id="p4" name="companion_type" value="家族と"><label for="p4">家族と</label>
+                    <input type="radio" id="p5" name="companion_type" value="その他"><label for="p5">その他</label>
+                  </div>
+                  <input type="text" id="party_other" name="companion_type_other" placeholder="その他（自由記述）" style="display:none">
+                </div>
+                <div>
+                  <label class="help">来場人数（自グループ）</label>
+                  <div class="opt" id="group_size_wrap">
+                    <input type="radio" id="gs2" name="group_size" value="2"><label for="gs2">2</label>
+                    <input type="radio" id="gs3" name="group_size" value="3"><label for="gs3">3</label>
+                    <input type="radio" id="gs4" name="group_size" value="4"><label for="gs4">4</label>
+                    <input type="radio" id="gs5" name="group_size" value="5"><label for="gs5">5</label>
+                    <input type="radio" id="gs6" name="group_size" value="6"><label for="gs6">6</label>
+                  </div>
+
+                  <label class="help" style="margin-top:10px">年代（任意）</label>
+                  <div class="opt">
+                    <input type="radio" id="age20" name="age" value="20代"><label for="age20">20代</label>
+                    <input type="radio" id="age30" name="age" value="30代"><label for="age30">30代</label>
+                    <input type="radio" id="age40" name="age" value="40代"><label for="age40">40代</label>
+                    <input type="radio" id="age50" name="age" value="50代"><label for="age50">50代</label>
+                    <input type="radio" id="age60" name="age" value="60代以上"><label for="age60">60代以上</label>
+                  </div>
+
+                  <label class="help" style="margin-top:10px">性別（任意）</label>
+                  <div class="opt">
+                    <input type="radio" id="g_m" name="gender" value="男性"><label for="g_m">男性</label>
+                    <input type="radio" id="g_f" name="gender" value="女性"><label for="g_f">女性</label>
+                    <input type="radio" id="g_o" name="gender" value="その他・回答しない"><label for="g_o">その他・回答しない</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="cgroup alt1">
+              <label>ご要望・ご意見・メッセージ（任意）</label>
+              <div class="divider"></div>
+              <textarea id="feedback" name="feedback" placeholder="運営へのメッセージや、もっとこうなったら嬉しい！ということがあればぜひ教えてください。"></textarea>
+            </div>
+          </div>
+
+          <div class="btns"><button type="button" class="ghost" data-prev>戻る</button><button type="submit" class="primary">送信する</button></div>
+        </section>
+      </form>
+    </div>
+
+    <div id="result" class="card" style="display:none"></div>
+    <div class="foot muted">匿名でのご協力ありがとうございます。入力内容はニクパーティおよびKU-DETAの改善・品質向上の目的でのみ利用します。</div>
+  </div>
+
+  <div class="confetti" id="confetti" aria-hidden="true"></div>
+
+  <script>
+    // ✅ FormspreeのURLを自分のフォームIDに変更してください
+    const FORMSPREE_ENDPOINT = "https://formspree.io/f/xxxxxxxx";
+
+    const steps = Array.from(document.querySelectorAll('.step'));
+    let idx = 0;
+    const progress = document.getElementById('progress');
+    const buddy = document.getElementById('buddy');
+    const capL = document.getElementById('captionLeft');
+    const capR = document.getElementById('captionRight');
+    const bubble = document.getElementById('bubble');
+
+    // 固定メーター: A=0, B=33, C=66（送信成功で100）
+    const pctByStep = [0, 33, 66];
+    const captions = [
+      {l:'A. 全体評価 / 残り2画面', b:'まずは今日の満足度を教えてね🥩'},
+      {l:'B. コンテンツ評価 / 残り1画面', b:'いい感じ！特にどうだったか教えてほしい🔥'},
+      {l:'C. 来店動機ほか / 最終画面', b:'ここが最後！「送信」で完了✨'}
+    ];
+
+    // === 5段階 ライブ表示 ===
+    const csatText = {1:'とても不満',2:'やや不満',3:'ふつう',4:'満足',5:'とても満足'};
+    const npsText  = {1:'勧めない',2:'あまり勧めない',3:'どちらとも言えない',4:'勧めたい',5:'とても勧めたい'};
+    const attrText = {1:'イマイチ',2:'やや物足りない',3:'ふつう',4:'良かった',5:'最高！'};
+
+    const csatNow = document.getElementById('csatNow');
+    const npsNow  = document.getElementById('npsNow');
+    const meatNow = document.getElementById('meatNow');
+    const meetNow = document.getElementById('meetNow');
+    const envNow  = document.getElementById('envNow');
+    const svcNow  = document.getElementById('svcNow');
+    const contMeatNow   = document.getElementById('contMeatNow');
+    const contDrinkNow  = document.getElementById('contDrinkNow');
+    const contGroupNow  = document.getElementById('contGroupNow');
+    const contOneNow    = document.getElementById('contOneNow');
+    const contMatchNow  = document.getElementById('contMatchNow');
+
+    function stars(n){ return '★'.repeat(n) + '☆'.repeat(5-n); }
+    function bindLiveHint(name, hintEl, dict){
+      document.querySelectorAll(`input[name="${name}"]`).forEach(r=>{
+        r.addEventListener('change', ()=>{
+          const v = Number(document.querySelector(`input[name="${name}"]:checked`)?.value || r.value);
+          hintEl.innerHTML = `選択：<b>${stars(v)}</b>（${dict[v]}）`;
+        });
+      });
+    }
+    bindLiveHint('csat', csatNow, csatText);
+    bindLiveHint('nps',  npsNow,  npsText);
+    bindLiveHint('meat_quality',   meatNow, attrText);
+    bindLiveHint('meet_satisfaction', meetNow, attrText);
+    bindLiveHint('env_atmosphere', envNow, attrText);
+    bindLiveHint('staff_hospitality', svcNow, attrText);
+    bindLiveHint('content_meat',        contMeatNow, attrText);
+    bindLiveHint('content_drink',       contDrinkNow, attrText);
+    bindLiveHint('content_group_talk',  contGroupNow, attrText);
+    bindLiveHint('content_one_talk',    contOneNow, attrText);
+    bindLiveHint('content_matching',    contMatchNow, attrText);
+
+    function confettiBurst(n=36){
+      const root = document.getElementById('confetti');
+      for(let i=0;i<n;i++){
+        const s = document.createElement('span');
+        s.textContent = Math.random()>.4 ? '🥩' : (Math.random()>.5?'✨':'⭐️');
+        s.style.left = Math.random()*100 + 'vw';
+        s.style.setProperty('--x', (Math.random()*200-100)+'px');
+        s.style.animationDuration = (1.2+Math.random()*0.8)+'s';
+        root.appendChild(s);
+        setTimeout(()=> s.remove(), 1800);
+      }
+    }
+
+    function updateProgress(){
+      const pct = pctByStep[idx] ?? 0;
+      progress.style.width = pct + '%';
+      buddy.style.left = pct + '%';
+      capL.textContent = captions[idx].l;
+      capR.textContent = `${pct}%`;
+      bubble.innerHTML = captions[idx].b;
+    }
+
+    function goto(i){
+      steps[idx].classList.remove('active');
+      idx = i; steps[idx].classList.add('active');
+      updateProgress();
+      const firstInput = steps[idx].querySelector('input, select, textarea, button');
+      if(firstInput) firstInput.focus({preventScroll:false});
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+
+    // 次へ／戻る
+    document.querySelectorAll('[data-next]').forEach(b=>b.addEventListener('click', ()=>{
+      const required = steps[idx].querySelectorAll('[required]');
+      for(const el of required){
+        if(el.type==='radio'){
+          const name = el.name;
+          if(!steps[idx].querySelector(`input[name="${name}"]:checked`)){
+            steps[idx].classList.add('error'); setTimeout(()=>steps[idx].classList.remove('error'), 800); return;
+          }
+        } else if(el.tagName==='SELECT' && !el.value){
+          steps[idx].classList.add('error'); setTimeout(()=>steps[idx].classList.remove('error'), 800); return;
+        }
+      }
+      if(idx===0 || idx===1) confettiBurst(18);
+      goto(Math.min(idx+1, steps.length-1));
+    }));
+    document.querySelectorAll('[data-prev]').forEach(b=>b.addEventListener('click', ()=> goto(Math.max(idx-1, 0))));
+
+    // 初期メタ
+    document.getElementById('timestamp').value = new Date().toISOString();
+    const params = new URLSearchParams(location.search);
+    document.getElementById('source').value = params.get('ch') || params.get('utm_source') || '';
+
+    // 「その他」表示切替
+    function toggleEtc(triggerId, inputId){
+      const t = document.getElementById(triggerId); const i = document.getElementById(inputId);
+      function u(){ const on = !!t.checked; i.style.display = on ? 'block' : 'none'; if(!on) i.value=''; }
+      t.addEventListener('change', u); u();
+    }
+    ['mot_etc:mot_etc_text','theme_other:theme_other_text','pt5:preferred_time_other','p5:party_other','aw6:awareness_other']
+      .forEach(pair=>{ const [t,i]=pair.split(':'); toggleEtc(t,i); });
+
+    // 順位の重複防止
+    const selects = ['rank1','rank2','rank3'].map(id=>document.getElementById(id));
+    function refreshOptions(){
+      const chosen = new Set(selects.map(s=>s.value).filter(Boolean));
+      selects.forEach(s=>{
+        Array.from(s.options).forEach(o=>{ if(!o.value) return; o.disabled = !o.selected && chosen.has(o.value); });
+      });
+    }
+    selects.forEach(s=> s.addEventListener('change', refreshOptions));
+
+    // フォーム送信
+    const form = document.getElementById('form');
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+
+      // 🔒 ハニーポット
+      const honey = form.querySelector('input[name="website"]');
+      if (honey && honey.value.trim() !== '') { return; }
+
+      const requiredNames = [
+        'csat','nps','rejoin','price_fairness',
+        'content_meat','content_drink','content_group_talk','content_one_talk','content_matching'
+      ];
+      for(const n of requiredNames){
+        if(!form.querySelector(`[name="${n}"]:checked`)){
+          alert('未回答の必須項目があります');
+          goto(n.startsWith('content_') ? 1 : 0);
+          return;
+        }
+      }
+      // 順位必須
+      for(const id of ['rank1','rank2','rank3']){
+        if(!document.getElementById(id).value){
+          alert('良かったコンテンツの順位を選択してください');
+          goto(1);
+          return;
+        }
+      }
+      const [r1,r2,r3] = selects.map(s=>s.value);
+      if(new Set([r1,r2,r3]).size<3){
+        alert('1位・2位・3位は重複しないよう選んでください');
+        goto(1);
+        return;
+      }
+
+      const data = new FormData(form);
+      // 「ひとり」なら group_size=1 を強制
+      if(data.get('companion_type') === 'ひとり'){ data.set('group_size','1'); }
+
+      try{
+        const res = await fetch(FORMSPREE_ENDPOINT, { method:'POST', body:data, headers:{ 'Accept':'application/json' }});
+        if(res.ok){
+          document.querySelector('.card').style.display='none';
+          const result = document.getElementById('result');
+          result.style.display='block';
+
+          progress.style.width = '100%'; buddy.style.left = '100%';
+          capL.textContent = '送信完了 / ありがとうございました！'; capR.textContent = '100%';
+          bubble.innerHTML = 'ありがとう！あなたの声を受け取りました🎉';
+
+          result.innerHTML = `
+            <h2 style="margin:0 0 10px">ご回答ありがとうございました！</h2>
+            <img src="menu_roastbeef.jpg" alt="ニクパーティ スタッフ" style="width:100%;max-width:640px;border-radius:16px;display:block;margin:6px 0 14px;object-fit:cover">
+            <div style="background:#0f1426;border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:16px 14px;line-height:1.9;box-shadow:0 6px 20px rgba(0,0,0,.25);">
+              <p>ニクパーティにご参加いただき、本当にありがとうございました。</p>
+              <p>いただいたお声は、次回以降の企画や進行、料理・サービスの改善にしっかり活かしていきます。</p>
+              <p>「お肉と出会い、どちらも楽しめる場所」に育てていけるよう、スタッフ一同チャレンジを続けていきます。</p>
+              <p>よければ、また次回のニクパーティやKU-DETAの通常営業にも遊びに来ていただけたら嬉しいです。</p>
+              <p>これからもKU-DETAをよろしくお願いいたします。</p>
+            </div>
+            <div class="btns" style="margin-top:12px">
+              <button type="button" class="ghost" id="againBtn">もう一度回答する</button>
+            </div>
+          `;
+
+          (function(){const root=document.getElementById('confetti'); for(let i=0;i<60;i++){const s=document.createElement('span'); s.textContent = Math.random()>.4 ? '🥩' : (Math.random()>.5?'✨':'⭐️'); s.style.left = Math.random()*100 + 'vw'; s.style.setProperty('--x', (Math.random()*200-100)+'px'); s.style.animationDuration = (1.2+Math.random()*0.8)+'s'; root.appendChild(s); setTimeout(()=> s.remove(), 1800);} })();
+
+          document.getElementById('againBtn')?.addEventListener('click', ()=>{
+            form.reset();
+            refreshOptions();
+            ['mot_etc_text','awareness_other','theme_other_text','preferred_time_other','party_other']
+              .forEach(id=>{ const el=document.getElementById(id); if(el){ el.value=''; el.style.display='none'; } });
+            // ライブ表示初期化
+            csatNow.innerHTML = '選択：—（<span>1=不満 / 5=とても満足</span>）';
+            npsNow.innerHTML  = '選択：—（<span>1=勧めない / 5=とても勧めたい</span>）';
+            meatNow.innerHTML = '選択：—（<span>1=イマイチ / 5=最高！</span>）';
+            meetNow.innerHTML = '選択：—（<span>1=イマイチ / 5=最高！</span>）';
+            envNow.innerHTML  = '選択：—（<span>1=イマイチ / 5=最高！</span>）';
+            svcNow.innerHTML  = '選択：—（<span>1=イマイチ / 5=最高！</span>）';
+            contMeatNow.innerHTML  = '選択：—（<span>1=イマイチ / 5=最高！</span>）';
+            contDrinkNow.innerHTML = '選択：—（<span>1=イマイチ / 5=最高！</span>）';
+            contGroupNow.innerHTML = '選択：—（<span>1=イマイチ / 5=最高！</span>）';
+            contOneNow.innerHTML   = '選択：—（<span>1=イマイチ / 5=最高！</span>）';
+            contMatchNow.innerHTML = '選択：—（<span>1=イマイチ / 5=最高！</span>）';
+
+            document.getElementById('timestamp').value = new Date().toISOString();
+            result.style.display='none';
+            document.querySelector('.card').style.display='block';
+            goto(0);
+            window.scrollTo({top:0, behavior:'smooth'});
+          });
+
+        } else {
+          const payload = await res.json().catch(()=>({}));
+          throw new Error(payload?.error || '送信に失敗しました。時間を置いてお試しください。');
+        }
+      } catch(err){ alert(err.message); }
+    });
+
+    function init(){ updateProgress(); refreshOptions(); }
+    init();
+  </script>
+</body>
+</html>
