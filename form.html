@@ -3,7 +3,7 @@
 <head>
   <!-- Niku Party アンケート（Formspree版・Meat BTI 版・視認性アップ）
        ・A/B/C 3画面・進行メーター固定(A0/B33/C66) → 成功で100%
-       ・色味コントラスト改善／質問カード化
+       ・色味コントラスト改善／質問カード化／質問文の色を強調
   -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -133,13 +133,24 @@
       box-shadow:0 8px 18px rgba(15,23,42,.7);
     }
 
+    /* ★ 質問文（label）の色をあたたかいオレンジ系に */
     label{
       display:block;
       font-weight:700;
       margin:4px 0 8px;
       font-size:.96rem;
+      color:#fed7aa;
     }
-    .help{color:var(--muted); font-size:.88rem; margin-bottom:4px}
+    .help{
+      color:var(--muted);
+      font-size:.88rem;
+      margin-bottom:4px;
+    }
+
+    /* Cステップのラベルも少しだけ明るめに（ほぼ同系色） */
+    .step[data-step="3"] label{
+      color:#ffe5c0;
+    }
 
     /* options */
     .opt{display:flex; gap:10px; flex-wrap:wrap}
@@ -156,6 +167,7 @@
       align-items:center;
       gap:6px;
       white-space:nowrap;
+      color:#e5e7eb; /* ボタン内文字色は上書きしておく */
     }
     .opt label:hover{
       transform:translateY(-1px);
@@ -279,7 +291,6 @@
     }
     .cgroup.alt1:before{ background:var(--stripe2); }
     .cgroup.alt2:before{ background:var(--stripe3); }
-    .step[data-step="3"] label{ color:#e5edff }
     .step[data-step="3"] .opt label{
       background:#020617;
       border-color:rgba(148,163,184,.8);
